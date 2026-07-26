@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="sk" data-page="domov">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1440">
+<title>HK Brezno — Rytieri z Brezna</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body { margin: 0; background: #E7ECF1; font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: #CE1126; text-decoration: none; }
+  a:hover { color: #9E0C1C; }
+  ::selection { background: #CE1126; color: #fff; }
+  @keyframes hkPulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
+
+/* ---- routovanie stránok ---------------------------------------------- */
+.pg { display: none }
+html[data-page="domov"] [data-pg="domov"]{display:block}
+html[data-page="domov"] [data-nav="domov"]{color:#fff !important}
+html[data-page="domov"] [data-nav="domov"] [data-u]{background:#CE1126 !important}
+html[data-page="novinky"] [data-pg="novinky"]{display:block}
+html[data-page="novinky"] [data-nav="novinky"]{color:#fff !important}
+html[data-page="novinky"] [data-nav="novinky"] [data-u]{background:#CE1126 !important}
+html[data-page="zapasy"] [data-pg="zapasy"]{display:block}
+html[data-page="zapasy"] [data-nav="zapasy"]{color:#fff !important}
+html[data-page="zapasy"] [data-nav="zapasy"] [data-u]{background:#CE1126 !important}
+html[data-page="tabulka"] [data-pg="tabulka"]{display:block}
+html[data-page="tabulka"] [data-nav="tabulka"]{color:#fff !important}
+html[data-page="tabulka"] [data-nav="tabulka"] [data-u]{background:#CE1126 !important}
+html[data-page="timy"] [data-pg="timy"]{display:block}
+html[data-page="timy"] [data-nav="timy"]{color:#fff !important}
+html[data-page="timy"] [data-nav="timy"] [data-u]{background:#CE1126 !important}
+html[data-page="supiska"] [data-pg="supiska"]{display:block}
+html[data-page="supiska"] [data-nav="supiska"]{color:#fff !important}
+html[data-page="supiska"] [data-nav="supiska"] [data-u]{background:#CE1126 !important}
+html[data-page="klub"] [data-pg="klub"]{display:block}
+html[data-page="klub"] [data-nav="klub"]{color:#fff !important}
+html[data-page="klub"] [data-nav="klub"] [data-u]{background:#CE1126 !important}
+html[data-page="stadion"] [data-pg="stadion"]{display:block}
+html[data-page="stadion"] [data-nav="stadion"]{color:#fff !important}
+html[data-page="stadion"] [data-nav="stadion"] [data-u]{background:#CE1126 !important}
+html[data-page="rodicia"] [data-pg="rodicia"]{display:block}
+html[data-page="rodicia"] [data-nav="rodicia"]{color:#fff !important}
+html[data-page="rodicia"] [data-nav="rodicia"] [data-u]{background:#CE1126 !important}
+html[data-page="partneri"] [data-pg="partneri"]{display:block}
+html[data-page="partneri"] [data-nav="partneri"]{color:#fff !important}
+html[data-page="partneri"] [data-nav="partneri"] [data-u]{background:#CE1126 !important}
+html[data-page="eshop"] [data-pg="eshop"]{display:block}
+html[data-page="eshop"] [data-nav="eshop"]{color:#fff !important}
+html[data-page="eshop"] [data-nav="eshop"] [data-u]{background:#CE1126 !important}
+html[data-page="prihlaska"] [data-pg="prihlaska"]{display:block}
+html[data-page="prihlaska"] [data-nav="prihlaska"]{color:#fff !important}
+html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !important}
+
+/* ---- prilepená navigácia -------------------------------------------- */
+[data-navbar] { position: absolute; top: auto; bottom: -42px; padding: 0 30px;
+                 box-shadow: 0 16px 34px rgba(11,27,51,.35) }
+[data-navbar].is-stuck { position: fixed; top: 0; bottom: auto; padding: 0 16px 0 12px;
+                          box-shadow: 0 10px 30px rgba(11,27,51,.4) }
+[data-stuck] { display: none }
+[data-navbar].is-stuck [data-stuck] { display: contents }
+
+/* ---- miesto pre fotografiu (nahrádza <image-slot>) ------------------ */
+.slot { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden;
+         background: linear-gradient(180deg, #EEF2F7, #DBE2EB);
+         box-shadow: inset 0 0 0 1px rgba(20,49,92,.14) }
+.slot::before { content: ""; position: absolute; inset: 0;
+                 background: repeating-linear-gradient(115deg, rgba(255,255,255,.55) 0 10px,
+                             rgba(255,255,255,0) 10px 26px) }
+.slot span { position: relative; max-width: 80%; text-align: center;
+              font-family: 'Barlow Condensed', sans-serif; font-size: 13px;
+              letter-spacing: .16em; text-transform: uppercase; color: #7C8BA1 }
+.slot span::before { content: "◻"; display: block; font-size: 20px; letter-spacing: 0;
+                      color: #A7B4C6; margin-bottom: 6px }
+
+/* ---- hover stavy z design canvasu ----------------------------------- */
+[data-hv="0"]:hover{background: #E31B31 !important}
+[data-hv="1"]:hover{color: #fff !important}
+[data-hv="2"]:hover{color: #fff !important}
+[data-hv="3"]:hover{color: #fff !important}
+[data-hv="4"]:hover{color: #fff !important}
+[data-hv="5"]:hover{color: #fff !important}
+[data-hv="6"]:hover{color: #fff !important}
+[data-hv="7"]:hover{color: #fff !important}
+[data-hv="8"]:hover{color: #fff !important}
+[data-hv="9"]:hover{color: #fff !important}
+[data-hv="10"]:hover{color: #fff !important}
+[data-hv="11"]:hover{color: #fff !important}
+[data-hv="12"]:hover{background: #E31B31 !important}
+[data-hv="13"]:hover{background: #E31B31 !important}
+[data-hv="14"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="15"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="16"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="17"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="18"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="19"]:hover{background: #E31B31 !important}
+[data-hv="20"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="21"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="22"]:hover{background: rgba(255,255,255,.18) !important}
+[data-hv="23"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="24"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="25"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="26"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="27"]:hover{box-shadow: 0 10px 26px rgba(11,27,51,.14) !important}
+[data-hv="28"]:hover{box-shadow: 0 10px 26px rgba(11,27,51,.14) !important}
+[data-hv="29"]:hover{box-shadow: 0 10px 26px rgba(11,27,51,.14) !important}
+[data-hv="30"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="31"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="32"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="33"]:hover{background: #E31B31 !important}
+[data-hv="34"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="35"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="36"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="37"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="38"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="39"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="40"]:hover{background: #E31B31 !important}
+[data-hv="41"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="42"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="43"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="44"]:hover{background: #14315C !important}
+[data-hv="45"]:hover{background: #14315C !important}
+[data-hv="46"]:hover{background: #14315C !important}
+[data-hv="47"]:hover{background: #14315C !important}
+[data-hv="48"]:hover{background: #14315C !important}
+[data-hv="49"]:hover{background: #14315C !important}
+[data-hv="50"]:hover{background: #14315C !important}
+[data-hv="51"]:hover{background: #14315C !important}
+[data-hv="52"]:hover{background: #14315C !important}
+[data-hv="53"]:hover{background: #14315C !important}
+[data-hv="54"]:hover{background: #E31B31 !important}
+[data-hv="55"]:hover{background: #E31B31 !important}
+[data-hv="56"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="57"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="58"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="59"]:hover{box-shadow: 0 14px 34px rgba(11,27,51,.16) !important}
+[data-hv="60"]:hover{color: #fff !important}
+[data-hv="61"]:hover{color: #fff !important}
+[data-hv="62"]:hover{color: #fff !important}
+[data-hv="63"]:hover{color: #fff !important}
+[data-hv="64"]:hover{color: #fff !important}
+[data-hv="65"]:hover{color: #fff !important}
+[data-hv="66"]:hover{color: #fff !important}
+[data-hv="67"]:hover{color: #fff !important}
+[data-hv="68"]:hover{color: #fff !important}
+</style>
+</head>
+<body>
+
+
+<div style="position: relative; isolation: isolate; width: 1440px; margin: 0 auto; overflow: hidden; background-color: #E9EEF3; background-image: radial-gradient(circle, rgba(150,164,182,.3) .7px, rgba(255,255,255,0) .8px), repeating-linear-gradient(102deg, rgba(255,255,255,.5) 0 2px, rgba(255,255,255,0) 2px 38px), repeating-linear-gradient(76deg, rgba(158,172,190,.14) 0 1px, rgba(255,255,255,0) 1px 56px), radial-gradient(120% 70% at 20% 6%, #FFFFFF 0%, rgba(255,255,255,0) 58%), radial-gradient(80% 50% at 80% 46%, #FFFFFF 0%, rgba(255,255,255,0) 62%), linear-gradient(180deg, #F8FAFC 0%, #E2E8EE 52%, #EEF2F6 100%); background-size: 6px 6px, auto, auto, auto, auto, auto; background-attachment: fixed, fixed, fixed, fixed, fixed, fixed">
+
+  <div style="position: fixed; inset: 0; z-index: -1; display: grid; place-items: center; pointer-events: none">
+    <img src="assets/logo-hk-brezno.png" alt="" style="width: 780px; opacity: .07; filter: grayscale(1) contrast(.9)">
+  </div>
+
+  <div style="height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 48px; color: #54657D; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; border-bottom: 1px solid rgba(20,49,92,.1)">
+    <div style="display: flex; gap: 26px; align-items: center">
+      <span>Zimný štadión Brezno</span>
+      <span style="color: #B6C0CE">/</span>
+      <span>2. liga — skupina Juh</span>
+    </div>
+    <div style="display: flex; gap: 22px; align-items: center">
+      <span>+421 48 611 22 33</span>
+      <span style="color: #B6C0CE">/</span>
+      <span>info@hkbrezno.sk</span>
+      <span style="display: flex; gap: 10px; margin-left: 8px">
+        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">FB</span>
+        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">IG</span>
+        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">YT</span>
+      </span>
+    </div>
+  </div>
+
+  <div style="position: relative; z-index: 5; height: 118px; padding: 0 48px">
+    <div style="height: 76px; display: flex; align-items: center; justify-content: space-between">
+      <div style="display: flex; align-items: center; gap: 16px; font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .2em; text-transform: uppercase; font-size: 13px">
+        <span style="width: 30px; height: 2px; background: #CE1126"></span>
+        <span>Rytieri z Brezna · sezóna 2026/2027</span>
+      </div>
+      <button onclick="go('prihlaska')" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 14px 24px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)" data-hv="0">Chcem hrať hokej</button>
+    </div>
+
+    <div style="position: absolute; left: 50%; top: 2px; transform: translateX(-50%); z-index: 7; cursor: pointer; display: flex; flex-direction: column; align-items: center" onclick="go('domov')">
+      <img src="assets/logo-hk-brezno.png" alt="HK Brezno" style="height: 86px; width: auto; display: block; filter: drop-shadow(0 6px 14px rgba(0,0,0,.55))">
+    </div>
+
+    <div style=" left: 50%; transform: translateX(-50%); z-index: 60; height: 62px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); border-bottom: 3px solid #CE1126; clip-path: polygon(22px 0, calc(100% - 22px) 0, 100% 100%, 0 100%); display: flex; align-items: center; gap: 6px" data-navbar>
+    <span data-stuck>
+      <img src="assets/logo-hk-brezno.png" alt="HK Brezno" onclick="go('domov')" style="height: 46px; width: auto; display: block; cursor: pointer; margin-right: 4px">
+    </span>
+    <nav style="display: flex; gap: 2px; align-items: stretch; height: 100%">
+      <button onclick="go('domov')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; position: relative" data-hv="1" data-nav="domov">Domov<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('novinky')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="2" data-nav="novinky">Novinky<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('zapasy')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="3" data-nav="zapasy">Zápasy<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('tabulka')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="4" data-nav="tabulka">Tabuľka<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('timy')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="5" data-nav="timy">Tímy<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('supiska')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="6" data-nav="supiska">Súpiska<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('klub')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="7" data-nav="klub">Klub<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('stadion')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="8" data-nav="stadion">Štadión<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('rodicia')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="9" data-nav="rodicia">Pre rodičov<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('partneri')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="10" data-nav="partneri">Partneri<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <button onclick="go('eshop')" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="11" data-nav="eshop">E-shop<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+    </nav>
+    <span data-stuck>
+      <button onclick="go('prihlaska')" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 12px 18px; margin-left: 6px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%)" data-hv="12">Chcem hrať hokej</button>
+    </span>
+    </div>
+  </div>
+
+  <section class="pg" data-pg="domov">
+  <div>
+    <div style="position: relative; height: 720px">
+      <div style="position: absolute; inset: 0; opacity: .5"><div class="slot"><span>Hero foto</span></div></div>
+      <div style="position: absolute; inset: 0; background: radial-gradient(85% 65% at 50% 44%, rgba(255,255,255,.78) 0%, rgba(255,255,255,.55) 55%, rgba(226,232,238,.35) 100%); pointer-events: none"></div>
+      <div style="position: absolute; inset: 0; padding: 96px 48px 130px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px">
+          <span style="width: 46px; height: 2px; background: #CE1126"></span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .38em; text-transform: uppercase; font-size: 14px">Hokejový klub Brezno · od roku 1928</span>
+          <span style="width: 46px; height: 2px; background: #CE1126"></span>
+        </div>
+        <h1 style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 116px; line-height: .9; margin: 0; letter-spacing: -.02em; text-shadow: 0 8px 30px rgba(255,255,255,.7)">RYTIERI Z <span style="color: #CE1126">BREZNA</span></h1>
+        <div style="display: flex; align-items: center; gap: 18px; margin: 26px 0 20px; width: 760px">
+          <span style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(20,49,92,0), rgba(20,49,92,.35))"></span>
+          <span style="width: 7px; height: 7px; background: #CE1126; transform: rotate(45deg)"></span>
+          <span style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(20,49,92,.35), rgba(20,49,92,0))"></span>
+        </div>
+        <p style="color: #3F4E64; font-size: 19px; line-height: 1.6; max-width: 660px; margin: 0 0 36px; text-wrap: pretty">Na ľade bojujeme ako rytieri, mimo ľadu sme priatelia. Od prípravky až po seniorov — pod Nízkymi Tatrami rastie hokejová generácia.</p>
+        <div style="display: flex; gap: 14px; justify-content: center; pointer-events: auto">
+          <button onclick="go('prihlaska')" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="13">Priveď dieťa na hokej</button>
+          <button onclick="go('zapasy')" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 18px 33px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase" data-hv="14">Rozpis zápasov</button>
+        </div>
+      </div>
+      <div style="position: absolute; top: 34px; right: 300px; display: grid; grid-template-columns: repeat(5, 22px); gap: 12px; pointer-events: none; font-family: 'Barlow', sans-serif; font-size: 20px; line-height: 1; color: rgba(120,133,152,.4)"><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span></div>
+      
+      <div style="position: absolute; right: 0; top: 0; width: 160px; height: 100%; pointer-events: none; background: repeating-linear-gradient(115deg, rgba(140,155,175,.16) 0 9px, rgba(140,155,175,0) 9px 26px)"></div>
+      
+    </div>
+
+    <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
+      <div style="padding: 38px 48px 38px 0; border-right: 1px solid #21406E">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px">
+          <span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 34px">
+          <div style="display: flex; align-items: center; gap: 18px">
+            <div style="width: 62px; height: 62px; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); display: grid; place-items: center; border: 1px solid #2B4C7E"><img src="assets/logo-hk-brezno.png" alt="" style="width: 46px"></div>
+            <div>
+              <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px">HK BREZNO</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">Domáci</div>
+            </div>
+          </div>
+          <span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 24px">VS</span>
+          <div style="display: flex; align-items: center; gap: 18px">
+            <div style="width: 62px; height: 62px; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); display: grid; place-items: center; border: 1px solid #2B4C7E; font-family: 'Archivo Black', sans-serif; color: #6E82A0; font-size: 15px">DK</div>
+            <div>
+              <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px">MHK D. KUBÍN</div>
+              <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">Hostia</div>
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 28px; margin-top: 24px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .1em; text-transform: uppercase; font-size: 15px">
+          <span>Sobota 12. 9. 2026 — 17:30</span>
+          <span style="color: #3A4C68">|</span>
+          <span>Zimný štadión Brezno</span>
+        </div>
+      </div>
+      <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 18px">Do zápasu zostáva</div>
+        <div style="display: flex; gap: 12px">
+          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1"><span data-cd="d">--</span></div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div>
+          </div>
+          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1"><span data-cd="h">--</span></div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div>
+          </div>
+          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1"><span data-cd="m">--</span></div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div>
+          </div>
+          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 34px; line-height: 1"><span data-cd="s">--</span></div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; overflow: hidden; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%)">
+      <span style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 13px; letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">POSLEDNÉ VÝSLEDKY</span>
+      <div style="display: flex; gap: 34px; align-items: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .04em; color: #C3C9D2; white-space: nowrap">
+        <span>Brezno <strong style="color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 15px; margin: 0 6px">5 : 2</strong> Rim. Sobota <span style="color: #4ADE80; font-size: 14px; margin-left: 6px">V</span></span>
+        <span style="color: #2B4C7E">/</span>
+        <span>Trnava <strong style="color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 15px; margin: 0 6px">3 : 4</strong> Brezno <span style="color: #4ADE80; font-size: 14px; margin-left: 6px">V pp</span></span>
+        <span style="color: #2B4C7E">/</span>
+        <span>Brezno <strong style="color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 15px; margin: 0 6px">1 : 4</strong> Petržalka <span style="color: #CE1126; font-size: 14px; margin-left: 6px">P</span></span>
+        <span style="color: #2B4C7E">/</span>
+        <span>Levice <strong style="color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 15px; margin: 0 6px">2 : 6</strong> Brezno <span style="color: #4ADE80; font-size: 14px; margin-left: 6px">V</span></span>
+      </div>
+    </div>
+
+    <div style="position: relative; padding: 84px 48px 20px; display: flex; align-items: flex-end; justify-content: space-between">
+      <div style="position: absolute; left: 0; top: 64px; width: 210px; height: 62px; pointer-events: none; background: repeating-linear-gradient(115deg, rgba(148,160,176,.35) 0 8px, rgba(148,160,176,0) 8px 22px)"></div>
+      <div style="position: relative">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 16px; font-weight: 700; margin-bottom: 10px">Z klubu</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 54px; margin: 0; letter-spacing: -.02em">NOVINKY</h2>
+      </div>
+      <button onclick="go('novinky')" style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 14px 26px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="15">Všetky novinky</button>
+    </div>
+
+    <div style="padding: 34px 48px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px">
+      <div style="background: #fff; box-shadow: 0 2px 0 #E1E6EC; cursor: pointer" data-hv="16">
+        <div style="height: 210px; position: relative"><div class="slot"><span>Fotka z tréningu prípravky</span></div></div>
+        <div style="padding: 24px 26px 30px">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px">
+            <span style="background: #CE1126; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; padding: 4px 9px; text-transform: uppercase">Mládež</span>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; font-size: 13px; text-transform: uppercase">18. 8. 2026</span>
+          </div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 21px; line-height: 1.25; margin: 0 0 12px; text-wrap: pretty">Prípravka začína sezónu s 24 novými deťmi</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0">Nábor na jeseň prekonal očakávania. Prvé tréningy na ľade štartujú už v pondelok.</p>
+        </div>
+      </div>
+      <div style="background: #fff; box-shadow: 0 2px 0 #E1E6EC; cursor: pointer" data-hv="17">
+        <div style="height: 210px; position: relative"><div class="slot"><span>Fotka zo zápasu seniorov</span></div></div>
+        <div style="padding: 24px 26px 30px">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px">
+            <span style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; padding: 4px 9px; text-transform: uppercase">Seniori</span>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; font-size: 13px; text-transform: uppercase">14. 8. 2026</span>
+          </div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 21px; line-height: 1.25; margin: 0 0 12px; text-wrap: pretty">Káder pre novú sezónu je uzavretý</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0">Do tímu prichádzajú tri posily, kapitánsku „C" si obliekol Martin Kováč.</p>
+        </div>
+      </div>
+      <div style="background: #fff; box-shadow: 0 2px 0 #E1E6EC; cursor: pointer" data-hv="18">
+        <div style="height: 210px; position: relative"><div class="slot"><span>Fotka z Minirytierskeho turnaja</span></div></div>
+        <div style="padding: 24px 26px 30px">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 12px">
+            <span style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; padding: 4px 9px; text-transform: uppercase">Turnaj</span>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; font-size: 13px; text-transform: uppercase">2. 8. 2026</span>
+          </div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 21px; line-height: 1.25; margin: 0 0 12px; text-wrap: pretty">Minirytiersky turnaj má 3. ročník</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0">30. augusta privítame osem tímov. Putovný rytiersky štít zostáva zatiaľ doma.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin: 84px 48px 0; position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); overflow: hidden; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <img src="assets/logo-hk-brezno.png" alt="" style="position: absolute; left: 320px; bottom: -60px; width: 300px; opacity: .07; pointer-events: none">
+      <div style="padding: 62px 56px 66px; position: relative">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 14px">Nábor 2026/2027</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 46px; line-height: 1.02; margin: 0 0 18px; letter-spacing: -.02em; text-wrap: balance">KAŽDÝ VEĽKÝ HOKEJISTA<br>BOL RAZ MALÝM <span style="color: #CE1126">RYTIEROM</span></h2>
+        <p style="color: #C9D2DE; font-size: 17px; line-height: 1.6; max-width: 520px; margin: 0 0 30px; text-wrap: pretty">Prvé tri mesiace zapožičíme výstroj bezplatne. Deti od 4 rokov, tréningy 3× do týždňa, licencovaní tréneri.</p>
+        <div style="display: flex; gap: 40px; margin-bottom: 34px">
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 32px">4+</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">Roky</div></div>
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 32px">0 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">Výstroj na štart</div></div>
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 32px">160</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">Detí v klube</div></div>
+        </div>
+        <button onclick="go('prihlaska')" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="19">Vyplniť prihlášku</button>
+      </div>
+      <div style="position: relative; min-height: 520px"><div class="slot"><span>Deti v hokejovej výstroji na ľade</span></div></div>
+    </div>
+
+    <div style="padding: 84px 48px 0">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 34px">
+        <div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Od prípravky po seniorov</div>
+          <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 54px; margin: 0; letter-spacing: -.02em">NAŠE TÍMY</h2>
+        </div>
+        <button onclick="go('timy')" style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 14px 26px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="20">Všetky kategórie</button>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px">
+        <div onclick="go('timy')" style="position: relative; height: 260px; cursor: pointer; overflow: hidden">
+          <div class="slot"><span>Seniori</span></div>
+          <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,27,51,.92) 0%, rgba(11,27,51,.1) 70%); pointer-events: none"></div>
+          <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; pointer-events: none">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">SENIORI</div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; margin-top: 4px">2. liga — skupina Juh</div>
+          </div>
+        </div>
+        <div onclick="go('timy')" style="position: relative; height: 260px; cursor: pointer; overflow: hidden">
+          <div class="slot"><span>Dorast</span></div>
+          <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,27,51,.92) 0%, rgba(11,27,51,.1) 70%); pointer-events: none"></div>
+          <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; pointer-events: none">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">DORAST</div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; margin-top: 4px">U18 — liga dorastu</div>
+          </div>
+        </div>
+        <div onclick="go('timy')" style="position: relative; height: 260px; cursor: pointer; overflow: hidden">
+          <div class="slot"><span>Prípravka</span></div>
+          <div style="position: absolute; inset: 0; background: linear-gradient(0deg, rgba(11,27,51,.92) 0%, rgba(11,27,51,.1) 70%); pointer-events: none"></div>
+          <div style="position: absolute; left: 24px; right: 24px; bottom: 22px; pointer-events: none">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">PRÍPRAVKA</div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; margin-top: 4px">U8 — U10, deti od 4 rokov</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="padding: 84px 48px 0; display: grid; grid-template-columns: 1.35fr 1fr; gap: 34px; align-items: start">
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 36px; margin: 0 0 22px; letter-spacing: -.02em">TABUĽKA — 2. LIGA JUH</h2>
+        <div style="background: #fff">
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 14px 20px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); font-family: 'Barlow Condensed', sans-serif; color: #A9B7CB; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">
+            <span>#</span><span>Tím</span><span style="text-align: center">Z</span><span style="text-align: center">V</span><span style="text-align: center">P</span><span style="text-align: center">Skóre</span><span style="text-align: center">Body</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; border-bottom: 1px solid #EDF0F4; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">1</span><span style="font-weight: 600">HK Rimavská Sobota</span><span style="text-align: center">22</span><span style="text-align: center">17</span><span style="text-align: center">5</span><span style="text-align: center">98:61</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">51</span></div>
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; border-bottom: 1px solid #EDF0F4; font-size: 15px; color: #fff; align-items: center; background: #CE1126"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">2</span><span style="font-weight: 700; display: flex; align-items: center; gap: 8px"><img src="assets/logo-hk-brezno.png" alt="" style="width: 22px">HK Brezno</span><span style="text-align: center">22</span><span style="text-align: center">15</span><span style="text-align: center">7</span><span style="text-align: center">91:64</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">46</span></div>
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; border-bottom: 1px solid #EDF0F4; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">3</span><span style="font-weight: 600">HC Petržalka</span><span style="text-align: center">22</span><span style="text-align: center">14</span><span style="text-align: center">8</span><span style="text-align: center">84:70</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">43</span></div>
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; border-bottom: 1px solid #EDF0F4; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">4</span><span style="font-weight: 600">HK Trnava</span><span style="text-align: center">22</span><span style="text-align: center">11</span><span style="text-align: center">11</span><span style="text-align: center">72:75</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">34</span></div>
+          <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">5</span><span style="font-weight: 600">HK Levice</span><span style="text-align: center">22</span><span style="text-align: center">8</span><span style="text-align: center">14</span><span style="text-align: center">63:88</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">26</span></div>
+        </div>
+        <button onclick="go('tabulka')" style="margin-top: 18px; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px 24px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="21">Celá tabuľka</button>
+      </div>
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 36px; margin: 0 0 22px; letter-spacing: -.02em">VEREJNÉ KLZANIE</h2>
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); padding: 30px 30px 34px">
+          <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #1F3A62; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Streda</span><span style="color: #C3C9D2">17:00 — 18:30</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid #1F3A62; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Sobota</span><span style="color: #C3C9D2">14:00 — 16:00</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 14px 0; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Nedeľa</span><span style="color: #C3C9D2">14:00 — 16:00</span></div>
+          <div style="margin-top: 26px; display: flex; gap: 26px">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 24px">3 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Dospelí</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 24px">1,50 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Deti do 15 r.</div></div>
+          </div>
+          <button onclick="go('stadion')" style="margin-top: 26px; width: 100%; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.3); color: #fff; cursor: pointer; padding: 15px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="22">Prevádzka štadióna</button>
+        </div>
+      </div>
+    </div>
+
+    <div style="position: relative; padding: 84px 48px 90px">
+      <div style="position: absolute; right: 48px; top: 70px; display: grid; grid-template-columns: repeat(4, 22px); gap: 12px; pointer-events: none; font-family: 'Barlow', sans-serif; font-size: 20px; line-height: 1; color: rgba(120,133,152,.42)"><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span></div>
+      <div style="text-align: center; margin-bottom: 34px; position: relative">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Bez nich by to nešlo</div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 44px; margin: 0; letter-spacing: -.02em">PARTNERI KLUBU</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px">
+        <div style="height: 108px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 14px">Mesto Brezno</div>
+        <div style="height: 108px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 14px">Hotel Ďumbier</div>
+        <div style="height: 108px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 14px">Logo partnera</div>
+        <div style="height: 108px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 14px">Logo partnera</div>
+        <div style="height: 108px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 14px">Logo partnera</div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="novinky">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Aktuality</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">NOVINKY</h1>
+    </div>
+    <div style="padding: 34px 48px 0; display: flex; gap: 10px">
+      <span style="background: #CE1126; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer">Všetko</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="23">Seniori</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="24">Mládež</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="25">Turnaje</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="26">Klub</span>
+    </div>
+    <div style="padding: 26px 48px 0; display: grid; grid-template-columns: 1.6fr 1fr; gap: 26px">
+      <div style="background: #fff; cursor: pointer">
+        <div style="height: 380px; position: relative"><div class="slot"><span>Hlavná fotka článku</span></div></div>
+        <div style="padding: 30px 34px 36px">
+          <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 14px">
+            <span style="background: #CE1126; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .14em; padding: 4px 9px; text-transform: uppercase">Mládež</span>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; font-size: 13px; text-transform: uppercase">18. 8. 2026 — 3 min čítania</span>
+          </div>
+          <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 34px; line-height: 1.15; margin: 0 0 14px; letter-spacing: -.01em; text-wrap: pretty">Prípravka začína sezónu s 24 novými deťmi</h2>
+          <p style="color: #4A5768; font-size: 17px; line-height: 1.65; margin: 0">Letný nábor priniesol najsilnejší ročník za posledných päť sezón. Deti čaká prvý týždeň na suchu, potom sa presúvame na ľad. Prvé tri mesiace zapožičíme kompletnú výstroj bezplatne.</p>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 18px">
+        <div style="background: #fff; display: grid; grid-template-columns: 150px 1fr; cursor: pointer" data-hv="27">
+          <div style="position: relative"><div class="slot"><span>Foto</span></div></div>
+          <div style="padding: 18px 20px">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Seniori — 14. 8. 2026</div>
+            <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; line-height: 1.3; margin: 0">Káder pre novú sezónu je uzavretý</h3>
+          </div>
+        </div>
+        <div style="background: #fff; display: grid; grid-template-columns: 150px 1fr; cursor: pointer" data-hv="28">
+          <div style="position: relative"><div class="slot"><span>Foto</span></div></div>
+          <div style="padding: 18px 20px">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Turnaj — 2. 8. 2026</div>
+            <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; line-height: 1.3; margin: 0">Minirytiersky turnaj má 3. ročník</h3>
+          </div>
+        </div>
+        <div style="background: #fff; display: grid; grid-template-columns: 150px 1fr; cursor: pointer" data-hv="29">
+          <div style="position: relative"><div class="slot"><span>Foto</span></div></div>
+          <div style="padding: 18px 20px">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Klub — 28. 7. 2026</div>
+            <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; line-height: 1.3; margin: 0">Štadión dostal novú mantinelovú reklamu</h3>
+          </div>
+        </div>
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); padding: 26px 24px 28px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px; margin-bottom: 8px">NEZMEŠKAJ NIČ</div>
+          <p style="color: #A9B7CB; font-size: 14px; line-height: 1.55; margin: 0 0 16px">Novinky, rozpis tréningov a oznamy pre rodičov raz týždenne do e-mailu.</p>
+          <div style="display: flex; gap: 8px">
+            <input placeholder="vas@email.sk" style="flex: 1; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); border: 1px solid #2B4C7E; color: #fff; padding: 13px 14px; font-family: 'Barlow', sans-serif; font-size: 14px">
+            <button style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 13px 18px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 26px 48px 90px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px">
+      <div style="background: #fff; cursor: pointer" data-hv="30">
+        <div style="height: 180px; position: relative"><div class="slot"><span>Foto</span></div></div>
+        <div style="padding: 22px 24px 26px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; margin-bottom: 8px">Seniori — 21. 7. 2026</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 19px; line-height: 1.3; margin: 0">Letná príprava odstartovala na Mýte</h3>
+        </div>
+      </div>
+      <div style="background: #fff; cursor: pointer" data-hv="31">
+        <div style="height: 180px; position: relative"><div class="slot"><span>Foto</span></div></div>
+        <div style="padding: 22px 24px 26px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; margin-bottom: 8px">Mládež — 9. 7. 2026</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 19px; line-height: 1.3; margin: 0">Traja naši hráči v reprezentácii U16</h3>
+        </div>
+      </div>
+      <div style="background: #fff; cursor: pointer" data-hv="32">
+        <div style="height: 180px; position: relative"><div class="slot"><span>Foto</span></div></div>
+        <div style="padding: 22px 24px 26px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; margin-bottom: 8px">Klub — 30. 6. 2026</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 19px; line-height: 1.3; margin: 0">Výročná členská schôdza: zhodnotenie sezóny</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="zapasy">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Sezóna 2026/2027</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">ZÁPASY A VÝSLEDKY</h1>
+    </div>
+    <div style="padding: 40px 48px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 26px">
+      <div style="background: #fff; padding: 30px 32px 34px; border-top: 4px solid #CE1126">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 20px">Najbližší domáci zápas</div>
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <div style="text-align: center; width: 150px">
+            <img src="assets/logo-hk-brezno.png" alt="" style="width: 66px; margin-bottom: 10px">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 16px">HK BREZNO</div>
+          </div>
+          <div style="text-align: center">
+            <div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 40px; line-height: 1">17:30</div>
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .12em; text-transform: uppercase; font-size: 13px; margin-top: 6px">So 12. 9. 2026</div>
+          </div>
+          <div style="text-align: center; width: 150px">
+            <div style="width: 66px; height: 66px; margin: 0 auto 10px; background: #EDF0F4; display: grid; place-items: center; font-family: 'Archivo Black', sans-serif; color: #93A0B2; font-size: 16px">DK</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 16px">MHK D. KUBÍN</div>
+          </div>
+        </div>
+        <div style="margin-top: 26px; display: flex; gap: 10px">
+          <button style="flex: 1; background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 15px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="33">Kúpiť vstupenku</button>
+          <button style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 15px 20px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="34">Do kalendára</button>
+        </div>
+      </div>
+      <div style="position: relative; min-height: 260px"><div class="slot"><span>Fotka zo zápasu — mantinel, dav</span></div></div>
+    </div>
+
+    <div style="padding: 44px 48px 0; display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start">
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 0 0 18px; letter-spacing: -.01em">ROZPIS</h2>
+        <div style="background: #fff">
+          <div style="display: grid; grid-template-columns: 92px 1fr 74px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 17px">12. 9.</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Sobota</div></div>
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Brezno — MHK Dolný Kubín</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Zimný štadión Brezno · 17:30</div></div>
+            <span style="justify-self: end; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; padding: 5px 9px">Doma</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 92px 1fr 74px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px">19. 9.</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Sobota</div></div>
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HC Petržalka — HK Brezno</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">ZŠ Vlada Dzurillu · 18:00</div></div>
+            <span style="justify-self: end; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: #EDF0F4; color: #6E7C90; padding: 5px 9px">Von</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 92px 1fr 74px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px">26. 9.</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Sobota</div></div>
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Brezno — HK Trnava</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Zimný štadión Brezno · 17:30</div></div>
+            <span style="justify-self: end; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; padding: 5px 9px">Doma</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 92px 1fr 74px; gap: 14px; padding: 18px 22px; align-items: center">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px">3. 10.</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">Sobota</div></div>
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Rimavská Sobota — HK Brezno</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">ZŠ Rimavská Sobota · 17:00</div></div>
+            <span style="justify-self: end; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; background: #EDF0F4; color: #6E7C90; padding: 5px 9px">Von</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 0 0 18px; letter-spacing: -.01em">VÝSLEDKY</h2>
+        <div style="background: #fff">
+          <div style="display: grid; grid-template-columns: 1fr 92px 46px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Brezno — HK Rim. Sobota</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">15. 3. 2026 · doma</div></div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 22px; text-align: center">5 : 2</div>
+            <span style="justify-self: end; width: 28px; height: 28px; display: grid; place-items: center; background: #16A34A; color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 13px">V</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 92px 46px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Trnava — HK Brezno</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">8. 3. 2026 · vonku · pp</div></div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 22px; text-align: center">3 : 4</div>
+            <span style="justify-self: end; width: 28px; height: 28px; display: grid; place-items: center; background: #16A34A; color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 13px">V</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 92px 46px; gap: 14px; padding: 18px 22px; border-bottom: 1px solid #EDF0F4; align-items: center">
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Brezno — HC Petržalka</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">1. 3. 2026 · doma</div></div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 22px; text-align: center">1 : 4</div>
+            <span style="justify-self: end; width: 28px; height: 28px; display: grid; place-items: center; background: #CE1126; color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 13px">P</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 92px 46px; gap: 14px; padding: 18px 22px; align-items: center">
+            <div><div style="font-weight: 700; color: #0B1B33; font-size: 16px">HK Levice — HK Brezno</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">22. 2. 2026 · vonku</div></div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 22px; text-align: center">2 : 6</div>
+            <span style="justify-self: end; width: 28px; height: 28px; display: grid; place-items: center; background: #16A34A; color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 13px">V</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height: 90px"></div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="tabulka">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">2. liga — skupina Juh</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">TABUĽKA SÚŤAŽE</h1>
+    </div>
+    <div style="padding: 40px 48px 0; background: #fff; margin: 40px 48px 0">
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 0 0 14px; border-bottom: 2px solid #14315C; font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; font-weight: 700">
+        <span>Poz.</span><span>Tím</span><span style="text-align: center">Z</span><span style="text-align: center">V</span><span style="text-align: center">Vpp</span><span style="text-align: center">Ppp</span><span style="text-align: center">P</span><span style="text-align: center">Skóre</span><span style="text-align: center">Body</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">1</span><span style="font-weight: 600">HK Rimavská Sobota</span><span style="text-align: center">22</span><span style="text-align: center">15</span><span style="text-align: center">2</span><span style="text-align: center">1</span><span style="text-align: center">4</span><span style="text-align: center">98:61</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">51</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 12px; margin: 0 -12px; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #fff; background: #CE1126"><span style="font-family: 'Archivo Black', sans-serif">2</span><span style="font-weight: 700; display: flex; align-items: center; gap: 10px"><img src="assets/logo-hk-brezno.png" alt="" style="width: 26px">HK Brezno</span><span style="text-align: center">22</span><span style="text-align: center">13</span><span style="text-align: center">2</span><span style="text-align: center">2</span><span style="text-align: center">5</span><span style="text-align: center">91:64</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">46</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">3</span><span style="font-weight: 600">HC Petržalka</span><span style="text-align: center">22</span><span style="text-align: center">13</span><span style="text-align: center">1</span><span style="text-align: center">2</span><span style="text-align: center">6</span><span style="text-align: center">84:70</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">43</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">4</span><span style="font-weight: 600">HK 95 Považská Bystrica</span><span style="text-align: center">22</span><span style="text-align: center">11</span><span style="text-align: center">3</span><span style="text-align: center">1</span><span style="text-align: center">7</span><span style="text-align: center">79:68</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">40</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">5</span><span style="font-weight: 600">HK Trnava</span><span style="text-align: center">22</span><span style="text-align: center">10</span><span style="text-align: center">1</span><span style="text-align: center">2</span><span style="text-align: center">9</span><span style="text-align: center">72:75</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">34</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">6</span><span style="font-weight: 600">MHK Humenné</span><span style="text-align: center">22</span><span style="text-align: center">9</span><span style="text-align: center">1</span><span style="text-align: center">2</span><span style="text-align: center">10</span><span style="text-align: center">70:79</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">31</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; border-bottom: 1px solid #EDF0F4; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">7</span><span style="font-weight: 600">HK Levice</span><span style="text-align: center">22</span><span style="text-align: center">7</span><span style="text-align: center">1</span><span style="text-align: center">2</span><span style="text-align: center">12</span><span style="text-align: center">63:88</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">26</span></div>
+      <div style="display: grid; grid-template-columns: 56px 1fr 60px 60px 60px 60px 60px 96px 74px; padding: 16px 0; align-items: center; font-size: 15px; color: #0B1B33"><span style="font-family: 'Archivo Black', sans-serif">8</span><span style="font-weight: 600">MHK Dolný Kubín</span><span style="text-align: center">22</span><span style="text-align: center">5</span><span style="text-align: center">1</span><span style="text-align: center">1</span><span style="text-align: center">15</span><span style="text-align: center">58:96</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif">19</span></div>
+      <div style="padding: 20px 0 30px; font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .08em; text-transform: uppercase; font-size: 13px">Z — zápasy · V — výhra · Vpp — výhra po predĺžení · Ppp — prehra po predĺžení · P — prehra</div>
+    </div>
+    <div style="padding: 40px 48px 90px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px">
+      <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 26px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px">46</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Bodov v sezóne</div></div>
+      <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 26px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px">91</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Vstrelených gólov</div></div>
+      <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 26px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px">4,1</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Gólov na zápas</div></div>
+      <div style="background: #CE1126; padding: 26px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px">2.</div><div style="font-family: 'Barlow Condensed', sans-serif; color: rgba(255,255,255,.8); letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Miesto v tabuľke</div></div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="timy">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Šesť kategórií, jeden klub</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">TÍMY A KATEGÓRIE</h1>
+    </div>
+    <div style="padding: 40px 48px 90px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px">
+      <div style="background: #fff">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Seniori — tímová fotka</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">2. liga Juh</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">SENIORI</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">A-tím klubu. Domáce zápasy hrávame v sobotu o 17:30.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #EDF0F4">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">24</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Hráčov</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">4×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('supiska')" style="margin-top: 20px; width: 100%; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="35">Súpiska tímu</button>
+        </div>
+      </div>
+      <div style="background: #fff">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Junior U20</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga juniorov</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">JUNIORI U20</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Most medzi mládežou a A-tímom. Najlepší už nakukli do seniorov.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #EDF0F4">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">21</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Hráčov</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">4×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('supiska')" style="margin-top: 20px; width: 100%; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="36">Súpiska tímu</button>
+        </div>
+      </div>
+      <div style="background: #fff">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Dorast U18</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga dorastu</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">DORAST U18</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Vek, kde sa láme charakter. Dôraz na kondíciu a herné myslenie.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #EDF0F4">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">23</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Hráčov</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">4×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('supiska')" style="margin-top: 20px; width: 100%; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="37">Súpiska tímu</button>
+        </div>
+      </div>
+      <div style="background: #fff">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Starší žiaci</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga starších žiakov</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">ŽIACI U15 / U14</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Dve vekové kategórie, spoločné tréningy, samostatné súťaže.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #EDF0F4">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">38</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Hráčov</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">3×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('supiska')" style="margin-top: 20px; width: 100%; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="38">Súpiska tímu</button>
+        </div>
+      </div>
+      <div style="background: #fff">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Mladší žiaci</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga mladších žiakov</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">ŽIACI U13 / U12</h3>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Technika, korčuliarske zručnosti a prvé skutočné zápasy.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #EDF0F4">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">34</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Hráčov</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">3×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('supiska')" style="margin-top: 20px; width: 100%; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="39">Súpiska tímu</button>
+        </div>
+      </div>
+      <div style="background: #0B1B33">
+        <div style="height: 190px; position: relative"><div class="slot"><span>Prípravka — najmenší</span></div></div>
+        <div style="padding: 24px 26px 28px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Nábor otvorený</div>
+          <h3 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 24px; margin: 6px 0 12px">PRÍPRAVKA U10 — U8</h3>
+          <p style="color: #A9B7CB; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Deti od 4 rokov. Hra, korčuľovanie a radosť z ľadu. Výstroj zapožičíme.</p>
+          <div style="display: flex; gap: 22px; padding-top: 16px; border-top: 1px solid #1F3A62">
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px">44</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Detí</div></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px">3×</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; text-transform: uppercase; letter-spacing: .12em; font-size: 11px">Tréning / týž.</div></div>
+          </div>
+          <button onclick="go('prihlaska')" style="margin-top: 20px; width: 100%; background: #CE1126; border: 0; color: #fff; cursor: pointer; padding: 15px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="40">Prihlásiť dieťa</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="supiska">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Seniori — sezóna 2026/2027</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">SÚPISKA</h1>
+    </div>
+    <div style="padding: 34px 48px 0; display: flex; gap: 10px">
+      <span style="background: #CE1126; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer">Brankári</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="41">Obrancovia</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="42">Útočníci</span>
+      <span style="background: #fff; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 14px; padding: 10px 18px; cursor: pointer" data-hv="43">Realizačný tím</span>
+    </div>
+    <div style="padding: 26px 48px 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 18px">
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="44">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">1</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Brankár</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Tomáš Ferko</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>27 r.</span><span>22 Z</span><span>0 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="45">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">30</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Brankár</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Adam Šulek</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>21 r.</span><span>9 Z</span><span>0 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="46">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">4</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Obranca</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Martin Kováč</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>31 r.</span><span>22 Z</span><span>14 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="47">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">7</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Obranca</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Jakub Hrušovský</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>24 r.</span><span>21 Z</span><span>9 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="48">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">22</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Obranca</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Denis Turčan</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>19 r.</span><span>18 Z</span><span>6 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="49">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">9</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Útočník</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Lukáš Bella</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>26 r.</span><span>22 Z</span><span>31 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="50">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">11</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Útočník</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Peter Šmál</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>23 r.</span><span>22 Z</span><span>27 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="51">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">17</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Útočník</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Michal Dovala</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>28 r.</span><span>20 Z</span><span>24 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="52">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">19</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Útočník</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Filip Krupa</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>20 r.</span><span>19 Z</span><span>15 B</span>
+            </div>
+          </div>
+        </div>
+      
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); position: relative; cursor: pointer; overflow: hidden" data-hv="53">
+          <div style="position: absolute; top: 12px; right: 14px; font-family: 'Archivo Black', sans-serif; color: rgba(255,255,255,.14); font-size: 46px; line-height: 1">91</div>
+          <div style="height: 220px; position: relative"><div class="slot"><span>Portrét hráča</span></div></div>
+          <div style="padding: 18px 18px 22px; border-top: 3px solid #CE1126">
+            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Útočník</div>
+            <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px; margin-top: 4px; line-height: 1.15">Samuel Piliar</div>
+            <div style="display: flex; gap: 14px; margin-top: 12px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; font-size: 13px; letter-spacing: .08em; text-transform: uppercase">
+              <span>18 r.</span><span>14 Z</span><span>11 B</span>
+            </div>
+          </div>
+        </div>
+      
+    </div>
+    <div style="height: 90px"></div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="klub">
+  <div>
+    <div style="position: relative; height: 420px; background: #0B1B33">
+      <div style="position: absolute; inset: 0"><div class="slot"><span>Historická fotka klubu / štadión zvonku</span></div></div>
+      <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,27,51,.93), rgba(11,27,51,.45)); pointer-events: none"></div>
+      <div style="position: absolute; inset: 0; padding: 0 48px; display: flex; flex-direction: column; justify-content: center; pointer-events: none">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 12px">Od roku 1928</div>
+        <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 68px; margin: 0; letter-spacing: -.02em">O KLUBE</h1>
+        <p style="color: #C9D2DE; font-size: 19px; line-height: 1.6; max-width: 560px; margin: 22px 0 0; text-wrap: pretty">Takmer sto rokov hokeja pod Nízkymi Tatrami. Klub, ktorý stojí na vlastných deťoch, dobrovoľníkoch a meste, ktoré drží.</p>
+      </div>
+    </div>
+    <div style="padding: 60px 48px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px">
+      <div style="background: #fff; padding: 28px 26px"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 36px">1928</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Rok založenia</div></div>
+      <div style="background: #fff; padding: 28px 26px"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 36px">6</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Vekových kategórií</div></div>
+      <div style="background: #fff; padding: 28px 26px"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 36px">184</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Registrovaných hráčov</div></div>
+      <div style="background: #fff; padding: 28px 26px"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 36px">14</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 13px; margin-top: 6px">Trénerov a dobrovoľníkov</div></div>
+    </div>
+    <div style="padding: 60px 48px 0; display: grid; grid-template-columns: 1fr 1.1fr; gap: 44px; align-items: start">
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 0 0 20px; letter-spacing: -.02em">NAŠE HODNOTY</h2>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="background: #fff; padding: 22px 26px; border-left: 4px solid #CE1126"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; margin-bottom: 6px">ČESTNOSŤ</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Vyhráva sa fair play. Rozhodnutie rozhodcu neriešime na sociálnych sieťach.</div></div>
+          <div style="background: #fff; padding: 22px 26px; border-left: 4px solid #CE1126"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; margin-bottom: 6px">REŠPEKT</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">K súperovi, spoluhráčovi, trénerovi aj k ľuďom, ktorí sa starajú o ľad.</div></div>
+          <div style="background: #fff; padding: 22px 26px; border-left: 4px solid #CE1126"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; margin-bottom: 6px">SRDCE A ODVAHA</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Na ľade bojuj ako rytier. Mimo ľadu buď priateľ.</div></div>
+          <div style="background: #fff; padding: 22px 26px; border-left: 4px solid #CE1126"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 17px; margin-bottom: 6px">RADOSŤ Z HRY</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Deti musia chcieť prísť na ďalší tréning. To je hlavné meradlo úspechu.</div></div>
+        </div>
+      </div>
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 0 0 20px; letter-spacing: -.02em">HISTÓRIA</h2>
+        <div style="display: flex; flex-direction: column">
+          <div style="display: grid; grid-template-columns: 92px 1fr; gap: 20px; padding-bottom: 24px; border-left: 2px solid #D6DCE4; padding-left: 24px; margin-left: 6px"><span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 18px">1928</span><span style="color: #4A5768; font-size: 15px; line-height: 1.6">Prvý organizovaný hokej v Brezne na prírodnom klzisku pri Hrone.</span></div>
+          <div style="display: grid; grid-template-columns: 92px 1fr; gap: 20px; padding-bottom: 24px; border-left: 2px solid #D6DCE4; padding-left: 24px; margin-left: 6px"><span style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">1976</span><span style="color: #4A5768; font-size: 15px; line-height: 1.6">Otvorenie zimného štadióna s umelou ľadovou plochou.</span></div>
+          <div style="display: grid; grid-template-columns: 92px 1fr; gap: 20px; padding-bottom: 24px; border-left: 2px solid #D6DCE4; padding-left: 24px; margin-left: 6px"><span style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">2011</span><span style="color: #4A5768; font-size: 15px; line-height: 1.6">Zastrešenie štadióna a vznik ucelenej mládežníckej pyramídy.</span></div>
+          <div style="display: grid; grid-template-columns: 92px 1fr; gap: 20px; padding-bottom: 24px; border-left: 2px solid #D6DCE4; padding-left: 24px; margin-left: 6px"><span style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">2024</span><span style="color: #4A5768; font-size: 15px; line-height: 1.6">Prvý Minirytiersky turnaj — dnes už tradícia s ôsmimi tímami.</span></div>
+          <div style="display: grid; grid-template-columns: 92px 1fr; gap: 20px; border-left: 2px solid #D6DCE4; padding-left: 24px; margin-left: 6px"><span style="font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 18px">2026</span><span style="color: #4A5768; font-size: 15px; line-height: 1.6">Nový klubový vizuál a 184 registrovaných hráčov — klubový rekord.</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 60px 48px 0">
+      <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 0 0 22px; letter-spacing: -.02em">VEDENIE KLUBU</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px">
+        <div style="background: #fff"><div style="height: 220px; position: relative"><div class="slot"><span>Portrét</span></div></div><div style="padding: 20px 22px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px">Peter Hriň</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-top: 4px">Prezident klubu</div></div></div>
+        <div style="background: #fff"><div style="height: 220px; position: relative"><div class="slot"><span>Portrét</span></div></div><div style="padding: 20px 22px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px">Jana Kučerová</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-top: 4px">Manažérka mládeže</div></div></div>
+        <div style="background: #fff"><div style="height: 220px; position: relative"><div class="slot"><span>Portrét</span></div></div><div style="padding: 20px 22px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px">Martin Slivka</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-top: 4px">Šéftréner</div></div></div>
+        <div style="background: #fff"><div style="height: 220px; position: relative"><div class="slot"><span>Portrét</span></div></div><div style="padding: 20px 22px 24px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px">Ivan Krupa</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; margin-top: 4px">Správca štadióna</div></div></div>
+      </div>
+    </div>
+    <div style="padding: 60px 48px 0">
+      <div style="display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 22px">
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 0; letter-spacing: -.02em">TRÉNERI MLÁDEŽE</h2>
+        <span style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .16em; text-transform: uppercase; font-size: 13px">Sezóna 2026/2027 · osem kategórií</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px">
+        <div style="background: #fff; border-bottom: 3px solid #CE1126"><div style="height: 250px; overflow: hidden; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-1.png" alt="Tomáš Turňa" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Športový manažér mládeže</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Tomáš Turňa</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-2.png" alt="Radovan Znak" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 0 — 2</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Radovan Znak</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-3.png" alt="Marek Medveď" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 3</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Marek Medveď</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-4.png" alt="Jakub Ďordík" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 4</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Jakub Ďordík</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-5.png" alt="Peter Turňa" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 5</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Peter Turňa</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-6.png" alt="Patrik Lupták" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 6</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Patrik Lupták</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-7.png" alt="Michael Ďuriš" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 7</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Michael Ďuriš</div></div></div>
+        <div style="background: #fff; border-bottom: 3px solid #14315C"><div style="height: 250px; background: linear-gradient(180deg, #F4F7FA, #E7ECF2)"><img src="assets/trener-8.png" alt="Matej Vais" style="width: 100%; height: 100%; object-fit: cover; object-position: top; display: block" onerror="this.remove()"></div><div style="padding: 18px 20px 22px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #5D6E86; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700">Ročník 8 — 9</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-top: 5px">Matej Vais</div></div></div>
+      </div>
+    </div>
+    <div style="padding: 60px 48px 90px; display: grid; grid-template-columns: 1fr 1fr; gap: 26px">
+      <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 40px 42px 44px">
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 30px; margin: 0 0 24px">KONTAKT</h2>
+        <div style="display: flex; flex-direction: column; gap: 18px; color: #C9D2DE; font-size: 16px; line-height: 1.55">
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-bottom: 4px">Adresa</div>HK Brezno, Zimný štadión, Rázusova 12, 977 01 Brezno</div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-bottom: 4px">E-mail</div>info@hkbrezno.sk · mladez@hkbrezno.sk</div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-bottom: 4px">Telefón</div>+421 48 611 22 33</div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-bottom: 4px">IČO / DIČ</div>31 936 421 / 2021318 445</div>
+        </div>
+      </div>
+      <div style="position: relative; min-height: 320px; background: #E4E9EF"><div class="slot"><span>Mapa — poloha štadióna</span></div></div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="stadion">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Rázusova 12, Brezno</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">ZIMNÝ ŠTADIÓN</h1>
+    </div>
+    <div style="padding: 40px 48px 0; display: grid; grid-template-columns: 1.4fr 1fr; gap: 26px">
+      <div style="position: relative; min-height: 380px"><div class="slot"><span>Interiér štadióna — ľadová plocha</span></div></div>
+      <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); padding: 34px 34px 38px">
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px; margin: 0 0 22px">VEREJNÉ KLZANIE</h2>
+        <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1F3A62; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Streda</span><span style="color: #C3C9D2">17:00 — 18:30</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1F3A62; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Sobota</span><span style="color: #C3C9D2">14:00 — 16:00</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #1F3A62; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Nedeľa</span><span style="color: #C3C9D2">14:00 — 16:00</span></div>
+        <div style="display: flex; justify-content: space-between; padding: 15px 0; color: #6E82A0; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .06em; text-transform: uppercase"><span>Po, Ut, Št, Pi</span><span>Tréningy klubu</span></div>
+        <div style="margin-top: 24px; padding-top: 22px; border-top: 1px solid #1F3A62; display: grid; grid-template-columns: 1fr 1fr; gap: 18px">
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">3 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Dospelí</div></div>
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">1,50 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Deti do 15 rokov</div></div>
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">2 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Brúsenie korčúľ</div></div>
+          <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 26px">90 €</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .12em; text-transform: uppercase; font-size: 12px">Hodina ľadu</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 40px 48px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px">
+      <div style="background: #fff; padding: 30px 30px 34px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 20px; margin-bottom: 12px">PARAMETRE PLOCHY</div><div style="color: #4A5768; font-size: 15px; line-height: 1.7">Rozmery 58 × 28 m<br>Kapacita 1 200 miest (400 na sedenie)<br>Zastrešená hala, 4 šatne<br>Rolba Engo 2019</div></div>
+      <div style="background: #fff; padding: 30px 30px 34px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 20px; margin-bottom: 12px">SLUŽBY</div><div style="color: #4A5768; font-size: 15px; line-height: 1.7">Požičovňa korčúľ (2 € / hod.)<br>Brúsenie korčúľ<br>Bufet s teplým čajom<br>Bezplatné parkovanie 60 miest</div></div>
+      <div style="background: #fff; padding: 30px 30px 34px"><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 20px; margin-bottom: 12px">PRENÁJOM ĽADU</div><div style="color: #4A5768; font-size: 15px; line-height: 1.7">Firmy, školy aj partie priateľov.<br>Rezervácia telefonicky alebo e-mailom minimálne 3 dni vopred.<br><strong style="color: #0B1B33">+421 48 611 22 33</strong></div></div>
+    </div>
+    <div style="padding: 40px 48px 90px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px">
+      <div style="height: 180px; position: relative"><div class="slot"><span>Foto štadióna</span></div></div>
+      <div style="height: 180px; position: relative"><div class="slot"><span>Foto štadióna</span></div></div>
+      <div style="height: 180px; position: relative"><div class="slot"><span>Foto štadióna</span></div></div>
+      <div style="height: 180px; position: relative"><div class="slot"><span>Foto štadióna</span></div></div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="prihlaska">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; background: linear-gradient(112deg, #A80D1E 0%, #CE1126 52%, #E4243A 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: rgba(255,255,255,.85); letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Nábor 2026/2027 — deti od 4 rokov</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">CHCEM HRAŤ HOKEJ</h1>
+    </div>
+    <div style="padding: 40px 48px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px">
+      <div style="background: #fff; padding: 26px 26px 30px; border-top: 4px solid #CE1126"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 15px; margin-bottom: 10px">01</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 8px">Vyplníte prihlášku</div><div style="color: #4A5768; font-size: 15px; line-height: 1.6">Stačí päť minút. Ozveme sa do dvoch pracovných dní.</div></div>
+      <div style="background: #fff; padding: 26px 26px 30px; border-top: 4px solid #D6DCE4"><div style="font-family: 'Archivo Black', sans-serif; color: #93A0B2; font-size: 15px; margin-bottom: 10px">02</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 8px">Prídete na tréning</div><div style="color: #4A5768; font-size: 15px; line-height: 1.6">Dve ukážkové hodiny sú zdarma a bez záväzku.</div></div>
+      <div style="background: #fff; padding: 26px 26px 30px; border-top: 4px solid #D6DCE4"><div style="font-family: 'Archivo Black', sans-serif; color: #93A0B2; font-size: 15px; margin-bottom: 10px">03</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 8px">Zapožičíme výstroj</div><div style="color: #4A5768; font-size: 15px; line-height: 1.6">Prvé tri mesiace kompletná výstroj od klubu bezplatne.</div></div>
+      <div style="background: #fff; padding: 26px 26px 30px; border-top: 4px solid #D6DCE4"><div style="font-family: 'Archivo Black', sans-serif; color: #93A0B2; font-size: 15px; margin-bottom: 10px">04</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 8px">Vitajte v klube</div><div style="color: #4A5768; font-size: 15px; line-height: 1.6">Registrácia do SZĽH, klubový dres a prvý zápas.</div></div>
+    </div>
+    <div style="padding: 40px 48px 90px; display: grid; grid-template-columns: 1.25fr 1fr; gap: 26px; align-items: start">
+      <div style="background: #fff; padding: 40px 44px 46px">
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 0 0 26px; letter-spacing: -.01em">ONLINE PRIHLÁŠKA</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px">
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Meno dieťaťa</div><input placeholder="Jakub" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Priezvisko</div><input placeholder="Kováč" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Dátum narodenia</div><input placeholder="DD. MM. RRRR" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Kategória</div><div style="border: 1px solid #D6DCE4; padding: 14px; font-size: 15px; color: #6E7C90; display: flex; justify-content: space-between">Prípravka U8<span>▾</span></div></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Rodič — meno a priezvisko</div><input placeholder="Martina Kováčová" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Telefón</div><input placeholder="+421 900 000 000" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div style="grid-column: 1 / -1"><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">E-mail</div><input placeholder="vas@email.sk" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; color: #0B1B33"></div>
+          <div style="grid-column: 1 / -1"><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Má dieťa skúsenosť s korčuľovaním?</div><div style="display: flex; gap: 10px"><span style="border: 2px solid #CE1126; color: #CE1126; padding: 11px 20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 14px; cursor: pointer">Áno</span><span style="border: 1px solid #D6DCE4; color: #6E7C90; padding: 12px 20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 14px; cursor: pointer">Nie</span><span style="border: 1px solid #D6DCE4; color: #6E7C90; padding: 12px 20px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 14px; cursor: pointer">Začiatočník</span></div></div>
+          <div style="grid-column: 1 / -1"><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Poznámka pre trénera</div><textarea placeholder="Zdravotné obmedzenia, otázky…" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; height: 92px; resize: none"></textarea></div>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: flex-start; margin-top: 20px; color: #4A5768; font-size: 14px; line-height: 1.5"><span style="width: 18px; height: 18px; border: 1px solid #D6DCE4; flex: none; margin-top: 2px"></span><span>Súhlasím so spracovaním osobných údajov na účely členstva v HK Brezno.</span></div>
+        <button style="margin-top: 26px; background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 40px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="54">Poslať prihlášku</button>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 20px">
+        <div style="position: relative; height: 260px"><div class="slot"><span>Malý hokejista na ľade</span></div></div>
+        <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 30px 32px 34px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px; margin-bottom: 16px">ČLENSKÉ POPLATKY</div>
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #21406E; color: #C9D2DE; font-size: 15px"><span>Prípravka</span><span style="color: #fff; font-weight: 700">35 € / mes.</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #21406E; color: #C9D2DE; font-size: 15px"><span>Žiaci</span><span style="color: #fff; font-weight: 700">45 € / mes.</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #21406E; color: #C9D2DE; font-size: 15px"><span>Dorast a juniori</span><span style="color: #fff; font-weight: 700">50 € / mes.</span></div>
+          <div style="display: flex; justify-content: space-between; padding: 12px 0; color: #C9D2DE; font-size: 15px"><span>Druhé dieťa v rodine</span><span style="color: #CE1126; font-weight: 700">−30 %</span></div>
+        </div>
+        <div style="background: #fff; padding: 28px 30px 32px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 10px">RADŠEJ ZAVOLÁTE?</div>
+          <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 14px">Manažérka mládeže Jana Kučerová vám odpovie na všetko.</p>
+          <div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 20px">+421 905 123 456</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="rodicia">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Rodičia v obraze</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">PRE RODIČOV</h1>
+    </div>
+    <div style="padding: 40px 48px 0; display: grid; grid-template-columns: 1.3fr 1fr; gap: 26px; align-items: start">
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 0 0 18px; letter-spacing: -.01em">OZNAMY</h2>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <div style="background: #fff; padding: 24px 28px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border-left: 4px solid #CE1126">
+            <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Dôležité · 20. 8. 2026</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 6px">Prvý tréning na ľade v pondelok 24. 8.</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Zraz 15:45 pri šatni č. 2. Prineste vlastnú fľašu a chrániče zubov.</div></div>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; white-space: nowrap; cursor: pointer">Detail →</span>
+          </div>
+          <div style="background: #fff; padding: 24px 28px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border-left: 4px solid #D6DCE4">
+            <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Platby · 15. 8. 2026</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 6px">Členské za september do 5. 9.</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Do poznámky uveďte meno dieťaťa a kategóriu.</div></div>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; white-space: nowrap; cursor: pointer">Detail →</span>
+          </div>
+          <div style="background: #fff; padding: 24px 28px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border-left: 4px solid #D6DCE4">
+            <div><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 6px">Výstroj · 8. 8. 2026</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin-bottom: 6px">Klubová burza výstroje 28. 8. na štadióne</div><div style="color: #4A5768; font-size: 15px; line-height: 1.55">Deti rýchlo rastú — prineste, čo už nesedí, a vymeňte za väčšie.</div></div>
+            <span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px; white-space: nowrap; cursor: pointer">Detail →</span>
+          </div>
+        </div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 44px 0 18px; letter-spacing: -.01em">ROZPIS TRÉNINGOV</h2>
+        <div style="background: #fff">
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 14px 20px; font-family: 'Barlow Condensed', sans-serif; color: #A9B7CB; letter-spacing: .12em; text-transform: uppercase; font-size: 12px"><span>Kategória</span><span>Po</span><span>Ut</span><span>St</span><span>Št</span><span>Pi</span></div>
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 16px 20px; border-bottom: 1px solid #EDF0F4; font-size: 14px; color: #0B1B33"><span style="font-weight: 700">Prípravka</span><span>16:00</span><span>—</span><span>16:00</span><span>—</span><span>15:30</span></div>
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 16px 20px; border-bottom: 1px solid #EDF0F4; font-size: 14px; color: #0B1B33"><span style="font-weight: 700">Žiaci U13 / U12</span><span>17:15</span><span>17:15</span><span>—</span><span>17:15</span><span>16:45</span></div>
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 16px 20px; border-bottom: 1px solid #EDF0F4; font-size: 14px; color: #0B1B33"><span style="font-weight: 700">Žiaci U15 / U14</span><span>18:30</span><span>18:30</span><span>—</span><span>18:30</span><span>18:00</span></div>
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 16px 20px; border-bottom: 1px solid #EDF0F4; font-size: 14px; color: #0B1B33"><span style="font-weight: 700">Dorast U18</span><span>19:45</span><span>19:45</span><span>—</span><span>19:45</span><span>19:15</span></div>
+          <div style="display: grid; grid-template-columns: 1.2fr repeat(5, 1fr); padding: 16px 20px; font-size: 14px; color: #0B1B33"><span style="font-weight: 700">Seniori</span><span>21:00</span><span>21:00</span><span>—</span><span>21:00</span><span>20:30</span></div>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 20px">
+        <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); padding: 30px 32px 34px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px; margin-bottom: 16px">PLATOBNÉ ÚDAJE</div>
+          <div style="color: #C9D2DE; font-size: 15px; line-height: 1.8">IBAN: SK12 0900 0000 0001 2345 6789<br>Variabilný symbol: rok narodenia dieťaťa<br>Poznámka: meno + kategória</div>
+          <div style="margin-top: 20px; padding-top: 18px; border-top: 1px solid #1F3A62; font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Splatnosť vždy do 5. dňa v mesiaci</div>
+        </div>
+        <div style="background: #fff; padding: 30px 32px 34px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 20px; margin-bottom: 18px">DOKUMENTY NA STIAHNUTIE</div>
+          <div style="display: flex; flex-direction: column; gap: 2px">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #EDF0F4; cursor: pointer"><span style="color: #0B1B33; font-size: 15px; font-weight: 600">Prihláška do klubu 2026/2027</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .1em; font-size: 13px; font-weight: 700">PDF</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #EDF0F4; cursor: pointer"><span style="color: #0B1B33; font-size: 15px; font-weight: 600">Súhlas so spracovaním údajov</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .1em; font-size: 13px; font-weight: 700">PDF</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid #EDF0F4; cursor: pointer"><span style="color: #0B1B33; font-size: 15px; font-weight: 600">Lekárske potvrdenie — vzor</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .1em; font-size: 13px; font-weight: 700">PDF</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 0; cursor: pointer"><span style="color: #0B1B33; font-size: 15px; font-weight: 600">Zoznam povinnej výstroje</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .1em; font-size: 13px; font-weight: 700">PDF</span></div>
+          </div>
+        </div>
+        <div style="background: #CE1126; padding: 30px 32px 34px">
+          <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 20px; margin-bottom: 10px">NEWSLETTER PRE RODIČOV</div>
+          <p style="color: rgba(255,255,255,.9); font-size: 15px; line-height: 1.55; margin: 0 0 16px">Zmeny tréningov, odchody na zápasy a oznamy raz týždenne.</p>
+          <div style="display: flex; gap: 8px">
+            <input placeholder="vas@email.sk" style="flex: 1; border: 0; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 14px">
+            <button style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); color: #fff; border: 0; cursor: pointer; padding: 14px 20px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-transform: uppercase">Odoslať</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="height: 90px"></div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="partneri">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Podporte hokej v Brezne</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">PARTNERI A SPONZORI</h1>
+    </div>
+    <div style="padding: 40px 48px 0">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Generálni partneri</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 34px">
+        <div style="height: 150px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 15px">Mesto Brezno</div>
+        <div style="height: 150px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 15px">Hotel Ďumbier</div>
+        <div style="height: 150px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #93A0B2; letter-spacing: .14em; text-transform: uppercase; font-size: 15px">Logo partnera</div>
+      </div>
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Partneri klubu</div>
+      <div style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px">
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+        <div style="height: 100px; background: #fff; display: grid; place-items: center; font-family: 'Barlow Condensed', sans-serif; color: #A9B4C2; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Logo</div>
+      </div>
+    </div>
+    <div style="padding: 60px 48px 0">
+      <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 40px; margin: 0 0 8px; letter-spacing: -.02em">SPONZORSKÉ BALÍČKY</h2>
+      <p style="color: #4A5768; font-size: 17px; line-height: 1.6; margin: 0 0 28px; max-width: 620px">Reklama na mantineloch, na dresoch a v hale, ktorá má za sezónu 11 000 návštevníkov — a hlavne 184 detí, ktoré vďaka vám hrajú.</p>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px">
+        <div style="background: #fff; padding: 34px 34px 38px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700">Bronzový</div>
+          <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 10px 0 20px">500 €<span style="font-size: 15px; color: #6E7C90"> / sezóna</span></div>
+          <div style="display: flex; flex-direction: column; gap: 11px; color: #4A5768; font-size: 15px; line-height: 1.5">
+            <div>Logo na webe klubu</div><div>Zmienka v social media príspevkoch</div><div>2 sezónne vstupenky</div>
+          </div>
+        </div>
+        <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 34px 34px 38px; position: relative">
+          <div style="position: absolute; top: 0; right: 0; background: #CE1126; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; padding: 6px 12px">Najobľúbenejší</div>
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700">Strieborný</div>
+          <div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 38px; margin: 10px 0 20px">1 500 €<span style="font-size: 15px; color: #8C9AB0"> / sezóna</span></div>
+          <div style="display: flex; flex-direction: column; gap: 11px; color: #C9D2DE; font-size: 15px; line-height: 1.5">
+            <div>Všetko z bronzového balíčka</div><div>Reklamný panel na mantineli (2 m)</div><div>Logo na tréningových tričkách</div><div>Spot v hale počas domácich zápasov</div><div>6 sezónnych vstupeniek</div>
+          </div>
+        </div>
+        <div style="background: #fff; padding: 34px 34px 38px">
+          <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700">Zlatý — generálny</div>
+          <div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 38px; margin: 10px 0 20px">5 000 €<span style="font-size: 15px; color: #6E7C90"> / sezóna</span></div>
+          <div style="display: flex; flex-direction: column; gap: 11px; color: #4A5768; font-size: 15px; line-height: 1.5">
+            <div>Všetko zo strieborného balíčka</div><div>Logo na hracích dresoch</div><div>Názov v komunikácii klubu</div><div>Mantinel v centre plochy (4 m)</div><div>Firemný večer na ľade</div><div>12 sezónnych vstupeniek + VIP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="margin: 60px 48px 90px; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); padding: 46px 48px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center">
+      <div>
+        <h2 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 32px; margin: 0 0 10px">CHCETE PODPORIŤ RYTIEROV?</h2>
+        <p style="color: #A9B7CB; font-size: 16px; line-height: 1.6; margin: 0; max-width: 620px">Balíčky prispôsobíme aj menšiemu rozpočtu — od 2 % z daní až po jednorazovú pomoc s výstrojou pre deti.</p>
+      </div>
+      <button style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="55">Napíšte nám</button>
+    </div>
+  </div>
+  </section>
+
+  <section class="pg" data-pg="eshop">
+  <div>
+    <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
+      <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px">Klubová kolekcia 2026/2027</div>
+      <h1 style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: -.02em">E-SHOP</h1>
+    </div>
+    <div style="padding: 40px 48px 90px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px">
+      <div style="background: #fff; cursor: pointer" data-hv="56">
+        <div style="height: 300px; position: relative"><div class="slot"><span>Domáci dres</span></div></div>
+        <div style="padding: 22px 24px 26px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Fan dres</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin: 6px 0 12px">Domáci dres 2026/27</div><div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 20px">69 €</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Do košíka</span></div></div>
+      </div>
+      <div style="background: #fff; cursor: pointer" data-hv="57">
+        <div style="height: 300px; position: relative"><div class="slot"><span>Šál</span></div></div>
+        <div style="padding: 22px 24px 26px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Fan shop</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin: 6px 0 12px">Klubový šál Rytieri</div><div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 20px">18 €</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Do košíka</span></div></div>
+      </div>
+      <div style="background: #fff; cursor: pointer" data-hv="58">
+        <div style="height: 300px; position: relative"><div class="slot"><span>Mikina</span></div></div>
+        <div style="padding: 22px 24px 26px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Oblečenie</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin: 6px 0 12px">Mikina s kapucňou HK</div><div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 20px">45 €</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Do košíka</span></div></div>
+      </div>
+      <div style="background: #fff; cursor: pointer" data-hv="59">
+        <div style="height: 300px; position: relative"><div class="slot"><span>Čiapka</span></div></div>
+        <div style="padding: 22px 24px 26px"><div style="font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .14em; text-transform: uppercase; font-size: 12px">Doplnky</div><div style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 18px; margin: 6px 0 12px">Zimná čiapka s logom</div><div style="display: flex; justify-content: space-between; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 20px">15 €</span><span style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-size: 13px">Do košíka</span></div></div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <div style="position: relative; padding: 60px 48px 0; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%)">
+    <div style="display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 44px; border-bottom: 1px solid #1F3A62">
+      <div>
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 18px">
+          <img src="assets/logo-hk-brezno.png" alt="" style="height: 62px">
+          <span style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 19px; line-height: .95">HK<br>BREZNO</span>
+        </div>
+        <p style="color: #8C9AB0; font-size: 15px; line-height: 1.65; margin: 0; max-width: 320px">Na ľade bojuj ako rytier. Mimo ľadu buď priateľ. Hokejový klub Brezno, od roku 1928.</p>
+      </div>
+      <div>
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Klub</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
+          <span style="cursor: pointer" onclick="go('klub')" data-hv="60">O klube</span>
+          <span style="cursor: pointer" onclick="go('timy')" data-hv="61">Tímy a kategórie</span>
+          <span style="cursor: pointer" onclick="go('supiska')" data-hv="62">Súpiska</span>
+          <span style="cursor: pointer" onclick="go('partneri')" data-hv="63">Partneri</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Sezóna</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
+          <span style="cursor: pointer" onclick="go('zapasy')" data-hv="64">Rozpis zápasov</span>
+          <span style="cursor: pointer" onclick="go('tabulka')" data-hv="65">Tabuľka</span>
+          <span style="cursor: pointer" onclick="go('novinky')" data-hv="66">Novinky</span>
+          <span style="cursor: pointer" onclick="go('eshop')" data-hv="67">E-shop</span>
+        </div>
+      </div>
+      <div>
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Kontakt</div>
+        <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
+          <span>Rázusova 12, 977 01 Brezno</span>
+          <span>info@hkbrezno.sk</span>
+          <span>+421 48 611 22 33</span>
+          <span style="cursor: pointer" onclick="go('stadion')" data-hv="68">Prevádzka štadióna</span>
+        </div>
+      </div>
+    </div>
+    <div style="padding: 22px 0 26px; display: flex; justify-content: space-between; align-items: center; font-family: 'Barlow Condensed', sans-serif; color: #56688A; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">
+      <span>© 2026 HK Brezno · Všetky práva vyhradené</span>
+      <span style="display: flex; gap: 22px"><span style="cursor: pointer">Ochrana údajov</span><span style="cursor: pointer">Cookies</span><span style="cursor: pointer">Pre médiá</span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var PAGES = ['domov', 'novinky', 'zapasy', 'tabulka', 'timy', 'supiska', 'klub', 'stadion', 'rodicia', 'partneri', 'eshop', 'prihlaska'];
+
+  window.go = function (page) {
+    if (PAGES.indexOf(page) === -1) return;
+    document.documentElement.dataset.page = page;
+    window.scrollTo(0, 0);
+    onScroll();
+  };
+
+  /* prilepenie navigácie po odscrollovaní hlavičky */
+  var bar = document.querySelector('[data-navbar]');
+  function onScroll() {
+    var y = window.scrollY || document.documentElement.scrollTop || 0;
+    if (bar) bar.classList.toggle('is-stuck', y > 120);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* odpočet do najbližšieho zápasu */
+  var target = new Date('2026-09-12T17:30:00').getTime();
+  var cells = document.querySelectorAll('[data-cd]');
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function tick() {
+    var diff = Math.max(0, target - Date.now());
+    var v = {
+      d: pad(Math.floor(diff / 86400000)),
+      h: pad(Math.floor(diff / 3600000) % 24),
+      m: pad(Math.floor(diff / 60000) % 60),
+      s: pad(Math.floor(diff / 1000) % 60)
+    };
+    cells.forEach(function (el) { el.textContent = v[el.dataset.cd]; });
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
+</body>
+</html>

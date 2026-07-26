@@ -1,0 +1,1626 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HK Brezno — vizuálny prototyp webu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,700;1,800&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;1,600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   HK BREZNO — DIZAJN SYSTÉM (odvodený z klubových plagátov)
+   ============================================================ */
+:root{
+  --navy-900:#0B1526;
+  --navy-850:#0E1B33;
+  --navy-800:#132340;
+  --navy-700:#1B2E52;
+  --red:#C8102E;
+  --red-700:#9E0C24;
+  --steel:#8A94A6;
+  --steel-200:#C4CBD6;
+  --ice:#F5F7FA;
+  --ice-200:#E7EBF1;
+  --ice-300:#D3DAE4;
+  --gold:#C9A227;
+  --gold-soft:#E0BF52;
+
+  --f-head:'Barlow Condensed','Oswald','Arial Narrow','Helvetica Neue',sans-serif;
+  --f-body:'Barlow','Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+
+  --r:4px;
+  --wrap:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--f-body);
+  background:#15181D;
+  color:var(--navy-900);
+  line-height:1.55;
+}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+
+/* ---------- PROTOTYPE CHROME (nie je súčasť dizajnu webu) ---------- */
+.proto{
+  position:sticky;top:0;z-index:100;
+  background:#0A0C10;border-bottom:1px solid #262B33;
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  padding:10px 18px;
+}
+.proto-tag{
+  font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.14em;
+  background:var(--red);color:#fff;padding:4px 9px;border-radius:2px;
+}
+.proto-note{color:#6D7684;font-size:12.5px}
+.proto-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-left:auto}
+.proto-tabs button,.proto-view button{
+  font-family:var(--f-head);font-weight:600;font-size:13.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:#8A93A1;background:transparent;
+  border:1px solid #2B313A;border-radius:3px;padding:6px 12px;cursor:pointer;
+  transition:.15s;
+}
+.proto-tabs button:hover,.proto-view button:hover{color:#fff;border-color:#3D4550}
+.proto-tabs button[aria-current="true"]{background:#fff;color:#0A0C10;border-color:#fff}
+.proto-view{display:flex;gap:4px;padding-left:14px;border-left:1px solid #262B33}
+.proto-view button[aria-pressed="true"]{background:var(--red);color:#fff;border-color:var(--red)}
+
+/* ---------- FRAME (container query root) ---------- */
+.frame{
+  container-type:inline-size;
+  background:var(--ice);
+  margin:0 auto;
+  max-width:none;
+  transition:max-width .25s ease;
+  overflow:hidden;
+}
+.frame.is-mobile{
+  max-width:390px;
+  margin:26px auto;
+  border-radius:26px;
+  box-shadow:0 0 0 9px #23262C,0 26px 60px rgba(0,0,0,.6);
+}
+.screen{display:none}
+.screen.is-active{display:block}
+
+/* ---------- TEXTURY A MOTÍVY ---------- */
+.tex-ice{
+  background-image:
+    radial-gradient(120% 80% at 20% -10%,rgba(120,160,215,.20),transparent 60%),
+    radial-gradient(90% 70% at 85% 0%,rgba(200,225,255,.14),transparent 55%),
+    repeating-linear-gradient(76deg,rgba(255,255,255,.035) 0 1px,transparent 1px 7px);
+}
+.chevrons{
+  height:12px;
+  background:repeating-linear-gradient(115deg,
+    var(--red) 0 16px,transparent 16px 24px,
+    var(--steel) 24px 40px,transparent 40px 48px);
+  opacity:.95;
+}
+.rule-red{width:52px;height:5px;background:var(--red);border-radius:2px}
+
+/* ---------- TYPOGRAFIA ---------- */
+.h-xxl,.h-xl,.h-l,.h-m,.h-s{
+  font-family:var(--f-head);font-weight:800;line-height:.92;
+  text-transform:uppercase;letter-spacing:-.005em;
+}
+.h-xxl{font-size:clamp(44px,7.2cqw,104px)}
+.h-xl{font-size:clamp(34px,4.4cqw,58px)}
+.h-l{font-size:clamp(27px,3.1cqw,40px)}
+.h-m{font-size:clamp(21px,2.1cqw,27px)}
+.h-s{font-size:17px;letter-spacing:.02em}
+.eyebrow{
+  font-family:var(--f-head);font-weight:600;text-transform:uppercase;
+  letter-spacing:.22em;font-size:12.5px;color:var(--red);
+}
+.eyebrow.on-dark{color:var(--gold-soft)}
+.motto{
+  font-family:var(--f-head);font-style:italic;font-weight:800;
+  text-transform:uppercase;letter-spacing:.01em;transform:skewX(-5deg);
+}
+.lead{font-size:17px;color:#4A5566;max-width:62ch}
+.on-dark .lead,.dark .lead{color:var(--steel-200)}
+
+/* ---------- LAYOUT ---------- */
+.wrap{max-width:var(--wrap);margin:0 auto;padding:0 28px}
+.sec{padding:74px 0}
+.sec-tight{padding:44px 0}
+.dark{background:var(--navy-900);color:#fff}
+.dark2{background:var(--navy-850);color:#fff}
+.sec-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:30px}
+.sec-head p{margin-top:9px}
+.grid{display:grid;gap:18px}
+
+/* ---------- BUTTONS ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--f-head);font-weight:700;text-transform:uppercase;
+  letter-spacing:.1em;font-size:14.5px;
+  padding:13px 24px;border:2px solid transparent;border-radius:2px;
+  cursor:pointer;transition:.16s;white-space:nowrap;
+}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-700)}
+.btn-ghost{border-color:rgba(255,255,255,.35);color:#fff}
+.btn-ghost:hover{border-color:#fff;background:rgba(255,255,255,.08)}
+.btn-dark{background:var(--navy-900);color:#fff}
+.btn-dark:hover{background:var(--navy-700)}
+.btn-gold{background:var(--gold);color:var(--navy-900)}
+.btn-gold:hover{background:var(--gold-soft)}
+.btn-sm{padding:9px 15px;font-size:13px}
+.link-more{
+  font-family:var(--f-head);font-weight:700;text-transform:uppercase;
+  letter-spacing:.11em;font-size:14px;color:var(--red);white-space:nowrap;
+}
+.link-more:hover{text-decoration:underline;text-underline-offset:4px}
+.on-dark .link-more,.dark .link-more{color:var(--gold-soft)}
+
+/* ---------- HLAVIČKA ---------- */
+.site-head{
+  background:var(--navy-900);color:#fff;
+  border-bottom:1px solid rgba(255,255,255,.09);
+}
+.site-head .bar{
+  max-width:var(--wrap);margin:0 auto;padding:12px 28px;
+  display:flex;align-items:center;gap:26px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.brand svg{width:50px;height:50px;flex:none}
+.brand b{font-family:var(--f-head);font-weight:800;font-size:23px;letter-spacing:.02em;display:block;line-height:1}
+.brand span{font-family:var(--f-head);font-weight:500;font-size:11.5px;letter-spacing:.24em;color:var(--steel);text-transform:uppercase}
+.main-nav{display:flex;gap:26px;margin-left:14px}
+.main-nav a{
+  font-family:var(--f-head);font-weight:600;font-size:16px;
+  text-transform:uppercase;letter-spacing:.09em;padding:6px 0;
+  border-bottom:3px solid transparent;color:var(--steel-200);
+}
+.main-nav a:hover{color:#fff}
+.main-nav a.on{color:#fff;border-color:var(--red)}
+.head-cta{margin-left:auto;display:flex;align-items:center;gap:14px}
+.socials{display:flex;gap:9px}
+.socials a{
+  width:32px;height:32px;border:1px solid rgba(255,255,255,.2);border-radius:2px;
+  display:grid;place-items:center;color:var(--steel-200);
+}
+.socials a:hover{border-color:#fff;color:#fff}
+.socials svg{width:16px;height:16px}
+.burger{display:none;margin-left:auto;background:none;border:1px solid rgba(255,255,255,.25);color:#fff;width:40px;height:36px;border-radius:2px;font-size:19px;cursor:pointer}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;background:var(--navy-900);color:#fff;overflow:hidden}
+.hero-bg{position:absolute;inset:0;opacity:.9}
+.hero-bg .lights{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(38% 60% at 12% -12%,rgba(150,190,245,.30),transparent 70%),
+    radial-gradient(30% 50% at 62% -8%,rgba(255,255,255,.16),transparent 70%),
+    radial-gradient(45% 70% at 95% 10%,rgba(120,60,70,.35),transparent 70%);
+}
+.hero-bg .stands{
+  position:absolute;inset:auto 0 0;height:56%;
+  background:linear-gradient(to top,rgba(11,21,38,.98),rgba(11,21,38,.55));
+}
+.hero-bg .scratch{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(74deg,rgba(255,255,255,.04) 0 1px,transparent 1px 9px);
+}
+.hero-slash{
+  position:absolute;right:-8%;top:0;bottom:0;width:46%;
+  background:linear-gradient(115deg,transparent 0 46%,rgba(200,16,46,.16) 46% 52%,transparent 52%),
+             linear-gradient(115deg,transparent 0 60%,rgba(138,148,166,.14) 60% 64%,transparent 64%);
+}
+.hero-in{
+  position:relative;max-width:var(--wrap);margin:0 auto;padding:86px 28px 74px;
+  display:grid;grid-template-columns:1.35fr .65fr;gap:40px;align-items:center;
+}
+.hero h1{margin:16px 0 0}
+.hero h1 em{color:var(--red);font-style:normal}
+.hero .motto{font-size:clamp(19px,2.2cqw,29px);color:var(--gold-soft);margin-top:20px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.hero-crest{justify-self:center}
+.hero-crest svg{width:min(270px,52cqw);height:auto;filter:drop-shadow(0 18px 34px rgba(0,0,0,.55))}
+.hero-strip{
+  position:relative;background:rgba(255,255,255,.05);
+  border-top:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(2px);
+}
+.hero-strip .wrap{display:flex;gap:34px;padding-top:16px;padding-bottom:16px;flex-wrap:wrap}
+.hs-item{display:flex;align-items:center;gap:11px;color:var(--steel-200);font-size:14.5px}
+.hs-item b{font-family:var(--f-head);font-size:19px;color:#fff;font-weight:700;letter-spacing:.02em}
+.hs-item svg{width:19px;height:19px;color:var(--red);flex:none}
+
+/* ---------- TENTO TÝŽDEŇ NA ĽADE (strip) ---------- */
+.week-strip{background:var(--navy-850);color:#fff;padding:34px 0 40px}
+.ws-head{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:20px;flex-wrap:wrap}
+.ws-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.ws-card{
+  background:var(--navy-800);border-left:4px solid var(--steel);
+  padding:15px 16px;border-radius:2px;
+}
+.ws-card.is-today{border-left-color:var(--red);background:#1A2947}
+.ws-card.is-match{border-left-color:var(--gold)}
+.ws-day{font-family:var(--f-head);font-weight:700;font-size:14px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+.ws-card.is-today .ws-day{color:var(--red)}
+.ws-time{font-family:var(--f-head);font-weight:800;font-size:27px;line-height:1.05;margin:3px 0 6px}
+.ws-team{font-weight:600;font-size:15px}
+.ws-meta{font-size:12.5px;color:var(--steel);margin-top:3px;letter-spacing:.04em;text-transform:uppercase}
+
+/* ---------- ZÁPASY ---------- */
+.match{
+  background:#fff;border:1px solid var(--ice-300);border-radius:3px;
+  overflow:hidden;display:flex;flex-direction:column;
+}
+.m-meta{
+  background:var(--navy-900);color:var(--steel-200);
+  font-family:var(--f-head);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;
+  padding:8px 15px;display:flex;justify-content:space-between;gap:10px;
+}
+.m-meta .st{color:var(--gold-soft)}
+.m-body{padding:20px 15px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}
+.m-t{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center}
+.m-logo{
+  width:46px;height:46px;border-radius:3px;display:grid;place-items:center;
+  font-family:var(--f-head);font-weight:800;font-size:14px;letter-spacing:.04em;
+  background:var(--navy-800);color:#fff;
+}
+.m-logo.home{background:var(--red)}
+.m-t span{font-family:var(--f-head);font-weight:700;font-size:16px;text-transform:uppercase;line-height:1}
+.m-score{font-family:var(--f-head);font-weight:800;font-size:36px;letter-spacing:-.01em;line-height:1}
+.m-score.pending{font-size:20px;color:var(--steel);letter-spacing:.1em}
+.m-foot{
+  border-top:1px solid var(--ice-200);padding:11px 15px;
+  font-size:13px;color:#5A6577;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+}
+.m-foot b{color:var(--navy-900);font-weight:600}
+.win{color:var(--red)}
+
+/* ---------- AKTUALITY ---------- */
+.news{background:#fff;border:1px solid var(--ice-300);border-radius:3px;overflow:hidden;display:flex;flex-direction:column}
+.n-img{
+  aspect-ratio:16/10;position:relative;
+  background:linear-gradient(135deg,var(--navy-800),var(--navy-900) 60%,#20304f);
+}
+.n-img .ph{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(115deg,rgba(255,255,255,.05) 0 14px,transparent 14px 28px);
+}
+.n-cat{
+  position:absolute;left:0;bottom:0;background:var(--red);color:#fff;
+  font-family:var(--f-head);font-weight:700;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;padding:6px 12px;
+}
+.n-body{padding:17px 18px 20px;display:flex;flex-direction:column;flex:1}
+.n-date{font-family:var(--f-head);font-size:13px;letter-spacing:.14em;color:var(--steel);text-transform:uppercase}
+.n-body h3{font-family:var(--f-head);font-weight:700;font-size:22px;line-height:1.1;text-transform:uppercase;margin:7px 0 9px}
+.n-body p{font-size:14.5px;color:#5A6577;flex:1}
+.n-body .link-more{margin-top:13px}
+
+/* ---------- NÁBOR BANNER ---------- */
+.recruit{position:relative;background:var(--navy-900);color:#fff;overflow:hidden}
+.recruit .rb{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(60% 100% at 78% 30%,rgba(200,16,46,.28),transparent 65%),
+    radial-gradient(50% 80% at 12% 0%,rgba(140,180,240,.18),transparent 70%);
+}
+.recruit .wrap{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:36px;align-items:center;padding-top:64px;padding-bottom:64px}
+.recruit .motto{font-size:clamp(20px,2.5cqw,32px);color:var(--gold-soft)}
+.recruit ul{margin:22px 0 0;display:grid;gap:11px}
+.recruit li{display:flex;gap:11px;align-items:flex-start;font-size:16px;color:var(--steel-200)}
+.recruit li svg{width:19px;height:19px;color:var(--red);flex:none;margin-top:3px}
+.knight-art{justify-self:center}
+.knight-art svg{width:min(230px,50cqw);height:auto;opacity:.95}
+
+/* ---------- TURNAJ BANNER ---------- */
+.tour-banner{
+  background:linear-gradient(120deg,var(--navy-900) 0 55%,#16274a 100%);
+  color:#fff;border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);
+}
+.tour-banner .wrap{display:flex;align-items:center;gap:34px;padding-top:38px;padding-bottom:38px;flex-wrap:wrap}
+.tb-shield{width:74px;flex:none}
+.tb-txt{flex:1;min-width:230px}
+.tb-txt .eyebrow{color:var(--gold-soft)}
+.tb-txt h3{font-family:var(--f-head);font-weight:800;font-size:clamp(25px,3cqw,38px);text-transform:uppercase;line-height:1;margin:6px 0 5px}
+.tb-txt p{color:var(--steel-200);font-size:15px}
+.countdown{display:flex;gap:9px}
+.cd{background:rgba(255,255,255,.07);border:1px solid rgba(201,162,39,.4);border-radius:2px;padding:9px 13px;text-align:center;min-width:64px}
+.cd b{display:block;font-family:var(--f-head);font-weight:800;font-size:29px;line-height:1;color:var(--gold-soft)}
+.cd span{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+
+/* ---------- KATEGÓRIE (štít karty) ---------- */
+.teams-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.team-card{
+  position:relative;background:var(--navy-900);color:#fff;overflow:hidden;
+  padding:22px 20px 20px;border-radius:3px;
+  clip-path:polygon(0 0,100% 0,100% calc(100% - 20px),calc(100% - 20px) 100%,0 100%);
+  transition:.18s;
+}
+.team-card:hover{background:var(--navy-700);transform:translateY(-3px)}
+.team-card .tc-bg{
+  position:absolute;right:-30px;top:-30px;width:130px;height:130px;opacity:.13;
+  background:conic-gradient(from 45deg,var(--red),transparent 60%);border-radius:50%;
+}
+.tc-year{font-family:var(--f-head);font-weight:600;font-size:12.5px;letter-spacing:.2em;color:var(--red);text-transform:uppercase}
+.team-card h3{font-family:var(--f-head);font-weight:800;font-size:26px;text-transform:uppercase;line-height:1;margin:6px 0 10px}
+.tc-league{font-size:13.5px;color:var(--steel);border-top:1px solid rgba(255,255,255,.12);padding-top:10px}
+.tc-count{position:relative;margin-top:14px;font-family:var(--f-head);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel-200)}
+
+/* ---------- PRINCÍPY (layout z plagátu) ---------- */
+.principles{background:var(--navy-900);color:#fff}
+.p-list{display:grid;gap:14px;margin-top:30px}
+.principle{display:grid;grid-template-columns:74px 1fr;gap:0;background:rgba(255,255,255,.96);border-radius:2px;overflow:hidden}
+.p-ico{display:grid;place-items:center;background:var(--navy-850);border-right:4px solid var(--red)}
+.p-ico svg{width:34px;height:34px;color:var(--red)}
+.p-body{padding:18px 22px;color:var(--navy-900);display:flex;gap:16px;align-items:flex-start}
+.p-num{font-family:var(--f-head);font-weight:800;font-size:34px;line-height:.9;color:var(--navy-900)}
+.p-body h3{font-family:var(--f-head);font-weight:800;font-size:22px;text-transform:uppercase;line-height:1.02}
+.p-body h3 em{color:var(--red);font-style:normal}
+.p-body ul{margin-top:8px;display:grid;gap:4px}
+.p-body li{font-size:14.5px;color:#4A5566;padding-left:15px;position:relative}
+.p-body li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;background:var(--steel);border-radius:50%}
+
+/* ---------- HODNOTY ---------- */
+.values{display:grid;grid-template-columns:repeat(7,1fr);gap:12px;text-align:center}
+.value svg{width:34px;height:34px;color:var(--red);margin:0 auto 10px}
+.value b{font-family:var(--f-head);font-weight:700;font-size:15px;letter-spacing:.1em;text-transform:uppercase;display:block}
+.dark .value svg{color:var(--gold-soft)}
+
+/* ---------- PARTNERI ---------- */
+.partners{background:#fff;border-top:1px solid var(--ice-300)}
+.p-strip{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:center}
+.p-logo{
+  height:64px;min-width:150px;padding:0 22px;border:1px solid var(--ice-300);border-radius:3px;
+  display:grid;place-items:center;font-family:var(--f-head);font-weight:700;font-size:16px;
+  letter-spacing:.14em;text-transform:uppercase;color:#7A8494;background:var(--ice);
+}
+
+/* ---------- PÄTIČKA ---------- */
+.site-foot{background:var(--navy-900);color:var(--steel-200)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:34px;padding:56px 0 40px}
+.site-foot h4{font-family:var(--f-head);font-weight:700;font-size:16px;letter-spacing:.16em;text-transform:uppercase;color:#fff;margin-bottom:14px}
+.site-foot li{margin-bottom:8px;font-size:14.5px}
+.site-foot a:hover{color:#fff}
+.foot-brand{display:flex;gap:13px;align-items:flex-start;margin-bottom:16px}
+.foot-brand svg{width:56px;flex:none}
+.foot-bot{
+  border-top:1px solid rgba(255,255,255,.1);padding:18px 0;
+  display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap;align-items:center;
+  font-size:13px;color:#67717F;
+}
+.foot-bot .motto{color:var(--steel);font-size:17px}
+
+/* ============================================================
+   ROZPIS ĽADU
+   ============================================================ */
+.page-head{background:var(--navy-900);color:#fff;position:relative;overflow:hidden}
+.page-head .ph-bg{position:absolute;inset:0;background:radial-gradient(60% 120% at 80% -20%,rgba(140,180,240,.2),transparent 65%)}
+.page-head .wrap{position:relative;padding-top:46px;padding-bottom:46px}
+.crumbs{font-family:var(--f-head);font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel);margin-bottom:12px}
+.page-head h1{margin-bottom:12px}
+
+.toolbar{
+  background:#fff;border-bottom:1px solid var(--ice-300);
+  position:relative;z-index:2;
+}
+.toolbar .wrap{display:flex;align-items:center;gap:20px;padding-top:16px;padding-bottom:16px;flex-wrap:wrap}
+.wk{display:flex;align-items:center;gap:12px}
+.wk button{
+  width:36px;height:36px;border:1px solid var(--ice-300);background:#fff;border-radius:2px;
+  cursor:pointer;font-size:16px;color:var(--navy-900);
+}
+.wk button:hover{border-color:var(--navy-900)}
+.wk b{font-family:var(--f-head);font-weight:700;font-size:19px;letter-spacing:.03em;text-transform:uppercase;min-width:190px;text-align:center}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{
+  font-family:var(--f-head);font-weight:600;font-size:13.5px;letter-spacing:.09em;text-transform:uppercase;
+  padding:7px 13px;border:1px solid var(--ice-300);border-radius:20px;background:#fff;cursor:pointer;
+  color:#546072;
+}
+.chip:hover{border-color:var(--steel)}
+.chip[aria-pressed="true"]{background:var(--navy-900);border-color:var(--navy-900);color:#fff}
+.toolbar .btn{margin-left:auto}
+
+.legend{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:22px}
+.lg{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#546072;white-space:nowrap}
+.lg i{width:14px;height:14px;border-radius:2px;display:block;flex:none}
+.lg.ice i{background:var(--navy-700)}
+.lg.dry i{background:var(--gold)}
+.lg.match i{background:var(--red)}
+
+.day{background:#fff;border:1px solid var(--ice-300);border-radius:3px;margin-bottom:12px;overflow:hidden}
+.day.is-today{border-color:var(--red);box-shadow:0 0 0 2px rgba(200,16,46,.12)}
+.day.is-empty{display:none}
+.d-head{
+  display:flex;align-items:center;gap:12px;padding:11px 18px;
+  background:var(--ice);border-bottom:1px solid var(--ice-200);
+}
+.d-name{font-family:var(--f-head);font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:.05em}
+.d-date{font-family:var(--f-head);font-weight:600;font-size:16px;color:var(--steel);letter-spacing:.06em}
+.d-badge{
+  margin-left:auto;background:var(--red);color:#fff;font-family:var(--f-head);font-weight:700;
+  font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;padding:4px 10px;border-radius:2px;
+}
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ice-200)}
+.slot{background:#fff;padding:14px 17px;border-left:4px solid var(--navy-700);display:flex;flex-direction:column;gap:3px}
+.slot.dry{border-left-color:var(--gold)}
+.slot.match{border-left-color:var(--red);background:#FFF7F8}
+.slot.is-hidden{display:none}
+.s-time{font-family:var(--f-head);font-weight:800;font-size:21px;letter-spacing:.02em;line-height:1}
+.s-team{font-weight:600;font-size:15.5px;margin-top:3px}
+.s-type{font-family:var(--f-head);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.s-coach{font-size:13px;color:#6B7688}
+
+.ics{
+  display:flex;gap:20px;align-items:center;flex-wrap:wrap;
+  background:var(--navy-900);color:#fff;padding:26px 28px;border-radius:3px;margin-bottom:26px;
+  border-left:5px solid var(--red);
+}
+.ics > svg{width:42px;height:42px;color:var(--gold-soft);flex:none}
+.ics .t{flex:1;min-width:250px}
+.ics .t b{font-family:var(--f-head);font-weight:800;font-size:22px;text-transform:uppercase;display:block;letter-spacing:.02em}
+.ics .t p{color:var(--steel-200);font-size:14.5px;margin-top:5px}
+.ics .acts{display:flex;gap:8px;flex-wrap:wrap}
+
+.callout{
+  background:#FFF8E7;border:1px solid #E8D9A8;border-left:4px solid var(--gold);
+  padding:16px 20px;border-radius:2px;font-size:14.5px;color:#6B5A26;margin-top:22px;
+}
+.callout b{color:#4A3F17}
+
+/* ============================================================
+   STRÁNKA TÍMU
+   ============================================================ */
+.team-hero{background:var(--navy-900);color:#fff;position:relative;overflow:hidden}
+.team-hero .th-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(50% 120% at 85% 0%,rgba(200,16,46,.3),transparent 65%),
+             repeating-linear-gradient(115deg,rgba(255,255,255,.03) 0 18px,transparent 18px 36px);
+}
+.team-hero .wrap{position:relative;padding-top:52px;padding-bottom:52px;display:flex;gap:32px;align-items:flex-end;flex-wrap:wrap}
+.th-main{flex:1;min-width:260px}
+.th-facts{display:flex;gap:28px;flex-wrap:wrap}
+.fact b{display:block;font-family:var(--f-head);font-weight:800;font-size:27px;line-height:1;color:var(--gold-soft)}
+.fact span{font-family:var(--f-head);font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--steel)}
+
+.subnav{background:#fff;border-bottom:1px solid var(--ice-300)}
+.subnav .wrap{display:flex;gap:26px;overflow-x:auto}
+.subnav a{
+  font-family:var(--f-head);font-weight:600;font-size:15.5px;letter-spacing:.1em;text-transform:uppercase;
+  padding:15px 0;border-bottom:3px solid transparent;color:#647085;white-space:nowrap;
+}
+.subnav a.on{color:var(--navy-900);border-color:var(--red)}
+
+.cols{display:grid;grid-template-columns:1.55fr .95fr;gap:34px;align-items:start}
+.card{background:#fff;border:1px solid var(--ice-300);border-radius:3px;overflow:hidden;margin-bottom:20px}
+.card > h3{
+  font-family:var(--f-head);font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:.05em;
+  padding:14px 18px;background:var(--navy-900);color:#fff;display:flex;justify-content:space-between;gap:10px;align-items:center;
+}
+.card > h3 .link-more{color:var(--gold-soft);font-size:12.5px}
+.card-in{padding:18px}
+
+table.roster{width:100%;border-collapse:collapse;font-size:14.5px}
+table.roster th{
+  text-align:left;font-family:var(--f-head);font-weight:600;font-size:12.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--steel);padding:9px 14px;border-bottom:1px solid var(--ice-200);
+}
+table.roster td{padding:10px 14px;border-bottom:1px solid var(--ice-200)}
+table.roster tr:last-child td{border-bottom:0}
+table.roster tr:hover td{background:var(--ice)}
+.num{font-family:var(--f-head);font-weight:800;font-size:18px;color:var(--red);width:52px}
+.pos{font-family:var(--f-head);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:#647085}
+
+table.standings{width:100%;border-collapse:collapse;font-size:14px}
+table.standings th{
+  font-family:var(--f-head);font-weight:600;font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--steel);padding:8px 6px;text-align:center;border-bottom:1px solid var(--ice-200);
+}
+table.standings th:nth-child(2){text-align:left}
+table.standings td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--ice-200)}
+table.standings td:nth-child(2){text-align:left;font-weight:600}
+table.standings tr.us{background:#FFF2F4}
+table.standings tr.us td{color:var(--red-700);font-weight:700}
+table.standings td.pts{font-family:var(--f-head);font-weight:800;font-size:17px}
+
+.coach{display:flex;gap:14px;align-items:center;padding:14px 18px;border-bottom:1px solid var(--ice-200)}
+.coach:last-child{border-bottom:0}
+.coach .av{
+  width:54px;height:54px;border-radius:2px;flex:none;background:var(--navy-800);color:#fff;
+  display:grid;place-items:center;font-family:var(--f-head);font-weight:800;font-size:19px;
+}
+.coach b{font-family:var(--f-head);font-weight:700;font-size:18px;text-transform:uppercase;display:block;line-height:1.1}
+.coach span{display:block;font-size:13.5px;color:#647085;line-height:1.35}
+.coach .lic{font-family:var(--f-head);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-top:2px}
+
+.train-row{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--ice-200)}
+.train-row:last-child{border-bottom:0}
+.train-row .tr-d{font-family:var(--f-head);font-weight:700;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);width:64px;flex:none}
+.train-row .tr-t{font-family:var(--f-head);font-weight:800;font-size:17px;width:104px;flex:none}
+.train-row .tr-x{font-size:13.5px;color:#647085}
+
+.gal{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.gal div{aspect-ratio:4/3;background:linear-gradient(135deg,var(--navy-800),#22355a);border-radius:2px}
+.gal div:nth-child(even){background:linear-gradient(135deg,#1d2c4c,var(--navy-900))}
+
+/* ============================================================
+   TURNAJ
+   ============================================================ */
+.tour-hero{
+  position:relative;color:#fff;overflow:hidden;
+  background:linear-gradient(160deg,#0A1424,#14274b 55%,#0B1526);
+}
+.tour-hero .tb{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(45% 60% at 50% -10%,rgba(201,162,39,.22),transparent 70%),
+    radial-gradient(60% 80% at 85% 20%,rgba(140,180,240,.14),transparent 70%),
+    repeating-linear-gradient(112deg,rgba(255,255,255,.03) 0 16px,transparent 16px 34px);
+}
+.tour-hero .mts{
+  position:absolute;left:0;right:0;bottom:0;height:44%;
+  background:linear-gradient(to top,rgba(10,20,36,.96),transparent);
+}
+.tour-hero .wrap{position:relative;padding-top:64px;padding-bottom:60px;text-align:center}
+.tour-hero .motto{color:var(--gold-soft);font-size:clamp(17px,2cqw,25px)}
+.tour-hero h1{margin:14px 0 6px}
+.tour-hero h1 em{color:var(--gold);font-style:normal;display:block}
+.tour-badge{
+  display:inline-flex;align-items:center;gap:10px;border:2px solid var(--gold);color:var(--gold-soft);
+  font-family:var(--f-head);font-weight:700;letter-spacing:.2em;text-transform:uppercase;font-size:13.5px;
+  padding:7px 16px;border-radius:2px;margin-bottom:18px;
+}
+.tour-meta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:26px 0 8px}
+.tm{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);padding:13px 20px;border-radius:2px;min-width:170px}
+.tm b{display:block;font-family:var(--f-head);font-weight:800;font-size:23px;letter-spacing:.02em}
+.tm span{font-family:var(--f-head);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--steel)}
+.tour-hero .countdown{justify-content:center;margin-top:26px}
+.tour-hero .hero-actions{justify-content:center}
+
+.sched{display:grid;gap:10px}
+.sl{
+  display:grid;grid-template-columns:100px 1fr auto;gap:16px;align-items:center;
+  background:#fff;border:1px solid var(--ice-300);border-left:4px solid var(--navy-700);
+  padding:14px 18px;border-radius:2px;
+}
+.sl.hi{border-left-color:var(--gold);background:#FFFCF3}
+.sl time{font-family:var(--f-head);font-weight:800;font-size:20px}
+.sl b{font-family:var(--f-head);font-weight:700;font-size:18px;text-transform:uppercase}
+.sl span{font-size:13.5px;color:#647085;display:block;margin-top:2px}
+.sl .pl{font-family:var(--f-head);font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+
+.tour-teams{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tt{background:#fff;border:1px solid var(--ice-300);padding:18px;border-radius:2px;text-align:center}
+.tt .em{width:44px;height:44px;margin:0 auto 10px;border-radius:3px;background:var(--navy-800);color:#fff;display:grid;place-items:center;font-family:var(--f-head);font-weight:800;font-size:14px}
+.tt b{font-family:var(--f-head);font-weight:700;font-size:16.5px;text-transform:uppercase;display:block}
+.tt span{font-size:13px;color:#647085}
+
+.trophy{display:grid;grid-template-columns:auto 1fr;gap:30px;align-items:center}
+.trophy svg{width:150px}
+.arch{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.ar{background:var(--navy-850);color:#fff;padding:20px;border-radius:2px;border-top:3px solid var(--gold)}
+.ar b{font-family:var(--f-head);font-weight:800;font-size:24px;display:block;text-transform:uppercase}
+.ar span{font-size:13.5px;color:var(--steel-200)}
+.ar .w{color:var(--gold-soft);font-family:var(--f-head);font-weight:700;letter-spacing:.08em;text-transform:uppercase;font-size:14px;margin-top:9px;display:block}
+
+/* ============================================================
+   CONTAINER QUERIES — mobile-first reflow
+   ============================================================ */
+@container (max-width:1000px){
+  .ws-grid{grid-template-columns:repeat(2,1fr)}
+  .teams-grid,.tour-teams{grid-template-columns:repeat(2,1fr)}
+  .values{grid-template-columns:repeat(4,1fr)}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .slots{grid-template-columns:repeat(2,1fr)}
+  .gal{grid-template-columns:repeat(3,1fr)}
+}
+@container (max-width:900px){
+  .main-nav,.head-cta{display:none}
+  .burger{display:block}
+  .hero-in{grid-template-columns:1fr;padding-top:52px;padding-bottom:52px}
+  .hero-crest{order:-1;justify-self:start}
+  .hero-crest svg{width:150px}
+  .recruit .wrap{grid-template-columns:1fr}
+  .knight-art{display:none}
+  .cols{grid-template-columns:1fr}
+  .arch{grid-template-columns:1fr}
+  .trophy{grid-template-columns:1fr;gap:18px}
+  .trophy svg{width:110px}
+  .sec{padding:52px 0}
+  .wrap{padding:0 20px}
+}
+@container (max-width:620px){
+  .ws-grid,.teams-grid,.tour-teams,.gal{grid-template-columns:1fr}
+  .values{grid-template-columns:repeat(2,1fr)}
+  .foot-grid{grid-template-columns:1fr;gap:26px;padding-top:40px}
+  .slots{grid-template-columns:1fr}
+  .grid[data-c]{grid-template-columns:1fr!important}
+  .sec-head{flex-direction:column;align-items:flex-start}
+  .principle{grid-template-columns:56px 1fr}
+  .p-ico svg{width:26px;height:26px}
+  .p-body{padding:15px 16px;gap:12px}
+  .p-body h3{font-size:19px}
+  .p-num{font-size:27px}
+  .wk b{min-width:auto;font-size:16px}
+  .toolbar .btn{margin-left:0;width:100%;justify-content:center}
+  .sl{grid-template-columns:74px 1fr;gap:10px}
+  .sl .pl{grid-column:2}
+  .th-facts{gap:18px}
+  .m-body{padding:16px 12px}
+  .m-score{font-size:29px}
+  .brand svg{width:42px;height:42px}
+  .brand b{font-size:19px}
+  .brand span{font-size:10px;letter-spacing:.18em}
+  .ics{padding:20px}
+  .ics > svg{width:32px;height:32px}
+  .gal{grid-template-columns:repeat(2,1fr)}
+}
+.grid[data-c="3"]{grid-template-columns:repeat(3,1fr)}
+.grid[data-c="2"]{grid-template-columns:repeat(2,1fr)}
+@container (max-width:860px){
+  .grid[data-c="3"]{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ SVG SYMBOLY (znak klubu — zástupná grafika) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <path id="ringTop" d="M100,100 m-76,0 a76,76 0 1,1 152,0"/>
+    <path id="ringBot" d="M100,100 m-87,0 a87,87 0 0,0 174,0"/>
+    <g id="helm">
+      <!-- chochol (plume) -->
+      <path d="M86 66 C92 34 122 24 144 40 C132 46 120 56 112 68 C104 62 94 62 86 66Z" fill="#C8102E"/>
+      <path d="M112 68 C120 56 132 46 144 40 C152 58 144 76 130 84 C128 76 120 71 112 68Z" fill="#9E0C24"/>
+      <!-- ochrana šije -->
+      <path d="M76 140 h52 v12 a8 8 0 0 1 -8 8 h-36 a8 8 0 0 1 -8 -8 z" fill="#6E7887"/>
+      <!-- prilba z profilu -->
+      <path d="M72 146 C60 124 62 92 82 76 C100 62 126 66 136 84 C142 96 143 106 141 116
+               C140 126 138 134 136 146 Z" fill="#8A94A6"/>
+      <!-- predný chránič -->
+      <path d="M134 90 L147 100 L147 114 L137 124 Z" fill="#8A94A6"/>
+      <path d="M82 76 C100 62 126 66 136 84 C124 74 100 74 84 88Z" fill="#C4CBD6"/>
+      <!-- priezor a vetracie štrbiny -->
+      <path d="M96 99 L143 95 L143 108 L96 110Z" fill="#0B1526"/>
+      <rect x="104" y="119" width="34" height="6.5" rx="3" fill="#0B1526"/>
+      <rect x="108" y="130" width="27" height="5.5" rx="2.7" fill="#0B1526"/>
+    </g>
+  </defs>
+
+  <symbol id="crest-mark" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="98" fill="#0E1B33"/>
+    <circle cx="100" cy="100" r="91" fill="none" stroke="#8A94A6" stroke-width="3.5"/>
+    <circle cx="100" cy="100" r="72" fill="#17274b"/>
+    <use href="#helm"/>
+  </symbol>
+
+  <symbol id="crest" viewBox="0 0 200 200">
+    <circle cx="100" cy="100" r="98" fill="#0E1B33"/>
+    <circle cx="100" cy="100" r="91" fill="none" stroke="#8A94A6" stroke-width="3"/>
+    <circle cx="100" cy="100" r="70" fill="#17274b"/>
+    <circle cx="100" cy="100" r="70" fill="none" stroke="#8A94A6" stroke-width="1.4"/>
+    <text font-family="Barlow Condensed,sans-serif" font-size="17" font-weight="700" fill="#C4CBD6" letter-spacing="5">
+      <textPath href="#ringTop" startOffset="50%" text-anchor="middle">BREZNO</textPath>
+    </text>
+    <text font-family="Barlow Condensed,sans-serif" font-size="15" font-weight="700" fill="#C4CBD6" letter-spacing="3">
+      <textPath href="#ringBot" startOffset="50%" text-anchor="middle">HOKEJOVÝ KLUB</textPath>
+    </text>
+    <use href="#helm"/>
+  </symbol>
+
+  <symbol id="knight-shield" viewBox="0 0 200 250">
+    <path d="M100 6l84 27v99c0 58-43 91-84 105-41-14-84-47-84-105V33z" fill="#132340" stroke="#8A94A6" stroke-width="3"/>
+    <path d="M100 20l71 23v92c0 49-36 78-71 90-35-12-71-41-71-90V43z" fill="#0B1526"/>
+    <use href="#helm" transform="translate(0,30)"/>
+  </symbol>
+</svg>
+
+<!-- ============ PROTOTYPE CHROME ============ -->
+<div class="proto">
+  <span class="proto-tag">PROTOTYP</span>
+  <span class="proto-note">Dizajnová ukážka · všetky mená, výsledky a rozpisy sú vzorové dáta</span>
+  <nav class="proto-tabs" id="tabs">
+    <button data-go="domov" aria-current="true">Domov</button>
+    <button data-go="rozpis">Rozpis ľadu</button>
+    <button data-go="tim">Stránka tímu</button>
+    <button data-go="turnaj">Turnaj</button>
+  </nav>
+  <div class="proto-view">
+    <button data-view="desktop" aria-pressed="true">Desktop</button>
+    <button data-view="mobile" aria-pressed="false">Mobil</button>
+  </div>
+</div>
+
+<div class="frame" id="frame">
+
+<!-- ============ SPOLOČNÁ HLAVIČKA ============ -->
+<header class="site-head">
+  <div class="bar">
+    <a class="brand" href="#">
+      <svg viewBox="0 0 200 200" aria-label="HK Brezno"><use href="#crest-mark"/></svg>
+      <span style="display:block">
+        <b>HK BREZNO</b>
+        <span>Hokejový klub</span>
+      </span>
+    </a>
+    <nav class="main-nav">
+      <a href="#" data-nav="klub">Klub</a>
+      <a href="#" data-nav="timy">Tímy</a>
+      <a href="#" data-nav="rozpis">Rozpis a zápasy</a>
+      <a href="#" data-nav="nabor">Nábor</a>
+      <a href="#" data-nav="aktuality">Aktuality</a>
+    </nav>
+    <div class="head-cta">
+      <div class="socials">
+        <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.2c0-.9.3-1.5 1.5-1.5h1.6V4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V10H7.4v3h2.3v8h3.8z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/><circle cx="17" cy="7" r="1.1" fill="currentColor" stroke="none"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.3 8.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C16.7 5 12 5 12 5h0s-4.7 0-6.4.2c-.4.1-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.5 10 2.5 11.8v1.4C2.5 15 2.7 16.8 2.7 16.8s.2 1.5.8 2.1c.8.8 1.8.8 2.2.9 1.7.2 6.3.2 6.3.2s4.7 0 6.4-.2c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.6v-1.4c0-1.8-.2-3.6-.2-3.6zM10.1 15.1V9.4l5.3 2.9-5.3 2.8z"/></svg></a>
+      </div>
+      <a class="btn btn-red btn-sm" href="#">Podpor nás</a>
+    </div>
+    <button class="burger" aria-label="Menu">☰</button>
+  </div>
+</header>
+<div class="chevrons"></div>
+
+
+<!-- ================================================================
+     OBRAZOVKA 1 — DOMOV
+     ================================================================ -->
+<section class="screen is-active" data-screen="domov">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg tex-ice">
+      <div class="lights"></div><div class="scratch"></div><div class="stands"></div>
+    </div>
+    <div class="hero-slash"></div>
+    <div class="hero-in">
+      <div>
+        <span class="eyebrow on-dark">Hokejový klub Brezno · sezóna 2026/2027</span>
+        <h1 class="h-xxl">VYCHOVÁVAME<br><em>RYTIEROV</em> NA ĽADE</h1>
+        <p class="motto">Trénujme s účelom. Hrajme s odvahou.</p>
+        <div class="hero-actions">
+          <a class="btn btn-red" href="#">Prihlás dieťa na hokej</a>
+          <a class="btn btn-ghost" href="#">Rozpis ľadu <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+      <div class="hero-crest">
+        <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#crest"/></svg>
+      </div>
+    </div>
+    <div class="hero-strip">
+      <div class="wrap">
+        <div class="hs-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20v-8m5 8V8m5 12v-6m5 6V4"/></svg>
+          <span><b>8</b> vekových kategórií</span>
+        </div>
+        <div class="hs-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><path d="M17 11.5a3 3 0 100-6"/><path d="M18 20c0-2.5-1-4.2-2.6-5"/></svg>
+          <span><b>190+</b> hráčov v klube</span>
+        </div>
+        <div class="hs-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+          <span><b>Nábor</b> otvorený celoročne</span>
+        </div>
+        <div class="hs-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3.1-5.8 3.1 1.1-6.5L2.6 9.8l6.5-.9z"/></svg>
+          <span><b>Od roku 1936</b> hokej v Brezne</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TENTO TÝŽDEŇ NA ĽADE -->
+  <div class="week-strip">
+    <div class="wrap">
+      <div class="ws-head">
+        <div>
+          <span class="eyebrow on-dark">27. 7. – 2. 8. 2026</span>
+          <h2 class="h-l" style="margin-top:8px">Tento týždeň na ľade</h2>
+        </div>
+        <a class="link-more" href="#">Celý rozpis ľadu →</a>
+      </div>
+      <div class="ws-grid">
+        <div class="ws-card is-today">
+          <div class="ws-day">Dnes · Ne 26. 7.</div>
+          <div class="ws-time">17:00</div>
+          <div class="ws-team">Kadeti + Dorast</div>
+          <div class="ws-meta">Ľad · hlavná plocha</div>
+        </div>
+        <div class="ws-card">
+          <div class="ws-day">Po 27. 7.</div>
+          <div class="ws-time">15:30</div>
+          <div class="ws-team">Prípravka</div>
+          <div class="ws-meta">Ľad · polovica plochy</div>
+        </div>
+        <div class="ws-card">
+          <div class="ws-day">St 29. 7.</div>
+          <div class="ws-time">16:00</div>
+          <div class="ws-team">Mladší + starší žiaci</div>
+          <div class="ws-meta">Suchá príprava · telocvičňa</div>
+        </div>
+        <div class="ws-card is-match">
+          <div class="ws-day">So 1. 8.</div>
+          <div class="ws-time">10:30</div>
+          <div class="ws-team">Juniori — HK Detva</div>
+          <div class="ws-meta">Prípravný zápas · domáci</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ZÁPASY -->
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Zápasy</span>
+          <h2 class="h-l" style="margin-top:8px">Najbližší zápas a posledné výsledky</h2>
+        </div>
+        <a class="link-more" href="#">Všetky zápasy a tabuľky →</a>
+      </div>
+      <div class="grid" data-c="3">
+        <article class="match">
+          <div class="m-meta"><span>Prípravný zápas · Juniori</span><span class="st">Najbližší</span></div>
+          <div class="m-body">
+            <div class="m-t"><div class="m-logo home">HKB</div><span>HK Brezno</span></div>
+            <div class="m-score pending">So 10:30</div>
+            <div class="m-t"><div class="m-logo">DET</div><span>HK Detva</span></div>
+          </div>
+          <div class="m-foot"><span><b>1. 8. 2026</b> · 10:30</span><span>Zimný štadión Brezno</span></div>
+        </article>
+        <article class="match">
+          <div class="m-meta"><span>2. liga žiaci · 12. kolo</span><span>Odohrané</span></div>
+          <div class="m-body">
+            <div class="m-t"><div class="m-logo home">HKB</div><span>HK Brezno</span></div>
+            <div class="m-score"><span class="win">5</span> : 2</div>
+            <div class="m-t"><div class="m-logo">LUC</div><span>Lučenec</span></div>
+          </div>
+          <div class="m-foot"><span><b>19. 7. 2026</b></span><span>Zimný štadión Brezno</span></div>
+        </article>
+        <article class="match">
+          <div class="m-meta"><span>2. liga žiaci · 11. kolo</span><span>Odohrané</span></div>
+          <div class="m-body">
+            <div class="m-t"><div class="m-logo">RSO</div><span>R. Sobota</span></div>
+            <div class="m-score">2 : <span class="win">3</span></div>
+            <div class="m-t"><div class="m-logo home">HKB</div><span>HK Brezno</span></div>
+          </div>
+          <div class="m-foot"><span><b>12. 7. 2026</b></span><span>ZŠ Rimavská Sobota</span></div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- AKTUALITY -->
+  <div class="sec" style="background:var(--ice-200);padding-top:60px;padding-bottom:60px">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Aktuality</span>
+          <h2 class="h-l" style="margin-top:8px">Čo sa deje v klube</h2>
+        </div>
+        <a class="link-more" href="#">Všetky aktuality →</a>
+      </div>
+      <div class="grid" data-c="3">
+        <article class="news">
+          <div class="n-img"><div class="ph"></div><span class="n-cat">Rodičia v obraze</span></div>
+          <div class="n-body">
+            <div class="n-date">24. júl 2026</div>
+            <h3>Rodičia v obraze: všetko pred sezónou 2026/2027</h3>
+            <p>Letné prípravy, termíny prvých tréningov, členské príspevky a novinky v trénerskom tíme na jednom mieste.</p>
+            <a class="link-more" href="#">Čítať →</a>
+          </div>
+        </article>
+        <article class="news">
+          <div class="n-img"><div class="ph"></div><span class="n-cat">Turnaj</span></div>
+          <div class="n-body">
+            <div class="n-date">18. júl 2026</div>
+            <h3>Minirytiersky turnaj 2026: prihlásených prvých šesť tímov</h3>
+            <p>Tretí ročník sa uskutoční 30. augusta. O Putovný rytiersky štít zabojujú tímy z celého stredného Slovenska.</p>
+            <a class="link-more" href="#">Čítať →</a>
+          </div>
+        </article>
+        <article class="news">
+          <div class="n-img"><div class="ph"></div><span class="n-cat">Nábor</span></div>
+          <div class="n-body">
+            <div class="n-date">11. júl 2026</div>
+            <h3>Prvé tri tréningy zdarma a výstroj zapožičíme</h3>
+            <p>Nábor pre deti od 4 rokov je otvorený celoročne. Stačí prísť na zimný štadión — o zvyšok sa postaráme my.</p>
+            <a class="link-more" href="#">Čítať →</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <!-- NÁBOR BANNER -->
+  <div class="recruit">
+    <div class="rb"></div>
+    <div class="wrap">
+      <div>
+        <span class="eyebrow on-dark">Nábor nových rytierov</span>
+        <p class="motto" style="margin-top:14px">Každý veľký hokejista bol raz malým rytierom.</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg> Prvé tri tréningy úplne zdarma, bez záväzku</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg> Kompletnú výstroj na začiatok zapožičíme</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg> Pre deti od 4 rokov, chlapcov aj dievčatá</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M4 12.5l5 5L20 6.5"/></svg> Licencovaní tréneri a jasná tréningová metodika</li>
+        </ul>
+        <div class="hero-actions">
+          <a class="btn btn-red" href="#">Vyplniť prihlášku online</a>
+          <a class="btn btn-ghost" href="#">Otázky rodičov (FAQ)</a>
+        </div>
+      </div>
+      <div class="knight-art">
+        <svg viewBox="0 0 200 250" aria-hidden="true"><use href="#knight-shield"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- TURNAJ BANNER -->
+  <div class="tour-banner">
+    <div class="wrap">
+      <svg class="tb-shield" viewBox="0 0 100 120" aria-hidden="true">
+        <path d="M50 4l44 14v52c0 30-22 47-44 55C28 117 6 100 6 70V18z" fill="#16264a" stroke="#C9A227" stroke-width="3"/>
+        <path d="M50 26l26 8v34c0 18-13 28-26 33-13-5-26-15-26-33V34z" fill="#0B1526"/>
+        <path d="M50 44l5 11 12 1.6-8.6 8.4 2 12L50 71l-10.4 6 2-12L33 56.6 45 55z" fill="#C9A227"/>
+      </svg>
+      <div class="tb-txt">
+        <span class="eyebrow">3. ročník · 30. august 2026 · Zimný štadión Brezno</span>
+        <h3>Minirytiersky turnaj</h3>
+        <p>Na ľade bojuj ako rytier. Mimo ľadu buď priateľ. — Hrá sa o Putovný rytiersky štít.</p>
+      </div>
+      <div class="countdown" id="cd-home">
+        <div class="cd"><b data-cd="d">–</b><span>dní</span></div>
+        <div class="cd"><b data-cd="h">–</b><span>hodín</span></div>
+        <div class="cd"><b data-cd="m">–</b><span>minút</span></div>
+      </div>
+      <a class="btn btn-gold" href="#">Info o turnaji</a>
+    </div>
+  </div>
+
+  <!-- KATEGÓRIE -->
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Tímy</span>
+          <h2 class="h-l" style="margin-top:8px">Naše kategórie</h2>
+          <p class="lead">Každá kategória má vlastnú stránku so súpiskou, trénermi, rozpisom tréningov, zápasmi a tabuľkou súťaže.</p>
+        </div>
+        <a class="link-more" href="#">Prehľad tímov →</a>
+      </div>
+      <div class="teams-grid">
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2019 a mladší</div><h3>Prípravka</h3><div class="tc-league">Hravý hokej · základy korčuľovania</div><div class="tc-count">28 hráčov · 3 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2017 – 2018</div><h3>1. stupeň</h3><div class="tc-league">Turnaje mini-hokeja</div><div class="tc-count">24 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2014 – 2015</div><h3>Mladší žiaci</h3><div class="tc-league">2. liga žiakov · skupina Stred</div><div class="tc-count">22 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2012 – 2013</div><h3>Starší žiaci</h3><div class="tc-league">2. liga žiakov · skupina Stred</div><div class="tc-count">21 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2010 – 2011</div><h3>Kadeti</h3><div class="tc-league">Liga kadetov</div><div class="tc-count">20 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2008 – 2009</div><h3>Dorast</h3><div class="tc-league">Liga dorastu</div><div class="tc-count">19 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">2006 – 2007</div><h3>Juniori</h3><div class="tc-league">Liga juniorov</div><div class="tc-count">18 hráčov · 2 tréneri</div></a>
+        <a class="team-card" href="#"><div class="tc-bg"></div><div class="tc-year">Seniori</div><h3>Muži</h3><div class="tc-league">Regionálna liga · obnovený tím</div><div class="tc-count">22 hráčov · 1 tréner</div></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRINCÍPY (layout z plagátu) -->
+  <div class="sec principles">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow on-dark">Ako trénujeme</span>
+          <h2 class="h-l" style="margin-top:8px">Princípy tvorby tréningovej jednotky</h2>
+          <p class="lead">Nie je to marketing — je to metodika, podľa ktorej sa v Brezne trénuje každý deň.</p>
+        </div>
+        <a class="link-more" href="#">Celá metodika a kódexy →</a>
+      </div>
+      <div class="p-list">
+        <div class="principle">
+          <div class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg></div>
+          <div class="p-body">
+            <div class="p-num">1.</div>
+            <div>
+              <h3>Každá TJ <em>má jasný zámer</em></h3>
+              <ul>
+                <li>vychádza z RTC (ročného tréningového cyklu)</li>
+                <li>zo štruktúry MC (mikrocyklu)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M3 17c3-6 7 2 10-4s5 3 8-1"/><circle cx="5" cy="6" r="1.6"/><path d="M15 4.5l3 3M18 4.5l-3 3"/></svg></div>
+          <div class="p-body">
+            <div class="p-num">2.</div>
+            <div>
+              <h3>Cvičenia sú herné, <em>otvorené v závere</em></h3>
+              <ul><li>s transition — reprezentatívne prostredie zápasu</li></ul>
+            </div>
+          </div>
+        </div>
+        <div class="principle">
+          <div class="p-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2.5" y="5" width="19" height="14" rx="7"/><path d="M12 5v14"/><circle cx="12" cy="12" r="2.4"/></svg></div>
+          <div class="p-body">
+            <div class="p-num">3.</div>
+            <div>
+              <h3>Využívame <em>small area games</em></h3>
+              <ul><li>veľa herných podnetov a reakcií v hernom kontexte</li><li>zmeny smeru, kontakty s pukom, súboje o puk, strely, prihrávky</li></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HODNOTY -->
+  <div class="sec-tight" style="background:#fff;padding-top:52px;padding-bottom:52px">
+    <div class="wrap">
+      <div style="text-align:center;margin-bottom:34px">
+        <span class="eyebrow">Naše hodnoty</span>
+        <h2 class="h-m" style="margin-top:8px">Na čom v Brezne stojíme</h2>
+      </div>
+      <div class="values">
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5l8 3v7c0 5-4 8-8 9.5-4-1.5-8-4.5-8-9.5v-7z"/></svg><b>Čestnosť</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l4-3 4 2 3-2 3 2 4-3"/><path d="M3 12l5 6 4-2 4 2 5-6"/></svg><b>Rešpekt</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-8-4.8-8-10a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.2-8 10-8 10z"/></svg><b>Srdce</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20c-2-4-2-9 1-12 3-3 8-2 9 2 1 4 0 8-2 10z"/><path d="M8 12h7M8 15h6"/></svg><b>Odvaha</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="2.8"/><circle cx="17" cy="10" r="2.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 19c0-2-.7-3.4-2-4.3"/></svg><b>Tímovosť</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8.5 14c1 1.5 2.2 2.2 3.5 2.2s2.5-.7 3.5-2.2"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg><b>Radosť z hry</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg><b>Fair play</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTNERI -->
+  <div class="partners sec-tight">
+    <div class="wrap">
+      <div style="text-align:center;margin-bottom:26px">
+        <span class="eyebrow">Partneri klubu</span>
+        <h2 class="h-m" style="margin-top:8px">Ďakujeme, že to s nami držíte</h2>
+      </div>
+      <div class="p-strip">
+        <div class="p-logo">Mesto Brezno</div>
+        <div class="p-logo">Hotel Ďumbier</div>
+        <div class="p-logo">Partner 3</div>
+        <div class="p-logo">Partner 4</div>
+        <div class="p-logo">Partner 5</div>
+      </div>
+      <div style="text-align:center;margin-top:26px">
+        <a class="btn btn-dark" href="#">Chcem podporiť klub</a>
+        <a class="btn" style="color:var(--red);border-color:var(--red)" href="#">Darujte 2 % z dane</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     OBRAZOVKA 2 — ROZPIS ĽADU
+     ================================================================ -->
+<section class="screen" data-screen="rozpis">
+  <div class="page-head">
+    <div class="ph-bg tex-ice"></div>
+    <div class="wrap">
+      <div class="crumbs">Domov / Rozpis a zápasy / Rozpis ľadu</div>
+      <h1 class="h-xl">Rozpis ľadu</h1>
+      <p class="lead">Tréningy, suchá príprava aj zápasy všetkých kategórií. Filtrujte podľa kategórie a pridajte si rozpis do kalendára v telefóne.</p>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <div class="wrap">
+      <div class="wk">
+        <button aria-label="Predchádzajúci týždeň">‹</button>
+        <b>27. 7. – 2. 8. 2026</b>
+        <button aria-label="Nasledujúci týždeň">›</button>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip" data-f="all" aria-pressed="true">Všetky</button>
+        <button class="chip" data-f="pripravka" aria-pressed="false">Prípravka</button>
+        <button class="chip" data-f="ziaci" aria-pressed="false">Žiaci</button>
+        <button class="chip" data-f="kadeti" aria-pressed="false">Kadeti / dorast</button>
+        <button class="chip" data-f="juniori" aria-pressed="false">Juniori</button>
+        <button class="chip" data-f="muzi" aria-pressed="false">Muži</button>
+      </div>
+      <a class="btn btn-dark btn-sm" href="#">⤓ Stiahnuť PDF</a>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:40px">
+    <div class="wrap">
+      <div class="ics">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15.5l2 2 4-4"/></svg>
+        <div class="t">
+          <b>Pridajte si rozpis do kalendára v telefóne</b>
+          <p>Jednorazovo pridáte odkaz a rozpis vašej kategórie sa v kalendári aktualizuje sám. Keď tréner zmení čas, zmenu uvidíte okamžite — bez hľadania na webe.</p>
+        </div>
+        <div class="acts">
+          <a class="btn btn-gold btn-sm" href="#">Prípravka</a>
+          <a class="btn btn-ghost btn-sm" href="#">Žiaci</a>
+          <a class="btn btn-ghost btn-sm" href="#">Celý klub</a>
+        </div>
+      </div>
+
+      <div class="legend">
+        <span class="lg ice"><i></i> Ľad</span>
+        <span class="lg dry"><i></i> Suchá príprava</span>
+        <span class="lg match"><i></i> Zápas</span>
+      </div>
+
+      <div id="days">
+        <div class="day is-today">
+          <div class="d-head"><span class="d-name">Nedeľa</span><span class="d-date">26. 7.</span><span class="d-badge">Dnes</span></div>
+          <div class="slots">
+            <div class="slot" data-team="kadeti"><div class="s-time">17:00 – 18:15</div><div class="s-team">Kadeti + Dorast</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot" data-team="juniori"><div class="s-time">18:30 – 19:45</div><div class="s-team">Juniori</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">J. Vzorový</div></div>
+            <div class="slot" data-team="muzi"><div class="s-time">20:00 – 21:15</div><div class="s-team">Muži</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">P. Skúšobný</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Pondelok</span><span class="d-date">27. 7.</span></div>
+          <div class="slots">
+            <div class="slot" data-team="pripravka"><div class="s-time">15:30 – 16:30</div><div class="s-team">Prípravka</div><div class="s-type">Ľad · polovica plochy</div><div class="s-coach">A. Modelová</div></div>
+            <div class="slot" data-team="ziaci"><div class="s-time">16:30 – 17:45</div><div class="s-team">Mladší žiaci</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot dry" data-team="kadeti"><div class="s-time">18:00 – 19:00</div><div class="s-team">Kadeti</div><div class="s-type">Suchá príprava · telocvičňa ZŠ</div><div class="s-coach">M. Ukážkový</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Utorok</span><span class="d-date">28. 7.</span></div>
+          <div class="slots">
+            <div class="slot" data-team="ziaci"><div class="s-time">16:00 – 17:15</div><div class="s-team">Starší žiaci</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot" data-team="juniori"><div class="s-time">17:30 – 18:45</div><div class="s-team">Juniori</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">J. Vzorový</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Streda</span><span class="d-date">29. 7.</span></div>
+          <div class="slots">
+            <div class="slot" data-team="pripravka"><div class="s-time">15:30 – 16:30</div><div class="s-team">Prípravka</div><div class="s-type">Ľad · polovica plochy</div><div class="s-coach">A. Modelová</div></div>
+            <div class="slot dry" data-team="ziaci"><div class="s-time">16:00 – 17:00</div><div class="s-team">Mladší + starší žiaci</div><div class="s-type">Suchá príprava · telocvičňa ZŠ</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot" data-team="kadeti"><div class="s-time">17:15 – 18:30</div><div class="s-team">Kadeti + Dorast</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Štvrtok</span><span class="d-date">30. 7.</span></div>
+          <div class="slots">
+            <div class="slot" data-team="ziaci"><div class="s-time">16:00 – 17:15</div><div class="s-team">Mladší žiaci</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot" data-team="muzi"><div class="s-time">20:00 – 21:15</div><div class="s-team">Muži</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">P. Skúšobný</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Piatok</span><span class="d-date">31. 7.</span></div>
+          <div class="slots">
+            <div class="slot" data-team="pripravka"><div class="s-time">15:30 – 16:30</div><div class="s-team">Prípravka</div><div class="s-type">Ľad · polovica plochy</div><div class="s-coach">A. Modelová</div></div>
+            <div class="slot" data-team="kadeti"><div class="s-time">16:45 – 18:00</div><div class="s-team">Dorast</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+            <div class="slot" data-team="juniori"><div class="s-time">18:15 – 19:30</div><div class="s-team">Juniori</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">J. Vzorový</div></div>
+          </div>
+        </div>
+
+        <div class="day">
+          <div class="d-head"><span class="d-name">Sobota</span><span class="d-date">1. 8.</span></div>
+          <div class="slots">
+            <div class="slot match" data-team="juniori"><div class="s-time">10:30</div><div class="s-team">Juniori — HK Detva</div><div class="s-type">Zápas · prípravný · domáci</div><div class="s-coach">Zraz 9:00</div></div>
+            <div class="slot" data-team="pripravka"><div class="s-time">08:30 – 09:30</div><div class="s-team">Prípravka</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">A. Modelová</div></div>
+            <div class="slot" data-team="ziaci"><div class="s-time">13:00 – 14:15</div><div class="s-team">Starší žiaci</div><div class="s-type">Ľad · hlavná plocha</div><div class="s-coach">M. Ukážkový</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <b>Takto to funguje v CMS:</b> tréner zadá tréning raz (dátum, čas, kategória, typ, plocha) a systém z toho automaticky vytvorí tento rozpis, pás „Tento týždeň na ľade“ na úvodnej stránke, sekciu na stránke kategórie aj kalendár <code>.ics</code> pre rodičov. Žiadny obrázok sa už nikde nenahráva.
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     OBRAZOVKA 3 — STRÁNKA TÍMU
+     ================================================================ -->
+<section class="screen" data-screen="tim">
+  <div class="team-hero">
+    <div class="th-bg"></div>
+    <div class="wrap">
+      <div class="th-main">
+        <div class="crumbs">Domov / Tímy / Mladší žiaci</div>
+        <span class="eyebrow on-dark">Ročníky 2014 – 2015</span>
+        <h1 class="h-xl" style="margin-top:8px">Mladší žiaci</h1>
+        <p class="lead" style="margin-top:12px">2. liga žiakov, skupina Stred · sezóna 2026/2027</p>
+      </div>
+      <div class="th-facts">
+        <div class="fact"><b>22</b><span>hráčov</span></div>
+        <div class="fact"><b>4.</b><span>miesto v tabuľke</span></div>
+        <div class="fact"><b>8–1–3</b><span>V–R–P</span></div>
+        <div class="fact"><b>3×</b><span>tréning / týždeň</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subnav">
+    <div class="wrap">
+      <a class="on" href="#">Prehľad</a>
+      <a href="#">Súpiska</a>
+      <a href="#">Rozpis</a>
+      <a href="#">Zápasy</a>
+      <a href="#">Tabuľka</a>
+      <a href="#">Galéria</a>
+    </div>
+  </div>
+
+  <div class="sec" style="padding-top:40px">
+    <div class="wrap">
+      <div class="ics" style="margin-bottom:30px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M9 15.5l2 2 4-4"/></svg>
+        <div class="t">
+          <b>Kalendár mladších žiakov do vášho telefónu</b>
+          <p>Tréningy aj zápasy tejto kategórie priamo v Google alebo Apple kalendári. Pridáte raz, aktualizuje sa samo.</p>
+        </div>
+        <div class="acts"><a class="btn btn-gold btn-sm" href="#">Pridať kalendár</a></div>
+      </div>
+
+      <div class="cols">
+        <!-- LEVÝ STĹPEC -->
+        <div>
+          <div class="card">
+            <h3>Súpiska <a class="link-more" href="#">Celá súpiska →</a></h3>
+            <table class="roster">
+              <thead><tr><th>Č.</th><th>Hráč</th><th>Pozícia</th><th>Ročník</th></tr></thead>
+              <tbody>
+                <tr><td class="num">1</td><td>A. Kováč</td><td class="pos">Brankár</td><td>2014</td></tr>
+                <tr><td class="num">4</td><td>M. Horváth</td><td class="pos">Obranca</td><td>2014</td></tr>
+                <tr><td class="num">7</td><td>T. Baláž</td><td class="pos">Obranca</td><td>2015</td></tr>
+                <tr><td class="num">9</td><td>S. Krajči</td><td class="pos">Útočník</td><td>2014</td></tr>
+                <tr><td class="num">12</td><td>D. Puška</td><td class="pos">Útočník</td><td>2015</td></tr>
+                <tr><td class="num">15</td><td>R. Šimko</td><td class="pos">Útočník</td><td>2014</td></tr>
+                <tr><td class="num">21</td><td>L. Medveď</td><td class="pos">Obranca</td><td>2015</td></tr>
+                <tr><td class="num">27</td><td>N. Bartoš</td><td class="pos">Útočník</td><td>2014</td></tr>
+              </tbody>
+            </table>
+            <div class="card-in" style="border-top:1px solid var(--ice-200);color:#647085;font-size:13.5px">
+              Zobrazujeme iniciálu krstného mena — v súlade s ochranou osobných údajov detí. Rozsah zverejnenia si klub nastaví v CMS.
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Tabuľka · 2. liga žiakov, skupina Stred</h3>
+            <div class="card-in" style="padding:0">
+              <table class="standings">
+                <thead><tr><th>#</th><th>Tím</th><th>Z</th><th>V</th><th>R</th><th>P</th><th>Skóre</th><th>B</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Banská Bystrica</td><td>12</td><td>10</td><td>1</td><td>1</td><td>62:24</td><td class="pts">31</td></tr>
+                  <tr><td>2</td><td>HK Detva</td><td>12</td><td>9</td><td>1</td><td>2</td><td>55:29</td><td class="pts">28</td></tr>
+                  <tr><td>3</td><td>Žiar nad Hronom</td><td>12</td><td>8</td><td>2</td><td>2</td><td>48:31</td><td class="pts">26</td></tr>
+                  <tr class="us"><td>4</td><td>HK Brezno</td><td>12</td><td>8</td><td>1</td><td>3</td><td>46:33</td><td class="pts">25</td></tr>
+                  <tr><td>5</td><td>Rimavská Sobota</td><td>12</td><td>5</td><td>1</td><td>6</td><td>34:41</td><td class="pts">16</td></tr>
+                  <tr><td>6</td><td>Lučenec</td><td>12</td><td>2</td><td>0</td><td>10</td><td>21:58</td><td class="pts">6</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Galéria kategórie <a class="link-more" href="#">Všetky fotky →</a></h3>
+            <div class="card-in">
+              <div class="gal"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRAVÝ STĹPEC -->
+        <div>
+          <div class="card">
+            <h3>Tréneri kategórie</h3>
+            <div class="coach"><div class="av">MU</div><div><b>M. Ukážkový</b><span>Hlavný tréner</span><span class="lic">Licencia SZĽH · A</span></div></div>
+            <div class="coach"><div class="av">JV</div><div><b>J. Vzorový</b><span>Asistent trénera</span><span class="lic">Licencia SZĽH · B</span></div></div>
+            <div class="coach"><div class="av">AM</div><div><b>A. Modelová</b><span>Tréner brankárov</span><span class="lic">Licencia SZĽH · B</span></div></div>
+          </div>
+
+          <div class="card">
+            <h3>Najbližšie tréningy <a class="link-more" href="#">Rozpis →</a></h3>
+            <div class="train-row"><span class="tr-d">Po 27. 7.</span><span class="tr-t">16:30–17:45</span><span class="tr-x">Ľad · hlavná plocha</span></div>
+            <div class="train-row"><span class="tr-d">St 29. 7.</span><span class="tr-t">16:00–17:00</span><span class="tr-x">Suchá · telocvičňa ZŠ</span></div>
+            <div class="train-row"><span class="tr-d">Št 30. 7.</span><span class="tr-t">16:00–17:15</span><span class="tr-x">Ľad · hlavná plocha</span></div>
+          </div>
+
+          <div class="card">
+            <h3>Posledné výsledky</h3>
+            <div class="card-in" style="display:grid;gap:12px">
+              <article class="match" style="margin:0">
+                <div class="m-meta"><span>12. kolo</span><span>19. 7.</span></div>
+                <div class="m-body" style="padding:15px 12px">
+                  <div class="m-t"><div class="m-logo home">HKB</div><span>Brezno</span></div>
+                  <div class="m-score"><span class="win">5</span> : 2</div>
+                  <div class="m-t"><div class="m-logo">LUC</div><span>Lučenec</span></div>
+                </div>
+              </article>
+              <article class="match" style="margin:0">
+                <div class="m-meta"><span>11. kolo</span><span>12. 7.</span></div>
+                <div class="m-body" style="padding:15px 12px">
+                  <div class="m-t"><div class="m-logo">RSO</div><span>R. Sobota</span></div>
+                  <div class="m-score">2 : <span class="win">3</span></div>
+                  <div class="m-t"><div class="m-logo home">HKB</div><span>Brezno</span></div>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="card" style="background:var(--navy-900);border-color:var(--navy-900)">
+            <div class="card-in" style="color:#fff">
+              <span class="eyebrow on-dark">Pre rodičov</span>
+              <h3 style="font-family:var(--f-head);text-transform:uppercase;font-size:22px;margin:8px 0 8px;background:none;padding:0;color:#fff">Otázka na trénera?</h3>
+              <p style="color:var(--steel-200);font-size:14.5px">Kontakt na trénerov kategórie, informácie o platbách aj výstroji nájdete v sekcii pre rodičov.</p>
+              <a class="btn btn-red btn-sm" href="#" style="margin-top:14px">Rodičia v obraze</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================================================================
+     OBRAZOVKA 4 — MINIRYTIERSKY TURNAJ
+     ================================================================ -->
+<section class="screen" data-screen="turnaj">
+  <div class="tour-hero">
+    <div class="tb"></div><div class="mts"></div>
+    <div class="wrap">
+      <p class="motto">Každý veľký hokejista bol raz malým rytierom.</p>
+      <h1 class="h-xxl" style="margin-top:14px">Minirytiersky<em>Turnaj</em></h1>
+      <div style="margin-top:16px"><span class="tour-badge">3. ročník · od roku 2024</span></div>
+      <div class="tour-meta">
+        <div class="tm"><b>30. august 2026</b><span>Termín</span></div>
+        <div class="tm"><b>Zimný štadión Brezno</b><span>Miesto</span></div>
+        <div class="tm"><b>8 tímov</b><span>Ročníky 2017 – 2018</span></div>
+      </div>
+      <div class="countdown" id="cd-tour">
+        <div class="cd"><b data-cd="d">–</b><span>dní</span></div>
+        <div class="cd"><b data-cd="h">–</b><span>hodín</span></div>
+        <div class="cd"><b data-cd="m">–</b><span>minút</span></div>
+      </div>
+      <div class="hero-actions">
+        <a class="btn btn-gold" href="#">Prihlásiť tím</a>
+        <a class="btn btn-ghost" href="#">Program turnaja</a>
+      </div>
+    </div>
+  </div>
+  <div class="chevrons"></div>
+
+  <!-- HODNOTY TURNAJA -->
+  <div class="sec-tight dark" style="padding-top:44px;padding-bottom:44px">
+    <div class="wrap">
+      <div style="text-align:center;margin-bottom:30px">
+        <span class="eyebrow on-dark">Hodnoty turnaja</span>
+        <h2 class="h-m" style="margin-top:8px">Na ľade bojuj ako rytier. Mimo ľadu buď priateľ.</h2>
+      </div>
+      <div class="values">
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.5l8 3v7c0 5-4 8-8 9.5-4-1.5-8-4.5-8-9.5v-7z"/></svg><b>Čestnosť</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 12l4-3 4 2 3-2 3 2 4-3"/><path d="M3 12l5 6 4-2 4 2 5-6"/></svg><b>Rešpekt</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-8-4.8-8-10a4.6 4.6 0 018-3 4.6 4.6 0 018 3c0 5.2-8 10-8 10z"/></svg><b>Srdce</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 20c-2-4-2-9 1-12 3-3 8-2 9 2 1 4 0 8-2 10z"/><path d="M8 12h7M8 15h6"/></svg><b>Odvaha</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="9" r="2.8"/><circle cx="17" cy="10" r="2.2"/><path d="M3.5 19c0-3 2.5-5 5.5-5s5.5 2 5.5 5"/><path d="M16 19c0-2-.7-3.4-2-4.3"/></svg><b>Tímovosť</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M8.5 14c1 1.5 2.2 2.2 3.5 2.2s2.5-.7 3.5-2.2"/><circle cx="9" cy="10" r="1" fill="currentColor"/><circle cx="15" cy="10" r="1" fill="currentColor"/></svg><b>Radosť z hry</b></div>
+        <div class="value"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 5l14 14M19 5L5 19"/></svg><b>Fair play</b></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRAM -->
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Program</span>
+          <h2 class="h-l" style="margin-top:8px">Harmonogram dňa</h2>
+          <p class="lead">Presné časy zápasov doplníme po uzavretí prihlášok. Program sa spravuje v CMS a mení sa aj počas turnaja v reálnom čase.</p>
+        </div>
+      </div>
+      <div class="sched">
+        <div class="sl"><time>08:00</time><div><b>Príchod tímov a registrácia</b><span>Vstupná hala zimného štadióna</span></div><span class="pl">Organizácia</span></div>
+        <div class="sl hi"><time>09:00</time><div><b>Slávnostné otvorenie</b><span>Rytiersky nástup všetkých tímov na ľade</span></div><span class="pl">Hlavná plocha</span></div>
+        <div class="sl"><time>09:30</time><div><b>Skupina A — 1. zápasy</b><span>Brezno · Detva · B. Bystrica · Žiar n. Hronom</span></div><span class="pl">Plocha 1 + 2</span></div>
+        <div class="sl"><time>11:30</time><div><b>Skupina B — 1. zápasy</b><span>Lučenec · R. Sobota · Zvolen · Poprad</span></div><span class="pl">Plocha 1 + 2</span></div>
+        <div class="sl"><time>13:00</time><div><b>Obed a rytierske hry pre deti</b><span>Sprievodný program aj pre rodičov a súrodencov</span></div><span class="pl">Vonkajšia zóna</span></div>
+        <div class="sl"><time>14:00</time><div><b>Semifinále</b><span>Prví dvaja z každej skupiny</span></div><span class="pl">Hlavná plocha</span></div>
+        <div class="sl hi"><time>16:00</time><div><b>Finále o Putovný rytiersky štít</b><span>Následne vyhlásenie výsledkov a ocenenia</span></div><span class="pl">Hlavná plocha</span></div>
+        <div class="sl"><time>17:30</time><div><b>Rytierska prísaha a ukončenie</b><span>Každý hráč dostane pamätnú medailu</span></div><span class="pl">Hlavná plocha</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ŠTÍT -->
+  <div class="sec dark2">
+    <div class="wrap">
+      <div class="trophy">
+        <svg viewBox="0 0 120 150" aria-hidden="true">
+          <path d="M60 4l52 17v62c0 36-26 56-52 65C34 139 8 119 8 83V21z" fill="#16264a" stroke="#C9A227" stroke-width="3"/>
+          <path d="M60 22l34 11v50c0 26-17 40-34 47-17-7-34-21-34-47V33z" fill="#0B1526"/>
+          <path d="M60 46l6.5 13.5L81 61.5l-10.5 10.3 2.5 14.7L60 79.6 47 86.5l2.5-14.7L39 61.5l14.5-2z" fill="#C9A227"/>
+          <path d="M36 104h48v5H36zM42 114h36v4H42z" fill="#8A94A6" opacity=".7"/>
+        </svg>
+        <div>
+          <span class="eyebrow on-dark">Trofej</span>
+          <h2 class="h-l" style="margin:8px 0 12px">Putovný rytiersky štít</h2>
+          <p class="lead">Víťaz turnaja si štít odnáša domov na celý rok a vracia ho na ďalší ročník. Na štíte sa postupne píše história celého turnaja — meno klubu, rok a kapitán tímu.</p>
+          <p class="motto" style="color:var(--gold-soft);font-size:20px;margin-top:18px">Víťazstvo poteší na chvíľu. Čestnosť, priateľstvo a láska k hokeju zostávajú na celý život.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TÍMY -->
+  <div class="sec">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Účastníci</span>
+          <h2 class="h-l" style="margin-top:8px">Prihlásené tímy</h2>
+        </div>
+        <a class="link-more" href="#">Prihlásiť tím →</a>
+      </div>
+      <div class="tour-teams">
+        <div class="tt"><div class="em">HKB</div><b>HK Brezno</b><span>Organizátor</span></div>
+        <div class="tt"><div class="em">DET</div><b>HK Detva</b><span>Skupina A</span></div>
+        <div class="tt"><div class="em">BBY</div><b>B. Bystrica</b><span>Skupina A</span></div>
+        <div class="tt"><div class="em">ZIA</div><b>Žiar n. Hronom</b><span>Skupina A</span></div>
+        <div class="tt"><div class="em">LUC</div><b>Lučenec</b><span>Skupina B</span></div>
+        <div class="tt"><div class="em">RSO</div><b>R. Sobota</b><span>Skupina B</span></div>
+        <div class="tt"><div class="em">ZVO</div><b>Zvolen</b><span>Skupina B</span></div>
+        <div class="tt" style="border-style:dashed;color:#8A94A6"><div class="em" style="background:var(--ice-200);color:var(--steel)">?</div><b>Voľné miesto</b><span>Prihláste sa</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ARCHÍV -->
+  <div class="sec" style="background:var(--ice-200)">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <span class="eyebrow">Archív</span>
+          <h2 class="h-l" style="margin-top:8px">Predchádzajúce ročníky</h2>
+          <p class="lead">Každý ročník má vlastnú stránku s výsledkami, galériou a víťazom — história turnaja zostáva na webe navždy.</p>
+        </div>
+      </div>
+      <div class="arch">
+        <a class="ar" href="#"><b>2025 · 2. ročník</b><span>31. august 2025 · 8 tímov</span><span class="w">★ Víťaz: HK Detva</span></a>
+        <a class="ar" href="#"><b>2024 · 1. ročník</b><span>25. august 2024 · 6 tímov</span><span class="w">★ Víťaz: HK Brezno</span></a>
+        <div class="ar" style="border-top-color:var(--red);background:var(--navy-900)"><b>2026 · 3. ročník</b><span>30. august 2026 · prebieha prihlasovanie</span><span class="w" style="color:var(--red)">● Aktuálny ročník</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ============ SPOLOČNÁ PÄTIČKA ============ -->
+<footer class="site-foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand">
+          <svg viewBox="0 0 200 200" aria-hidden="true"><use href="#crest"/></svg>
+          <div>
+            <b style="font-family:var(--f-head);font-size:23px;color:#fff;letter-spacing:.02em">HK BREZNO</b>
+            <div style="font-family:var(--f-head);font-size:11.5px;letter-spacing:.22em;color:var(--steel);text-transform:uppercase">Hokejový klub</div>
+          </div>
+        </div>
+        <p style="font-size:14.5px;max-width:34ch">Zimný štadión Brezno<br>Brezno, Slovensko<br><a href="#" style="color:#fff">info@hkbrezno.sk</a></p>
+        <p class="motto" style="color:var(--gold-soft);font-size:18px;margin-top:16px">Trénujme s účelom.<br>Hrajme s odvahou.</p>
+      </div>
+      <div>
+        <h4>Klub</h4>
+        <ul>
+          <li><a href="#">O klube</a></li>
+          <li><a href="#">Vedenie klubu</a></li>
+          <li><a href="#">Trénerský tím</a></li>
+          <li><a href="#">História</a></li>
+          <li><a href="#">Princípy a kódexy</a></li>
+          <li><a href="#">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Pre rodičov</h4>
+        <ul>
+          <li><a href="#">Rodičia v obraze</a></li>
+          <li><a href="#">Členské a platby</a></li>
+          <li><a href="#">Výstroj</a></li>
+          <li><a href="#">Ako to funguje</a></li>
+          <li><a href="#">Na stiahnutie</a></li>
+          <li><a href="#">Rozpis ľadu</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Podpor klub</h4>
+        <ul>
+          <li><a href="#">2 % z dane</a></li>
+          <li><a href="#">Staňte sa partnerom</a></li>
+          <li><a href="#">Minirytiersky turnaj</a></li>
+          <li><a href="#">Dobrovoľníci</a></li>
+        </ul>
+        <div class="socials" style="margin-top:14px">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8.2c0-.9.3-1.5 1.5-1.5h1.6V4c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.2V10H7.4v3h2.3v8h3.8z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="3.8"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.3 8.2s-.2-1.5-.8-2.1c-.8-.8-1.7-.8-2.1-.9C16.7 5 12 5 12 5s-4.7 0-6.4.2c-.4.1-1.3.1-2.1.9-.6.6-.8 2.1-.8 2.1S2.5 10 2.5 11.8v1.4c0 1.8.2 3.6.2 3.6s.2 1.5.8 2.1c.8.8 1.8.8 2.2.9 1.7.2 6.3.2 6.3.2s4.7 0 6.4-.2c.4-.1 1.3-.1 2.1-.9.6-.6.8-2.1.8-2.1s.2-1.8.2-3.6v-1.4c0-1.8-.2-3.6-.2-3.6zM10.1 15.1V9.4l5.3 2.9-5.3 2.8z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="foot-bot">
+      <span>© 2026 HK Brezno · Jednota · Disciplína · Rozvoj · Víťazstvo</span>
+      <span><a href="#">Ochrana osobných údajov</a> · <a href="#">Cookies</a></span>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /frame -->
+
+<script>
+(function(){
+  /* --- prepínanie obrazoviek --- */
+  var tabs = document.getElementById('tabs');
+  tabs.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-go]'); if(!b) return;
+    tabs.querySelectorAll('button').forEach(function(x){ x.setAttribute('aria-current','false'); });
+    b.setAttribute('aria-current','true');
+    document.querySelectorAll('.screen').forEach(function(s){
+      s.classList.toggle('is-active', s.dataset.screen === b.dataset.go);
+    });
+    var map = {domov:null, rozpis:'rozpis', tim:'timy', turnaj:null};
+    document.querySelectorAll('.main-nav a').forEach(function(a){
+      a.classList.toggle('on', a.dataset.nav === map[b.dataset.go]);
+    });
+    window.scrollTo({top:0, behavior:'instant'});
+  });
+
+  /* --- desktop / mobil --- */
+  var frame = document.getElementById('frame');
+  document.querySelectorAll('.proto-view button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('.proto-view button').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      frame.classList.toggle('is-mobile', b.dataset.view === 'mobile');
+    });
+  });
+
+  /* --- filter rozpisu --- */
+  var chips = document.getElementById('chips');
+  if (chips) chips.addEventListener('click', function(e){
+    var b = e.target.closest('.chip'); if(!b) return;
+    chips.querySelectorAll('.chip').forEach(function(x){ x.setAttribute('aria-pressed','false'); });
+    b.setAttribute('aria-pressed','true');
+    var f = b.dataset.f;
+    document.querySelectorAll('#days .slot').forEach(function(s){
+      s.classList.toggle('is-hidden', f !== 'all' && s.dataset.team !== f);
+    });
+    document.querySelectorAll('#days .day').forEach(function(d){
+      var visible = d.querySelectorAll('.slot:not(.is-hidden)').length;
+      d.classList.toggle('is-empty', visible === 0);
+    });
+  });
+
+  /* --- odpočet do turnaja --- */
+  var target = new Date('2026-08-30T09:00:00');
+  function tick(){
+    var diff = target - new Date();
+    if (diff < 0) diff = 0;
+    var d = Math.floor(diff/86400000),
+        h = Math.floor(diff%86400000/3600000),
+        m = Math.floor(diff%3600000/60000);
+    document.querySelectorAll('.countdown').forEach(function(c){
+      c.querySelector('[data-cd="d"]').textContent = d;
+      c.querySelector('[data-cd="h"]').textContent = h;
+      c.querySelector('[data-cd="m"]').textContent = m;
+    });
+  }
+  tick(); setInterval(tick, 30000);
+})();
+</script>
+</body>
+</html>
