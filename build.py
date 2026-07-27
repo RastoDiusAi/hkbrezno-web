@@ -173,6 +173,68 @@ def transform_tag(m):
     if tag == 'img' and 'assets/trener-' in attrs:
         attrs += ' onerror="this.remove()"'
 
+    # ---- responzívne markery -----------------------------------------
+    # Priradí data-r tokeny pre elementy, ktoré media queries menia na
+    # mobile/tablete. Inline štýly majú vysokú špecificitu, takže pravidlá
+    # nižšie používajú !important a cielia na tieto stabilné markery.
+    style = re.search(r'\sstyle="([^"]*)"', attrs)
+    if style:
+        s = style.group(1)
+        tokens = []
+        # fluidný obsahový wrapper (fixná šírka 1440px -> max-width)
+        if 'width: 1440px; margin: 0 auto' in s:
+            attrs = attrs.replace('width: 1440px; margin: 0 auto',
+                                  'width: 100%; max-width: 1440px; margin: 0 auto')
+            tokens.append('wrap')
+        # horizontálny padding sekcií (0 48px) -> menší na mobile
+        if re.search(r'padding:\s*0 48px', s):
+            tokens.append('pad')
+        if re.search(r'padding:\s*(\d+)px 48px', s):
+            tokens.append('padx')
+        # akýkoľvek grid -> na mobile jeden stĺpec (okrem dekoratívnych ✕)
+        if 'grid-template-columns:' in s and 'repeat(5, 22px)' not in s \
+                and 'repeat(4, 22px)' not in s:
+            tokens.append('grid')
+        # dátové tabuľky s pevnými px stĺpcami (súpiska) alebo tabuľka ligy
+        # -> vodorovný scroll (nemá zmysel ich lámať do stĺpca)
+        if re.search(r'grid-template-columns:\s*\d+px 1fr(?: \d+px)+', s) \
+                or '1.2fr repeat(5, 1fr)' in s:
+            tokens.append('wide')
+        # obrí nadpis hero -> plynulé zmenšenie
+        if 'font-size: 116px' in s:
+            tokens.append('h1')
+        # hlavičkový blok (obsahuje logo-riadok, veľké logo a navigáciu).
+        # Na mobile mu zrušíme rezervovanú výšku 118px, ale necháme ho v toku,
+        # lebo navigácia (fixná lišta) je jeho potomok — display:none by ju
+        # tiež odstránil z renderu.
+        if 'z-index: 5; height: 118px' in s:
+            tokens.append('header')
+        # horný riadok hlavičky (text sezóny + CTA) -> na mobile skry
+        if 'height: 76px' in s and 'justify-content: space-between' in s:
+            tokens.append('hdrhide')
+        # veľké centrované logo v hlavičke -> na mobile skry (logo je v lište)
+        if 'left: 50%; top: 2px; transform: translateX(-50%); z-index: 7' in s:
+            tokens.append('hdrhide')
+        # prvky s pevnou pixelovou šírkou, ktoré by pretiekli
+        if re.search(r'width:\s*760px', s):
+            tokens.append('fixw')
+        # dekoratívny pruh vpravo (right: 0; width: 160px) -> skry
+        if 'right: 0; top: 0; width: 160px' in s:
+            tokens.append('deco')
+        # dekoratívne, absolútne umiestnené logá s nízkou opacitou (presvitajú) -> skry
+        if 'opacity: .07' in s and ('left: 320px' in s or 'width: 780px' in s):
+            tokens.append('deco')
+        # veľké vertikálne padding-y hero obsahu -> zmenši
+        if 'padding: 96px 48px 130px' in s:
+            tokens.append('heropad')
+        # nezalamovacie riadky (VS zápas, ticker výsledkov) -> na mobile
+        # buď zalom, alebo nechaj scrollovať; označíme ich ako 'row'
+        if 'white-space: nowrap' in s and ('gap: 34px' in s or 'gap: 22px' in s
+                                           or "letter-spacing: .04em" in s):
+            tokens.append('row')
+        if tokens:
+            attrs += ' data-r="%s"' % " ".join(tokens)
+
     return f'<{tag}{attrs}{selfclose}>'
 
 
@@ -217,7 +279,7 @@ html = f"""<!DOCTYPE html>
 <html lang="sk" data-page="domov">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=1440">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HK Brezno — Rytieri z Brezna</title>
 {fonts}
 <style>
@@ -250,6 +312,144 @@ html = f"""<!DOCTYPE html>
 
 /* ---- hover stavy z design canvasu ----------------------------------- */
 {hover_css}
+
+/* ==== RESPONZIVITA ===================================================== */
+/* Layout je pôvodne fixný na 1440 px s inline štýlmi (vysoká špecificita),
+   preto pravidlá nižšie používajú !important a cielia na data-r markery,
+   ktoré pridáva build.py. */
+
+/* obrázok-vodoznak na pozadí nech neprelieza na malých displejoch */
+@media (max-width: 1024px) {{
+  img[alt=""] {{ max-width: 100% !important; height: auto }}
+}}
+
+/* žiadny vodorovný pretok na malých displejoch */
+@media (max-width: 1024px) {{
+  html, body {{ max-width: 100%; overflow-x: hidden }}
+}}
+
+/* --- tablet a menej (<= 1024px) --------------------------------------- */
+@media (max-width: 1024px) {{
+  [data-r~="pad"]  {{ padding-left: 28px !important; padding-right: 28px !important }}
+  [data-r~="padx"] {{ padding-left: 28px !important; padding-right: 28px !important }}
+  /* viacstĺpcové mriežky na 2 stĺpce */
+  [data-r~="grid"] {{ grid-template-columns: repeat(2, minmax(0, 1fr)) !important }}
+  [data-r~="h1"]   {{ font-size: 8.5vw !important }}
+  /* nezalamovacie riadky (VS, ticker) nech sa zalomia už na tablete */
+  [data-r~="row"] {{ flex-wrap: wrap !important; white-space: normal !important;
+                     gap: 16px !important; max-width: 100% }}
+  /* dátové tabuľky scrollujú vodorovne aj na tablete */
+  [data-r~="wide"] {{ display: block !important; overflow-x: auto !important;
+                      -webkit-overflow-scrolling: touch }}
+  [data-r~="wide"] > * {{ min-width: 620px }}
+}}
+
+/* --- mobil (<= 720px) -------------------------------------------------- */
+@media (max-width: 720px) {{
+  html, body {{ overflow-x: hidden }}
+  [data-r~="pad"]  {{ padding-left: 18px !important; padding-right: 18px !important }}
+  [data-r~="padx"] {{ padding-left: 18px !important; padding-right: 18px !important }}
+
+  /* takmer všetky mriežky do jedného stĺpca */
+  [data-r~="grid"] {{ grid-template-columns: minmax(0, 1fr) !important }}
+
+  /* tabuľky s pevnými stĺpcami (súpiska/tabuľka) nechaj scrollovať vodorovne */
+  [data-r~="wide"] {{
+    display: block !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    white-space: nowrap;
+  }}
+  [data-r~="wide"] > * {{ min-width: 640px }}
+
+  /* hero nadpis a odsadenia */
+  [data-r~="h1"] {{ font-size: 46px !important; line-height: .95 !important }}
+  [data-r~="heropad"] {{ padding: 40px 18px 56px !important }}
+
+  /* prvky s pevnou šírkou nech sa zmestia */
+  [data-r~="fixw"] {{ width: 100% !important; max-width: 100% !important }}
+  /* dekoratívne prvky, ktoré by spôsobili vodorovný pretok, skry */
+  [data-r~="deco"] {{ display: none !important }}
+  /* nezalamovacie riadky nechaj plynúť / scrollovať vodorovne */
+  [data-r~="row"] {{
+    flex-wrap: wrap !important;
+    white-space: normal !important;
+    gap: 14px !important;
+    max-width: 100%;
+  }}
+
+  /* horný info-pás skry (telefón/mail sú v pätičke) */
+  body [style*="height: 40px"][style*="border-bottom: 1px solid rgba(20,49,92,.1)"] {{
+    display: none !important;
+  }}
+}}
+
+/* ==== MOBILNÁ NAVIGÁCIA (hamburger) =================================== */
+/* Tlačidlo + backdrop vkladá JS; tu je len ich vzhľad a správanie. */
+.hk-burger {{ display: none }}
+@media (max-width: 900px) {{
+  /* schovaj širokú desktopovú lištu a ukáž hamburger */
+  [data-navbar] {{
+    position: fixed !important; top: 0 !important; left: 0 !important;
+    right: 0 !important; bottom: auto !important; transform: none !important;
+    width: 100% !important; height: 56px !important;
+    padding: 0 16px !important; clip-path: none !important;
+    justify-content: space-between !important; z-index: 200 !important;
+  }}
+  [data-navbar] nav {{
+    position: fixed; top: 56px; left: 0; right: 0;
+    max-height: calc(100vh - 56px); overflow-y: auto;
+    flex-direction: column !important; align-items: stretch !important;
+    height: auto !important; gap: 0 !important;
+    background: linear-gradient(180deg, #0D2242, #14315C);
+    border-bottom: 3px solid #CE1126;
+    box-shadow: 0 20px 40px rgba(11,27,51,.5);
+    transform: translateY(-120%); transition: transform .25s ease;
+  }}
+  [data-navbar] nav button {{
+    width: 100%; padding: 16px 20px !important;
+    flex-direction: row !important; justify-content: flex-start !important;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-size: 16px !important;
+  }}
+  [data-navbar] nav button span {{ display: none !important }}  /* podčiarkovač skry */
+  html.nav-open [data-navbar] nav {{ transform: translateY(0) }}
+
+  .hk-burger {{
+    display: inline-flex; flex-direction: column; justify-content: center;
+    gap: 5px; width: 44px; height: 44px; padding: 0 10px; margin-left: auto;
+    background: none; border: 0; cursor: pointer; z-index: 210;
+  }}
+  .hk-burger span {{ display: block; height: 2px; background: #fff; border-radius: 2px;
+                     transition: transform .25s ease, opacity .2s ease }}
+  html.nav-open .hk-burger span:nth-child(1) {{ transform: translateY(7px) rotate(45deg) }}
+  html.nav-open .hk-burger span:nth-child(2) {{ opacity: 0 }}
+  html.nav-open .hk-burger span:nth-child(3) {{ transform: translateY(-7px) rotate(-45deg) }}
+
+  /* logo v prilepenej lište nech je vždy vidno vľavo */
+  [data-navbar] [data-stuck] {{ display: contents !important }}
+  /* CTA tlačidlo v lište skry na mobile (je dostupné v menu / hero) */
+  [data-navbar] [data-stuck] button {{ display: none !important }}
+
+  /* hlavička: zruš rezervovanú výšku (navigácia je fixná lišta), ale nechaj
+     ju v renderi kvôli potomkovi [data-navbar] */
+  [data-r~="header"] {{ height: auto !important; padding: 0 !important }}
+  /* logo-riadok a veľké centrované logo skry — nahrádza ich lišta */
+  [data-r~="hdrhide"] {{ display: none !important }}
+
+  /* logo v lište je vždy viditeľné vľavo */
+  [data-navbar] [data-stuck] {{ display: contents !important }}
+  [data-navbar] [data-stuck] img {{ display: block !important; height: 40px !important;
+                                    margin-right: auto !important }}
+
+  /* keďže je lišta fixná hore, odsaď obsah pod ňu */
+  body {{ padding-top: 56px }}
+}}
+
+/* wrapper na mobile nesmie spôsobiť vodorovný pretok */
+@media (max-width: 720px) {{
+  [data-r~="wrap"] {{ overflow-x: clip !important }}
+}}
 </style>
 </head>
 <body>
@@ -261,12 +461,31 @@ html = f"""<!DOCTYPE html>
   window.go = function (page) {{
     if (PAGES.indexOf(page) === -1) return;
     document.documentElement.dataset.page = page;
+    document.documentElement.classList.remove('nav-open');  /* zavri mobilné menu */
     window.scrollTo(0, 0);
     onScroll();
   }};
 
   /* prilepenie navigácie po odscrollovaní hlavičky */
   var bar = document.querySelector('[data-navbar]');
+
+  /* mobilný hamburger: vloží tlačidlo do lišty a prepína .nav-open */
+  if (bar) {{
+    var burger = document.createElement('button');
+    burger.className = 'hk-burger';
+    burger.setAttribute('aria-label', 'Menu');
+    burger.innerHTML = '<span></span><span></span><span></span>';
+    burger.addEventListener('click', function () {{
+      document.documentElement.classList.toggle('nav-open');
+    }});
+    bar.appendChild(burger);
+    /* klik mimo menu ho zavrie */
+    document.addEventListener('click', function (e) {{
+      if (!document.documentElement.classList.contains('nav-open')) return;
+      if (bar.contains(e.target)) return;
+      document.documentElement.classList.remove('nav-open');
+    }});
+  }}
   function onScroll() {{
     var y = window.scrollY || document.documentElement.scrollTop || 0;
     if (bar) bar.classList.toggle('is-stuck', y > 120);
