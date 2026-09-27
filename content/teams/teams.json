@@ -1,0 +1,18 @@
+[
+  {
+    "name": "Prípravka U8",
+    "slug": "pripravka-u8",
+    "years": "deti od 4 rokov",
+    "description": "Prvé kroky na ľade, základné korčuľovanie a radosť z hry.",
+    "order": 1,
+    "active": true
+  },
+  {
+    "name": "Mladší žiaci",
+    "slug": "mladsi-ziaci",
+    "years": "",
+    "description": "Kategória pre rozvoj techniky, pohybu a tímových návykov.",
+    "order": 2,
+    "active": true
+  }
+]

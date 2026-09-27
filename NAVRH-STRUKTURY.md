@@ -3,6 +3,12 @@
 Návrh štruktúry, obsahových modelov, technológie a dizajn systému pre redesign
 `hkbrezno.sk`.
 
+> Aktualizácia podľa pravidiel tvorby webu: technologické odporúčanie v staršej
+> časti dokumentu (Astro/Sanity/Cloudflare) je nahradené cieľom **Next.js v
+> režime statického exportu**, bez CMS a bez databázy. Publikačný obsah patrí do
+> Git repozitára (`content/`, `public/`) a jediná serverová funkcionalita je
+> PHP endpoint `send-form.php` pre rodičovský formulár na klasickom hostingu.
+
 ---
 
 ## 1. Audit súčasného stavu
@@ -206,7 +212,24 @@ aby rozpis reálne udržiavali tréneri a nie jeden preťažený človek.
 
 ## 5. Technológia a hosting
 
-### Odporúčaná varianta: Astro + Sanity + Cloudflare Pages
+### Aktuálne rozhodnutie: Next.js statický export + Git obsah + PHP formulár
+
+Podľa aktuálnych pravidiel sa projekt ďalej upravuje ako jednoduchá statická
+webová aplikácia bez CMS a databázy:
+
+- frontend: Next.js s `output: 'export'`,
+- hosting: bežný statický/PHP hosting, bez závislosti od Vercelu,
+- obsah: súbory v Gite (`content/articles`, `content/teams`,
+  `content/coaches`, `content/partners`, `public/images`, `public/documents`),
+- formulár: `send-form.php`, server-side validácia, e-mail klubu a potvrdenie
+  rodičovi, bez ukladania do databázy,
+- obrázky: optimalizované pred publikovaním alebo počas buildu.
+
+Aktuálny repozitár je prechodový prototyp: `build.py` zatiaľ generuje statické
+HTML bez Node runtime a zároveň validuje nový obsahový model. Finálnym krokom je
+preniesť komponenty do Next.js aplikácie pri zachovaní statického exportu.
+
+### Staršia zvažovaná varianta: Astro + Sanity + Cloudflare Pages
 
 | Vrstva | Riešenie | Cena |
 |---|---|---|
@@ -248,8 +271,8 @@ modely + WP Cron pre rozpis, na slovenskom hostingu (Websupport, ~40 €/rok).
 - **Proti:** priebežná údržba a bezpečnosť, výrazne pomalší web, `.ics` export a
   rozpis treba doprogramovať v PHP, dizajnová voľnosť menšia.
 
-**Odporúčanie:** varianta Astro + Sanity. WordPress voľte len vtedy, ak je
-podmienkou, aby web mohol prevziať bežný lokálny WP dodávateľ.
+**Pôvodné odporúčanie:** varianta Astro + Sanity. Táto časť zostáva ako
+historická úvaha, nie ako aktuálne technologické rozhodnutie.
 
 ### Tretia možnosť pre nulové priebežné náklady
 
@@ -332,7 +355,7 @@ súťaže` · `Odpočet do turnaja` · `FAQ akordeón` · `Formulár prihlášky
 |---|---|---|
 | 0 | Obsahová inventúra, súpisky kategórií, zber podkladov od trénerov | 1 týždeň |
 | 1 | Dizajn systém + návrh homepage, tímu a rozpisu | 2 týždne |
-| 2 | Astro projekt, CMS schémy, roly, komponenty | 2 týždne |
+| 2 | Next.js statický export, obsahové súbory v Gite, komponenty | 2 týždne |
 | 3 | Migrácia obsahu + prepis grafík na text | 1–2 týždne |
 | 4 | Rozpis, zápasy, `.ics`, formuláre, vyhľadávanie | 1 týždeň |
 | 5 | QA, SEO, presmerovania, zaškolenie, spustenie | 1 týždeň |
@@ -360,7 +383,8 @@ zdržania — súpisky a rozpis treba dodať v použiteľnej podobe.
 
 ## 9. Čo treba rozhodnúť pred štartom
 
-1. **Technológia** — Astro + Sanity (odporúčané) vs. WordPress s vlastnou témou.
+1. **Finálna implementačná fáza** — preniesť prechodový statický prototyp do
+   Next.js aplikácie so statickým exportom.
 2. **GDPR pri súpiskách** — zverejňovať mená a fotky detí? Odporúčam: meno,
    číslo a ročník pri žiakoch a starších, u prípravky bez mien; fotky len so
    súhlasom rodiča.

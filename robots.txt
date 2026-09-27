@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /
+
+Sitemap: https://novyweb.smartitbiz.com/sitemap.xml

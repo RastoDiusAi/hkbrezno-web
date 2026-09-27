@@ -10,7 +10,10 @@ Návrh a implementácia novej webovej stránky pre hokejový klub HK Brezno
 | [`index.html`](index.html) | **Implementovaný dizajn** — funkčná stránka s 12 podstránkami, routovaním, prilepenou navigáciou a odpočtom do zápasu. Generovaný z design canvasu. |
 | [`build.py`](build.py) | Transpiler: prevedie `design-canvas.dc.html` na samostatný `index.html` bez runtime závislostí. |
 | [`design-canvas.dc.html`](design-canvas.dc.html) | Zdrojový design canvas importovaný z projektu na `claude.ai/design`. **Needituje sa priamo** — je to vstup pre `build.py`. |
-| [`NAVRH-STRUKTURY.md`](NAVRH-STRUKTURY.md) | Návrh informačnej architektúry, obsahových modelov pre CMS, technológie, hostingu a plánu realizácie. |
+| [`content/`](content) | Publikačný obsah v Gite: články, tímy, tréneri, partneri, dokumenty. |
+| [`public/`](public) | Verejné obrázky a dokumenty pripravené pre budúci Next.js statický export. |
+| [`send-form.php`](send-form.php) | Serverový endpoint pre rodičovský formulár na klasickom PHP hostingu, bez databázy. |
+| [`NAVRH-STRUKTURY.md`](NAVRH-STRUKTURY.md) | Informačná architektúra a historický návrh. Technologické rozhodnutie je aktualizované podľa aktuálnych pravidiel: Next.js statický export, obsah v Gite, PHP formulár. |
 | [`prototyp.html`](prototyp.html) | Skorší vizuálny prototyp (4 obrazovky, responzívny, prepínač Desktop/Mobil) — slúžil na odladenie dizajnového smeru. |
 | `assets/` | Logo klubu. Fotografie trénerov chýbajú — pozri nižšie. |
 
@@ -21,8 +24,17 @@ python3 build.py
 ```
 
 Skript nemá žiadne závislosti (iba štandardná knižnica Pythonu 3). Vypíše počet
-vygenerovaných podstránok, fotomiest a hover pravidiel; pri akejkoľvek
-nevyriešenej šablónovej väzbe zlyhá s chybou namiesto tichého prepustenia.
+vygenerovaných podstránok, fotomiest, hover pravidiel a publikovaných článkov.
+Pri akejkoľvek nevyriešenej šablónovej väzbe alebo chybnom obsahu zlyhá s jasnou
+chybou namiesto tichého prepustenia.
+
+Build zároveň:
+
+- validuje články v `content/articles/**/*.md`,
+- generuje detail článku do `aktuality/<slug>/index.html`,
+- generuje `sitemap.xml`,
+- generuje `robots.txt` s blokovaním indexácie demo subdomény,
+- synchronizuje obsah `public/` do web rootu podobne, ako to robí Next.js.
 
 Prezeranie: otvor `index.html` priamo v prehliadači (nepotrebuje server).
 
@@ -52,6 +64,11 @@ Hotové:
   Pre rodičov, Partneri, E-shop, Prihláška.
 - Routovanie medzi podstránkami, aktívny stav v menu, prilepená navigácia po
   odscrollovaní, živý odpočet do najbližšieho zápasu, 69 hover stavov.
+- Základná obsahová štruktúra podľa pravidiel: `content/articles`, `content/pages`,
+  `content/teams`, `content/coaches`, `content/partners`, `public/images`,
+  `public/documents`, `app`, `components`, `lib/content`.
+- Rodičovský formulár odosiela na `send-form.php`; údaje sa neukladajú do
+  databázy a SMTP/API tajomstvá nie sú vo frontende.
 
 Zostáva:
 
@@ -64,8 +81,11 @@ Zostáva:
 3. **Responzivita** — dizajn je zatiaľ fixná plocha 1440 px (tak je navrhnutý
    v canvase). Prepis na mobil je samostatný krok; rodičia web otvárajú
    prevažne na telefóne, takže má vysokú prioritu.
-4. **CMS a hosting** — navrhnuté v [`NAVRH-STRUKTURY.md`](NAVRH-STRUKTURY.md)
-   (Astro + Sanity + Cloudflare Pages).
+4. **Migrácia na finálnu Next.js aplikáciu** — cieľ je `output: 'export'`,
+   bez API routes, middleware, ISR a bez závislosti od Vercelu.
+5. **Nasadenie formulára** — pred testovaním treba na hostingu zapnúť HTTPS a
+   nastaviť cieľový e-mail cez `HK_FORM_TO` alebo upraviť fallback v
+   `send-form.php`.
 
 ## Poznámka k obsahu
 

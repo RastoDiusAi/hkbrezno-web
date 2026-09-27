@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Doplniť trénera",
+    "role": "Tréner",
+    "license": "",
+    "email": "",
+    "phone": "",
+    "teams": [],
+    "photo": "",
+    "order": 100,
+    "active": false
+  }
+]

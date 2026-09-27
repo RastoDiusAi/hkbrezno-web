@@ -22,10 +22,17 @@ Spustenie:  python3 build.py
 import re
 import sys
 import pathlib
+import html as html_lib
+import json
+import shutil
+from datetime import date, datetime, timezone
 
 HERE = pathlib.Path(__file__).parent
 SRC = HERE / "design-canvas.dc.html"
 OUT = HERE / "index.html"
+CONTENT = HERE / "content"
+PUBLIC = HERE / "public"
+SITE_URL = "https://novyweb.smartitbiz.com"
 
 PAGES = ['domov', 'novinky', 'zapasy', 'tabulka', 'timy', 'supiska',
          'klub', 'stadion', 'rodicia', 'partneri', 'eshop', 'prihlaska']
@@ -47,6 +54,7 @@ MATCH_TARGET = '2026-09-12T17:30:00'   # najbližší zápas z pôvodnej logiky
 
 # start tag, ktorý korektne preskočí `>` vnútri hodnôt atribútov
 TAG_RE = re.compile(r'<([a-zA-Z][\w-]*)((?:[^>"]|"[^"]*")*?)(/?)>')
+SLUG_RE = re.compile(r'^[a-z0-9]+(?:-[a-z0-9]+)*$')
 
 hover_rules = []   # index -> CSS deklarácie
 
@@ -55,7 +63,296 @@ def fail(msg):
     sys.exit(f"build.py: {msg}")
 
 
+def parse_scalar(value):
+    value = value.strip()
+    if value in ("true", "false"):
+        return value == "true"
+    if (value.startswith('"') and value.endswith('"')) or (
+            value.startswith("'") and value.endswith("'")):
+        return value[1:-1]
+    return value
+
+
+def parse_frontmatter(text, source):
+    if not text.startswith("---\n"):
+        fail(f"{source}: chýba front matter blok")
+    end = text.find("\n---", 4)
+    if end == -1:
+        fail(f"{source}: front matter nie je ukončený")
+    meta_text = text[4:end].strip("\n")
+    body = text[end + 4:].lstrip("\n")
+    meta = {}
+    current_list = None
+    for line in meta_text.splitlines():
+        if not line.strip():
+            continue
+        if line.startswith("  - "):
+            if current_list is None:
+                fail(f"{source}: položka zoznamu bez kľúča: {line}")
+            meta[current_list].append(parse_scalar(line[4:]))
+            continue
+        current_list = None
+        if ":" not in line:
+            fail(f"{source}: neplatný riadok front matter: {line}")
+        key, value = line.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key:
+            fail(f"{source}: prázdny kľúč vo front matter")
+        if value == "":
+            meta[key] = []
+            current_list = key
+        else:
+            meta[key] = parse_scalar(value)
+    return meta, body
+
+
+def markdown_to_html(markdown):
+    out = []
+    paragraph = []
+    in_list = False
+
+    def flush_paragraph():
+        if paragraph:
+            text = " ".join(paragraph)
+            out.append(f"<p>{html_lib.escape(text)}</p>")
+            paragraph.clear()
+
+    def close_list():
+        nonlocal in_list
+        if in_list:
+            out.append("</ul>")
+            in_list = False
+
+    for raw in markdown.splitlines():
+        line = raw.rstrip()
+        if not line:
+            flush_paragraph()
+            close_list()
+            continue
+        if line.startswith("# "):
+            flush_paragraph()
+            close_list()
+            out.append(f"<h1>{html_lib.escape(line[2:].strip())}</h1>")
+            continue
+        if line.startswith("## "):
+            flush_paragraph()
+            close_list()
+            out.append(f"<h2>{html_lib.escape(line[3:].strip())}</h2>")
+            continue
+        if line.startswith("### "):
+            flush_paragraph()
+            close_list()
+            out.append(f"<h3>{html_lib.escape(line[4:].strip())}</h3>")
+            continue
+        if line.startswith("- "):
+            flush_paragraph()
+            if not in_list:
+                out.append("<ul>")
+                in_list = True
+            out.append(f"<li>{html_lib.escape(line[2:].strip())}</li>")
+            continue
+        paragraph.append(line.strip())
+
+    flush_paragraph()
+    close_list()
+    return "\n".join(out)
+
+
+def validate_article(path):
+    meta, body = parse_frontmatter(path.read_text(encoding="utf-8"), path)
+    required = ("title", "slug", "date", "description", "published")
+    for key in required:
+        if key not in meta:
+            fail(f"{path}: chýba povinné pole `{key}`")
+    if not isinstance(meta["published"], bool):
+        fail(f"{path}: `published` musí byť true alebo false")
+    if not SLUG_RE.match(str(meta["slug"])):
+        fail(f"{path}: `slug` musí používať malé písmená, čísla a pomlčky")
+    try:
+        article_date = date.fromisoformat(str(meta["date"]))
+    except ValueError:
+        fail(f"{path}: `date` musí byť vo formáte YYYY-MM-DD")
+    publish_date = meta.get("publishDate")
+    if publish_date:
+        try:
+            publish_date = date.fromisoformat(str(publish_date))
+        except ValueError:
+            fail(f"{path}: `publishDate` musí byť vo formáte YYYY-MM-DD")
+    return {
+        "title": str(meta["title"]),
+        "slug": str(meta["slug"]),
+        "date": article_date,
+        "publishDate": publish_date,
+        "description": str(meta["description"]),
+        "cover": str(meta.get("cover", "")),
+        "author": str(meta.get("author", "HK Brezno")),
+        "tags": meta.get("tags", []),
+        "published": meta["published"],
+        "body": body,
+        "path": path,
+    }
+
+
+def load_articles():
+    article_dir = CONTENT / "articles"
+    if not article_dir.exists():
+        return []
+    articles = [validate_article(path) for path in sorted(article_dir.rglob("*.md"))]
+    today = date.today()
+    published = []
+    seen = set()
+    for article in articles:
+        if article["slug"] in seen:
+            fail(f"duplicitný slug článku: {article['slug']}")
+        seen.add(article["slug"])
+        if not article["published"]:
+            continue
+        if article["publishDate"] and article["publishDate"] > today:
+            continue
+        published.append(article)
+    return sorted(published, key=lambda item: item["date"], reverse=True)
+
+
+def validate_json_file(path, required_keys):
+    if not path.exists():
+        return
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{path}: neplatný JSON ({exc})")
+    if not isinstance(data, list):
+        fail(f"{path}: očakávam zoznam objektov")
+    for i, item in enumerate(data, start=1):
+        if not isinstance(item, dict):
+            fail(f"{path}: položka {i} nie je objekt")
+        for key in required_keys:
+            if key not in item:
+                fail(f"{path}: položke {i} chýba `{key}`")
+
+
+def validate_content():
+    validate_json_file(CONTENT / "partners" / "partners.json",
+                       ("name", "active", "order"))
+    validate_json_file(CONTENT / "teams" / "teams.json",
+                       ("name", "slug", "active", "order"))
+    validate_json_file(CONTENT / "coaches" / "coaches.json",
+                       ("name", "role", "active", "order"))
+    validate_json_file(CONTENT / "documents" / "documents.json",
+                       ("title", "file", "active", "order"))
+    return load_articles()
+
+
+def page_shell(title, description, canonical, body_html):
+    safe_title = html_lib.escape(title)
+    safe_meta_title = html_lib.escape(f"{title} | HK Brezno")
+    safe_description = html_lib.escape(description)
+    safe_canonical = html_lib.escape(canonical)
+    return f"""<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{safe_meta_title}</title>
+<meta name="description" content="{safe_description}">
+<meta property="og:title" content="{safe_meta_title}">
+<meta property="og:description" content="{safe_description}">
+<meta property="og:type" content="article">
+<link rel="canonical" href="{safe_canonical}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{{margin:0;background:#E7ECF1;color:#0B1B33;font-family:'Barlow',system-ui,sans-serif;line-height:1.65}}
+a{{color:#CE1126;text-decoration:none}}a:hover{{color:#9E0C1C}}
+.top{{background:linear-gradient(112deg,#0D2242 0%,#14315C 52%,#1C4074 100%);color:#fff;border-bottom:3px solid #CE1126}}
+.wrap{{max-width:940px;margin:0 auto;padding:28px 22px}}
+.brand{{display:flex;align-items:center;gap:12px;font-family:'Archivo Black',sans-serif;letter-spacing:.02em}}
+.brand img{{width:48px;height:48px}}
+.hero{{padding:58px 22px 50px}}
+.eyebrow{{font-family:'Barlow Condensed',sans-serif;color:#CE1126;letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:13px}}
+h1{{font-family:'Archivo Black',sans-serif;font-size:clamp(36px,8vw,64px);line-height:.98;margin:12px 0 18px;letter-spacing:0}}
+main{{background:#fff;margin:34px auto 60px;max-width:880px;padding:42px clamp(22px,5vw,58px);box-shadow:0 14px 34px rgba(11,27,51,.12)}}
+main h1{{font-size:38px}}main h2{{font-family:'Archivo Black',sans-serif;margin-top:34px}}main p{{font-size:18px;color:#334155}}main li{{font-size:18px;color:#334155;margin:7px 0}}
+.meta{{color:#CBD5E1;font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;font-weight:700}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap brand"><img src="/assets/logo-hk-brezno.png" alt="HK Brezno"><span>HK Brezno</span></div>
+  <div class="wrap hero">
+    <div class="eyebrow">Aktuality</div>
+    <h1>{safe_title}</h1>
+    <div class="meta">{safe_description}</div>
+  </div>
+</header>
+<main>
+{body_html}
+</main>
+</body>
+</html>
+"""
+
+
+def generate_article_pages(articles):
+    for article in articles:
+        out_dir = HERE / "aktuality" / article["slug"]
+        out_dir.mkdir(parents=True, exist_ok=True)
+        body_html = markdown_to_html(article["body"])
+        canonical = f"{SITE_URL}/aktuality/{article['slug']}/"
+        page = page_shell(
+            article["title"],
+            article["description"],
+            canonical,
+            body_html,
+        )
+        (out_dir / "index.html").write_text(page, encoding="utf-8")
+
+
+def generate_seo_files(articles):
+    urls = [f"{SITE_URL}/"]
+    urls.extend(f"{SITE_URL}/aktuality/{article['slug']}/" for article in articles)
+    sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
+               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    now = datetime.now(timezone.utc).date().isoformat()
+    for url in urls:
+        sitemap.append("  <url>")
+        sitemap.append(f"    <loc>{html_lib.escape(url)}</loc>")
+        sitemap.append(f"    <lastmod>{now}</lastmod>")
+        sitemap.append("  </url>")
+    sitemap.append("</urlset>")
+    (HERE / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
+    (HERE / "robots.txt").write_text(
+        "User-agent: *\nDisallow: /\n\n"
+        f"Sitemap: {SITE_URL}/sitemap.xml\n",
+        encoding="utf-8",
+    )
+
+
+def sync_public_assets():
+    if not PUBLIC.exists():
+        return
+    for child in PUBLIC.iterdir():
+        if child.name.startswith("."):
+            continue
+        target = HERE / child.name
+        if child.is_dir():
+            target.mkdir(exist_ok=True)
+            for src in child.rglob("*"):
+                if src.is_dir() or src.name.startswith("."):
+                    continue
+                rel = src.relative_to(child)
+                dst = target / rel
+                dst.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(src, dst)
+        else:
+            shutil.copy2(child, target / child.name)
+
+
 # ---------------------------------------------------------------- 0. načítanie
+articles = validate_content()
+sync_public_assets()
+
 if not SRC.exists():
     fail(f"chýba {SRC.name} — najprv stiahni .dc.html z design projektu")
 src = SRC.read_text(encoding='utf-8')
@@ -281,6 +578,11 @@ html = f"""<!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>HK Brezno — Rytieri z Brezna</title>
+<meta name="description" content="Nový statický web HK Brezno pre aktuality, tímy, zápasy, rodičov a nábor mladých hokejistov.">
+<meta property="og:title" content="HK Brezno — Rytieri z Brezna">
+<meta property="og:description" content="Nový statický web HK Brezno pre aktuality, tímy, zápasy, rodičov a nábor mladých hokejistov.">
+<meta property="og:type" content="website">
+<link rel="canonical" href="{SITE_URL}/">
 {fonts}
 <style>
 {base_css}
@@ -516,5 +818,8 @@ html = f"""<!DOCTYPE html>
 """
 
 OUT.write_text(html, encoding='utf-8')
+generate_article_pages(articles)
+generate_seo_files(articles)
 print(f"OK  {OUT.name}: {len(html)} znakov, {n_slots} fotomiest, "
-      f"{len(hover_rules)} hover pravidiel, {len(PAGES)} stránok")
+      f"{len(hover_rules)} hover pravidiel, {len(PAGES)} stránok, "
+      f"{len(articles)} publikovaných článkov")
