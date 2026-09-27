@@ -235,7 +235,7 @@ def validate_content():
     validate_json_file(CONTENT / "partners" / "partners.json",
                        ("name", "active", "order"))
     validate_json_file(CONTENT / "teams" / "teams.json",
-                       ("name", "slug", "active", "order"))
+                       ("name", "slug", "competition", "competitionUrl", "active", "order"))
     validate_json_file(CONTENT / "coaches" / "coaches.json",
                        ("name", "role", "active", "order"))
     validate_json_file(CONTENT / "documents" / "documents.json",

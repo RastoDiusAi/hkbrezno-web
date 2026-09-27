@@ -1,18 +1,56 @@
 [
   {
-    "name": "Prípravka U8",
-    "slug": "pripravka-u8",
-    "years": "deti od 4 rokov",
-    "description": "Prvé kroky na ľade, základné korčuľovanie a radosť z hry.",
+    "name": "A tím",
+    "slug": "a-tim",
+    "competition": "2. slovenská hokejová liga",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/home/1199/2-slovenska-hokejova-liga",
+    "description": "Seniorský tím HK Brezno.",
     "order": 1,
     "active": true
   },
   {
-    "name": "Mladší žiaci",
-    "slug": "mladsi-ziaci",
-    "years": "",
-    "description": "Kategória pre rozvoj techniky, pohybu a tímových návykov.",
+    "name": "Starší žiaci",
+    "slug": "starsi-ziaci",
+    "competition": "Liga starších žiakov A1",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/results-date/1212/liga-starsich-ziakov-a1",
+    "description": "Tím starších žiakov HK Brezno.",
     "order": 2,
+    "active": true
+  },
+  {
+    "name": "Mladší žiaci 7. ročník",
+    "slug": "mladsi-ziaci-7-rocnik",
+    "competition": "Liga mladších žiakov AA",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/results-date/1207/liga-mladsich-ziakov-aa",
+    "description": "Tím mladších žiakov siedmeho ročníka HK Brezno.",
+    "order": 3,
+    "active": true
+  },
+  {
+    "name": "Mladší žiaci 6. ročník",
+    "slug": "mladsi-ziaci-6-rocnik",
+    "competition": "Liga mladších žiakov A",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/results-date/1208/liga-mladsich-ziakov-a",
+    "description": "Tím mladších žiakov šiesteho ročníka HK Brezno.",
+    "order": 4,
+    "active": true
+  },
+  {
+    "name": "Prípravka 5. ročník",
+    "slug": "pripravka-5-rocnik",
+    "competition": "Liga prípraviek HP5 Mini Stred",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/teams/1228/liga-pripraviek-hp5-mini-stred/team/670970/hk-brezno",
+    "description": "Prípravka piateho ročníka HK Brezno.",
+    "order": 5,
+    "active": true
+  },
+  {
+    "name": "Prípravka 4. ročník",
+    "slug": "pripravka-4-rocnik",
+    "competition": "Liga prípraviek HP4 Mini Stred",
+    "competitionUrl": "https://www.hockeyslovakia.sk/sk/stats/teams/1230/liga-pripraviek-hp4-mini-stred/team/671231/hk-brezno-modri",
+    "description": "Prípravka štvrtého ročníka HK Brezno Modrí.",
+    "order": 6,
     "active": true
   }
 ]
