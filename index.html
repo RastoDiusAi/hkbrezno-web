@@ -16,6 +16,8 @@
 body { margin: 0; background: #E7ECF1; font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: #CE1126; text-decoration: none; }
   a:hover { color: #9E0C1C; }
+  .social-icon:hover { background: #14315C; border-color: #14315C !important; color: #fff !important; }
+  .social-text:hover { color: #fff !important; }
   ::selection { background: #CE1126; color: #fff; }
   @keyframes hkPulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
 
@@ -309,9 +311,8 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <span style="color: #B6C0CE">/</span>
       <span>info@hkbrezno.sk</span>
       <span style="display: flex; gap: 10px; margin-left: 8px">
-        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">FB</span>
-        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">IG</span>
-        <span style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">YT</span>
+        <a class="social-icon" href="https://www.facebook.com/horehronskirytieri" target="_blank" rel="noopener noreferrer" aria-label="Facebook HK Brezno" title="Facebook HK Brezno" style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">FB</a>
+        <a class="social-icon" href="https://www.instagram.com/hk_brezno_official" target="_blank" rel="noopener noreferrer" aria-label="Instagram HK Brezno" title="Instagram HK Brezno" style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">IG</a>
       </span>
     </div>
   </div>
@@ -1341,6 +1342,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <span>Rázusova 12, 977 01 Brezno</span>
           <span>info@hkbrezno.sk</span>
           <span>+421 48 611 22 33</span>
+          <span style="display: flex; gap: 16px"><a class="social-text" href="https://www.facebook.com/horehronskirytieri" target="_blank" rel="noopener noreferrer" aria-label="Facebook HK Brezno" style="color: #8C9AB0">Facebook</a><a class="social-text" href="https://www.instagram.com/hk_brezno_official" target="_blank" rel="noopener noreferrer" aria-label="Instagram HK Brezno" style="color: #8C9AB0">Instagram</a></span>
           <span style="cursor: pointer" onclick="go('stadion')" data-hv="68">Prevádzka štadióna</span>
         </div>
       </div>
