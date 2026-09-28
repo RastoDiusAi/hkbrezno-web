@@ -14,6 +14,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <script src="./image-slot.js"></script>
 <style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { max-width: 100%; overflow-x: hidden; }
   body { margin: 0; background: #E7ECF1; font-family: 'Barlow', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
   a { color: #CE1126; text-decoration: none; }
   a:hover { color: #9E0C1C; }
@@ -59,6 +61,54 @@
   .match-location.home { background: #CE1126; color: #fff; }
   .match-location.away { background: #EDF0F4; color: #59687A; }
   .match-calendar-source { margin-top: 28px; color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  .article-home-grid, .article-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
+  .article-home-grid { padding: 34px 48px 0; }
+  .article-news-page { padding: 40px 48px 90px; }
+  .article-news-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+  .article-news-heading h2 { margin: 0; color: #0B1B33; font-family: 'Archivo Black', sans-serif; font-size: 30px; letter-spacing: 0; }
+  .article-news-heading span { color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .12em; text-transform: uppercase; }
+  .article-card { min-width: 0; display: flex; flex-direction: column; overflow: hidden; background: #fff; color: #0B1B33; border-bottom: 3px solid #14315C; box-shadow: 0 2px 0 #E1E6EC; transition: transform .18s ease, box-shadow .18s ease; }
+  .article-card:hover { color: #0B1B33; transform: translateY(-3px); box-shadow: 0 14px 34px rgba(11,27,51,.16); }
+  .article-card-media { position: relative; aspect-ratio: 16 / 9; overflow: hidden; background: #DDE5EE; }
+  .article-card-media > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .article-card-fallback { width: 100%; height: 100%; display: grid; place-items: center; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); }
+  .article-card-fallback img { width: 82px; height: 82px; object-fit: contain; }
+  .article-card-body { display: flex; flex: 1; flex-direction: column; padding: 22px 24px 26px; }
+  .article-card-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; }
+  .article-card-meta span { padding: 4px 8px; background: #CE1126; color: #fff; font-weight: 700; }
+  .article-card h3 { margin: 0 0 11px; color: #0B1B33; font-family: 'Archivo Black', sans-serif; font-size: 20px; line-height: 1.28; letter-spacing: 0; overflow-wrap: anywhere; }
+  .article-card p { display: -webkit-box; margin: 0; overflow: hidden; color: #4A5768; font-size: 15px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
+  .article-empty { grid-column: 1 / -1; margin: 0; padding: 32px; background: #fff; color: #4A5768; }
+  .section-kicker { margin-bottom: 9px; color: #CE1126; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+  .club-page { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .75fr); gap: 28px; align-items: start; padding: 44px 48px 90px; }
+  .club-history { min-width: 0; background: #fff; padding: 38px 42px 46px; }
+  .club-history > h2, .club-contact h2, .ice-schedule-heading h2 { margin: 0; color: #0B1B33; font-family: 'Archivo Black', sans-serif; font-size: 32px; line-height: 1.12; letter-spacing: 0; }
+  .club-history-content { margin-top: 26px; color: #4A5768; font-size: 16px; line-height: 1.72; }
+  .club-history-content h2 { margin: 42px 0 18px; color: #14315C; font-family: 'Archivo Black', sans-serif; font-size: 25px; letter-spacing: 0; }
+  .club-history-content p { margin: 0 0 18px; }
+  .club-history-content .club-history-lead { color: #0B1B33; font-size: 19px; font-weight: 600; line-height: 1.62; }
+  .club-history-content .club-history-emphasis { padding: 22px 24px; border-left: 4px solid #CE1126; background: #F3F6F9; color: #243A59; font-weight: 600; }
+  .club-source { display: inline-block; margin-top: 16px; border-bottom: 1px solid currentColor; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .club-contact { position: sticky; top: 90px; padding: 34px 32px 38px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; }
+  .club-contact .section-kicker { color: #E44758; }
+  .club-contact h2 { color: #fff; font-size: 25px; }
+  .club-contact dl { margin: 26px 0 0; }
+  .club-contact dl > div { padding: 15px 0; border-top: 1px solid #2B4C7E; }
+  .club-contact dt { margin-bottom: 5px; color: #8FA0B9; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+  .club-contact dd { margin: 0; color: #fff; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
+  .club-contact a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .ice-schedule-page { padding: 40px 48px 90px; }
+  .ice-schedule-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
+  .ice-schedule-open { flex: none; border: 2px solid #14315C; padding: 13px 20px; color: #14315C; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
+  .ice-schedule-open:hover { background: #14315C; color: #fff; }
+  .ice-schedule-media { width: 100%; min-width: 0; min-height: 520px; display: grid; place-items: center; overflow: hidden; background: #fff; border-top: 4px solid #CE1126; }
+  .ice-schedule-frame { display: block; width: 100%; height: 78vh; min-height: 720px; border: 0; }
+  .ice-schedule-image { display: block; width: 100%; max-width: 100%; height: auto; max-height: 1100px; object-fit: contain; }
+  .ice-schedule-empty { margin: 0; padding: 50px 20px; color: #4A5768; text-align: center; }
+  .ice-schedule-meta { margin-top: 14px; color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  @media (max-width: 1050px) {
+    .article-home-grid, .article-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 800px) {
     .match-hero { padding: 42px 20px 46px; }
     .match-hero > div { line-height: 1.45; }
@@ -83,6 +133,24 @@
     .match-info { text-align: right; }
     .match-info span { display: none; }
     .match-location { grid-column: 3; justify-self: end; box-sizing: border-box; max-width: 54px; padding: 6px 7px; font-size: 10px; }
+    .article-home-grid, .article-grid { grid-template-columns: minmax(0, 1fr); }
+    .article-home-grid { padding: 28px 18px 0; }
+    .article-news-page { padding: 28px 18px 60px; }
+    .article-news-heading { align-items: flex-start; flex-direction: column; gap: 6px; }
+    .article-news-heading h2 { font-size: 24px; line-height: 1.15; }
+    .article-card-body { padding: 20px 20px 23px; }
+    .club-page { grid-template-columns: minmax(0, 1fr); padding: 28px 18px 60px; }
+    .club-history { padding: 27px 22px 34px; }
+    .club-history > h2, .ice-schedule-heading h2 { font-size: 25px; }
+    .club-history-content .club-history-lead { font-size: 17px; }
+    .club-contact { position: static; padding: 28px 24px 32px; }
+    .ice-schedule-page { padding: 28px 18px 60px; }
+    .ice-schedule-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
+    .ice-schedule-open { box-sizing: border-box; width: 100%; text-align: center; }
+    .ice-schedule-media { min-height: 260px; }
+    .ice-schedule-frame { min-height: 560px; height: 72vh; }
+    .home-hero-actions { width: 100%; max-width: 310px; flex-direction: column; }
+    .home-hero-actions button { width: 100%; }
   }
   ::selection { background: #CE1126; color: #fff; }
   @keyframes hkPulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
@@ -102,8 +170,6 @@
       <span>2. liga</span>
     </div>
     <div style="display: flex; gap: 22px; align-items: center">
-      <span>+421 48 611 22 33</span>
-      <span style="color: #B6C0CE">/</span>
       <span>info@hkbrezno.sk</span>
       <span style="display: flex; gap: 10px; margin-left: 8px">
         <a class="social-icon" href="https://www.facebook.com/horehronskirytieri" target="_blank" rel="noopener noreferrer" aria-label="Facebook HK Brezno" title="Facebook HK Brezno" style="width: 22px; height: 22px; border: 1px solid #C0CAD8; display: grid; place-items: center; color: #14315C; font-size: 11px; letter-spacing: 0">FB</a>
@@ -133,10 +199,9 @@
       <button onClick="{{ go.domov }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.domov }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; position: relative" style-hover="color: #fff">Domov<span style="height: 3px; width: 100%; background: {{ u.domov }}"></span></button>
       <button onClick="{{ go.novinky }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.novinky }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Novinky<span style="height: 3px; width: 100%; background: {{ u.novinky }}"></span></button>
       <button onClick="{{ go.zapasy }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.zapasy }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Zápasy<span style="height: 3px; width: 100%; background: {{ u.zapasy }}"></span></button>
+      <button onClick="{{ go.rozpisladu }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.rozpisladu }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Rozpis ľadu<span style="height: 3px; width: 100%; background: {{ u.rozpisladu }}"></span></button>
       <button onClick="{{ go.timy }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.timy }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Tímy<span style="height: 3px; width: 100%; background: {{ u.timy }}"></span></button>
-      <button onClick="{{ go.supiska }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.supiska }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Súpiska<span style="height: 3px; width: 100%; background: {{ u.supiska }}"></span></button>
       <button onClick="{{ go.klub }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.klub }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Klub<span style="height: 3px; width: 100%; background: {{ u.klub }}"></span></button>
-      <button onClick="{{ go.stadion }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.stadion }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Štadión<span style="height: 3px; width: 100%; background: {{ u.stadion }}"></span></button>
       <button onClick="{{ go.rodicia }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.rodicia }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Pre rodičov<span style="height: 3px; width: 100%; background: {{ u.rodicia }}"></span></button>
       <button onClick="{{ go.partneri }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.partneri }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Partneri<span style="height: 3px; width: 100%; background: {{ u.partneri }}"></span></button>
     </nav>
@@ -164,9 +229,9 @@
           <span style="flex: 1; height: 1px; background: linear-gradient(90deg, rgba(20,49,92,.35), rgba(20,49,92,0))"></span>
         </div>
         <p style="color: #3F4E64; font-size: 19px; line-height: 1.6; max-width: 660px; margin: 0 0 36px; text-wrap: pretty">Na ľade bojujeme ako rytieri, mimo ľadu sme priatelia. Od prípravky až po seniorov — pod Nízkymi Tatrami rastie hokejová generácia.</p>
-        <div style="display: flex; gap: 14px; justify-content: center; pointer-events: auto">
+        <div class="home-hero-actions" style="display: flex; gap: 14px; justify-content: center; pointer-events: auto">
           <button onClick="{{ go.prihlaska }}" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" style-hover="background: #E31B31">Priveď dieťa na hokej</button>
-          <button onClick="{{ go.zapasy }}" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 18px 33px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase" style-hover="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff">Rozpis zápasov</button>
+          <button onClick="{{ go.rozpisladu }}" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 18px 33px; font-family: 'Archivo Black', sans-serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase" style-hover="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff">Rozpis ľadu</button>
         </div>
       </div>
       <div style="position: absolute; top: 34px; right: 300px; display: grid; grid-template-columns: repeat(5, 22px); gap: 12px; pointer-events: none; font-family: 'Barlow', sans-serif; font-size: 20px; line-height: 1; color: rgba(120,133,152,.4)"><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span></div>
@@ -253,6 +318,7 @@
       <button onClick="{{ go.novinky }}" style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 14px 26px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" style-hover="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff">Všetky novinky</button>
     </div>
 
+    <!-- HOME_ARTICLES_START -->
     <div style="padding: 34px 48px 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px">
       <div style="background: #fff; box-shadow: 0 2px 0 #E1E6EC; cursor: pointer" style-hover="box-shadow: 0 14px 34px rgba(11,27,51,.16)">
         <div style="height: 210px; position: relative"><image-slot id="news-1" shape="rect" placeholder="Fotka z tréningu prípravky"></image-slot></div>
@@ -288,7 +354,9 @@
         </div>
       </div>
     </div>
+    <!-- HOME_ARTICLES_END -->
 
+    <!-- HOME_REMOVED_START -->
     <div style="margin: 84px 48px 0; position: relative; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); overflow: hidden; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
       <img src="./assets/logo-hk-brezno.png" alt="" style="position: absolute; left: 320px; bottom: -60px; width: 300px; opacity: .07; pointer-events: none">
       <div style="padding: 62px 56px 66px; position: relative">
@@ -370,6 +438,7 @@
       </div>
     </div>
 
+    <!-- HOME_REMOVED_END -->
     <div style="position: relative; padding: 84px 48px 90px">
       <div style="position: absolute; right: 48px; top: 70px; display: grid; grid-template-columns: repeat(4, 22px); gap: 12px; pointer-events: none; font-family: 'Barlow', sans-serif; font-size: 20px; line-height: 1; color: rgba(120,133,152,.42)"><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span></div>
       <div style="text-align: center; margin-bottom: 34px; position: relative">
@@ -555,6 +624,10 @@
     </div>
     <div style="height: 90px"></div>
   </div>
+  </sc-if>
+
+  <sc-if value="{{ isRozpisladu }}">
+  <div></div>
   </sc-if>
 
   <sc-if value="{{ isTabulka }}">
@@ -1011,7 +1084,6 @@
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
           <span style="cursor: pointer" onClick="{{ go.klub }}" style-hover="color: #fff">O klube</span>
           <span style="cursor: pointer" onClick="{{ go.timy }}" style-hover="color: #fff">Tímy a kategórie</span>
-          <span style="cursor: pointer" onClick="{{ go.supiska }}" style-hover="color: #fff">Súpiska</span>
           <span style="cursor: pointer" onClick="{{ go.partneri }}" style-hover="color: #fff">Partneri</span>
         </div>
       </div>
@@ -1019,17 +1091,16 @@
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Sezóna</div>
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
           <span style="cursor: pointer" onClick="{{ go.zapasy }}" style-hover="color: #fff">Rozpis zápasov</span>
+          <span style="cursor: pointer" onClick="{{ go.rozpisladu }}" style-hover="color: #fff">Rozpis ľadu</span>
           <span style="cursor: pointer" onClick="{{ go.novinky }}" style-hover="color: #fff">Novinky</span>
         </div>
       </div>
       <div>
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Kontakt</div>
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
-          <span>Rázusova 12, 977 01 Brezno</span>
+          <span>Štvrť Ladislava Novomeského 2157/34, 977 01 Brezno</span>
           <span>info@hkbrezno.sk</span>
-          <span>+421 48 611 22 33</span>
           <span style="display: flex; gap: 16px"><a class="social-text" href="https://www.facebook.com/horehronskirytieri" target="_blank" rel="noopener noreferrer" aria-label="Facebook HK Brezno" style="color: #8C9AB0">Facebook</a><a class="social-text" href="https://www.instagram.com/hk_brezno_official" target="_blank" rel="noopener noreferrer" aria-label="Instagram HK Brezno" style="color: #8C9AB0">Instagram</a></span>
-          <span style="cursor: pointer" onClick="{{ go.stadion }}" style-hover="color: #fff">Prevádzka štadióna</span>
         </div>
       </div>
     </div>
@@ -1058,7 +1129,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const p = this.state.page;
-    const pages = ['domov','novinky','zapasy','timy','supiska','klub','stadion','rodicia','partneri','prihlaska'];
+    const pages = ['domov','novinky','zapasy','rozpisladu','timy','klub','rodicia','partneri','prihlaska'];
     const go = {}, c = {}, u = {};
     pages.forEach(k => {
       go[k] = () => { this.setState({ page: k }); window.scrollTo(0, 0); };
@@ -1101,8 +1172,8 @@ class Component extends DCLogic {
     return {
       go, c, u, cd, roster, nav, isStuck: st,
       isDomov: p === 'domov', isNovinky: p === 'novinky', isZapasy: p === 'zapasy',
-      isTimy: p === 'timy', isSupiska: p === 'supiska',
-      isKlub: p === 'klub', isStadion: p === 'stadion', isRodicia: p === 'rodicia',
+      isRozpisladu: p === 'rozpisladu', isTimy: p === 'timy',
+      isKlub: p === 'klub', isRodicia: p === 'rodicia',
       isPartneri: p === 'partneri', isPrihlaska: p === 'prihlaska'
     };
   }

@@ -3,11 +3,12 @@
 Návrh štruktúry, obsahových modelov, technológie a dizajn systému pre redesign
 `hkbrezno.sk`.
 
-> Aktualizácia podľa pravidiel tvorby webu: technologické odporúčanie v staršej
-> časti dokumentu (Astro/Sanity/Cloudflare) je nahradené cieľom **Next.js v
-> režime statického exportu**, bez CMS a bez databázy. Publikačný obsah patrí do
-> Git repozitára (`content/`, `public/`) a jediná serverová funkcionalita je
-> PHP endpoint `send-form.php` pre rodičovský formulár na klasickom hostingu.
+> Aktualizácia technologického rozhodnutia (28. 9. 2026): verejný web zostáva
+> statický a bez databázy, ale WordPress slúži ako oddelený headless redakčný
+> systém pre aktuality. Publikované články a médiá sa cez REST API synchronizujú
+> do Git repozitára (`content/`, `public/`) ešte pred buildom. Produkčný frontend
+> preto nepotrebuje WordPress ani Node.js runtime. Jediná serverová funkcionalita
+> verejného webu je PHP endpoint `send-form.php` pre rodičovský formulár.
 
 ---
 

@@ -2,3 +2,6 @@ _check-*.html
 .DS_Store
 .image-slots.state.json
 __pycache__/
+.env
+.env.*
+!.env.example

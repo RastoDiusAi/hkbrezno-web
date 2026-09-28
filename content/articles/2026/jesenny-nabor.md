@@ -4,7 +4,7 @@ slug: "jesenny-nabor"
 date: "2026-09-23"
 description: "Informácie o jesennom nábore detí do HK Brezno."
 cover: "/images/articles/jesenny-nabor/cover.webp"
-published: true
+published: false
 author: "HK Brezno"
 tags:
   - nabor

@@ -1,0 +1,74 @@
+(function () {
+  'use strict';
+  var PAGES = ["domov", "novinky", "zapasy", "rozpisladu", "timy", "klub", "rodicia", "partneri", "prihlaska"];
+
+  function go(page, updateHistory) {
+    if (PAGES.indexOf(page) === -1) return;
+    document.documentElement.dataset.page = page;
+    document.documentElement.classList.remove('nav-open');
+    if (updateHistory !== false) {
+      var url = page === 'domov' ? location.pathname : location.pathname + '?page=' + encodeURIComponent(page);
+      history.pushState({ page: page }, '', url);
+    }
+    window.scrollTo(0, 0);
+    onScroll();
+  }
+
+  var requestedPage = new URLSearchParams(location.search).get('page');
+  if (requestedPage && PAGES.indexOf(requestedPage) !== -1) go(requestedPage, false);
+  window.addEventListener('popstate', function () {
+    var page = new URLSearchParams(location.search).get('page') || 'domov';
+    go(page, false);
+  });
+
+  document.addEventListener('click', function (event) {
+    var trigger = event.target.closest('[data-go]');
+    if (!trigger) return;
+    event.preventDefault();
+    go(trigger.dataset.go);
+  });
+
+  var bar = document.querySelector('[data-navbar]');
+  if (bar) {
+    var burger = document.createElement('button');
+    burger.className = 'hk-burger';
+    burger.type = 'button';
+    burger.setAttribute('aria-label', 'Menu');
+    burger.setAttribute('aria-expanded', 'false');
+    for (var i = 0; i < 3; i += 1) burger.appendChild(document.createElement('span'));
+    burger.addEventListener('click', function () {
+      var isOpen = document.documentElement.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', String(isOpen));
+    });
+    bar.appendChild(burger);
+    document.addEventListener('click', function (event) {
+      if (!document.documentElement.classList.contains('nav-open')) return;
+      if (bar.contains(event.target)) return;
+      document.documentElement.classList.remove('nav-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+  function onScroll() {
+    var y = window.scrollY || document.documentElement.scrollTop || 0;
+    if (bar) bar.classList.toggle('is-stuck', y > 120);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  var target = new Date('2026-10-03T17:30:00').getTime();
+  var cells = document.querySelectorAll('[data-cd]');
+  function pad(number) { return String(number).padStart(2, '0'); }
+  function tick() {
+    var diff = Math.max(0, target - Date.now());
+    var values = {
+      d: pad(Math.floor(diff / 86400000)),
+      h: pad(Math.floor(diff / 3600000) % 24),
+      m: pad(Math.floor(diff / 60000) % 60),
+      s: pad(Math.floor(diff / 1000) % 60)
+    };
+    cells.forEach(function (element) { element.textContent = values[element.dataset.cd]; });
+  }
+  tick();
+  window.setInterval(tick, 1000);
+})();

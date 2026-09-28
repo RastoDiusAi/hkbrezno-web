@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 1,
+  "source": "https://www.hkbrezno.sk",
+  "updatedAt": "2026-03-23T11:02:07",
+  "club": {
+    "contact": {
+      "modified": "2025-11-05T21:50:39",
+      "sourceUrl": "https://www.hkbrezno.sk/klub/kontakt/",
+      "name": "Hokejový klub Brezno",
+      "address": [
+        "Štvrť Ladislava Novomeského 2157/34",
+        "977 01 Brezno"
+      ],
+      "email": "info@hkbrezno.sk",
+      "companyId": "31905277",
+      "taxId": "2021170558",
+      "vatId": "SK2021170558",
+      "registry": "Register mimovládnych neziskových organizácií Ministerstva vnútra SR",
+      "registryNumber": "VVS/1-900/90-10231"
+    },
+    "history": {
+      "modified": "2025-11-05T21:51:20",
+      "sourceUrl": "https://www.hkbrezno.sk/klub/historia/",
+      "blocks": [
+        {
+          "tag": "h1",
+          "text": "História klubu"
+        },
+        {
+          "tag": "h3",
+          "text": "Tradovanie zimného korčuľovania a neskoršie začiatky ľadového hokeja v Brezne siahajú do roku 1908. V roku 1910 bolo otvorené prvé klzisko za malou stanicou na lúkach. Prvý „hokejový“ zápas sa odohral v roku 1913 na námestí a to medzi študentami Banskej Bystrice a Brezna. Bystričania vtedy zvíťazili 1:0. Vlastná hokejová hra podľa medzinárodných pravidiel zvaná „kanadský hokej“ sa dostáva do Brezna v roku 1935, kedy v Brezne vzniká prvý hokejový oddiel."
+        },
+        {
+          "tag": "h5",
+          "text": "Medzi najväčšie ikony nášho klubu patria naši odchovanci ako Ladislav Horský, ktorý sa stal hráčom ŠK Bratislava a neskôr aj reprezentantom ČSR. Taktiež sú to Vojtech Zachar, ktorý sa stal hráčom Žiliny a Simeček, Gallo a Klinec, ktorí hájili farby Slávie Bratislava.V roku 1985, seniori prvýkrát nastúpili do zväzom organizovanej súťaže Krajských majstrovstiev SR . Následne klub striedavo nastupoval v organizovaných súťažiach. Zlom nastal v roku 1997, keď sa družstvo prihlásilo do 2. hokejovej. Odvtedy bolo jej pravidelným účastníkom a posledné roky patrilo medzi popredné družstvá súťaže. V sezóne 2008/09 sa napokon podaril postup do 1. hokejovej ligy, kde tím hneď v prvej sezóne zaznamenal historický úspech 7. miesto. V sezóne 2013/2014 bol hokejový klub z Horehronia účastníkom 2. hokejovej ligy seniorov – skupina východ, kde ostáva dodnes."
+        },
+        {
+          "tag": "p",
+          "text": "1935 – HO ŠK Brezno"
+        },
+        {
+          "tag": "p",
+          "text": "1939 – ŠK Brezno nad Hronom"
+        },
+        {
+          "tag": "p",
+          "text": "1976- – Jednota SD Brezno"
+        },
+        {
+          "tag": "p",
+          "text": "TJ Mostáreň Brezno"
+        },
+        {
+          "tag": "p",
+          "text": "1988 – 1.MSK VTJ Brezno"
+        },
+        {
+          "tag": "p",
+          "text": "2003 – HK BREZNO"
+        },
+        {
+          "tag": "p",
+          "text": "Prvými reprezentantmi Hokejového oddielu ŠK Brezno boli hráči Dubiny, Laco, Barbarič, Révesz, Strádal, Šramko a brankár Cúth."
+        },
+        {
+          "tag": "p",
+          "text": "Po výmene generácií a menšom prerušení činnosti vznikol v roku 1939 nový oddiel s názvom ŠK Brezno. Jeho hráčmi sa stali bratia Zacharovci, Petraško, Dunajský, Giertl, Országh a bratia Brožovci."
+        },
+        {
+          "tag": "p",
+          "text": "Tento kolektív si vybojoval miesto v lige, kde súťažil proti tímom ako HC Poprad-Tatry, Prešov a Trenčín.\nNajväčšie úspechy dosiahli útočník Vojtech Zachar, obranca František Zachar, brankár Ondrej Petraško a útočníci bratia Brožovci s Dušanom Faškom."
+        },
+        {
+          "tag": "h2",
+          "text": "Športové úspechy"
+        },
+        {
+          "tag": "p",
+          "text": "ČESKO – SLOVENSKO"
+        },
+        {
+          "tag": "p",
+          "text": "2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky\n● 5. miesto: 1992/93 (s)\n● 6. miesto: 1991/92 (s)"
+        },
+        {
+          "tag": "p",
+          "text": "2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky\n● 1. miesto: 1990/91 (s)\n● 2. miesto: 1985/86 (s)\n● 3. miesto: 1989/90 (s)\n● 5. miesto: 1986/1987 (s), 1988/89 (s)"
+        },
+        {
+          "tag": "p",
+          "text": "2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov\n● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)"
+        },
+        {
+          "tag": "p",
+          "text": "SLOVENSKO"
+        },
+        {
+          "tag": "p",
+          "text": "1. Hokejová liga SR – 2. ročníky\n● 7. miesto: 2009/10\n● 14. miesto: 2010/11"
+        },
+        {
+          "tag": "p",
+          "text": "2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov\n● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)\n● 2. miesto: 2001/02 (v), 2006/07 (v), 2007/08 (v)\n● 3. miesto: 2004/05 (v), 2016/17 (sr)\n● 4. miesto: 1999/00 (v), 2000/01 (s)"
+        },
+        {
+          "tag": "p",
+          "text": "Extraliga dorastu\n● Play out 2022/23"
+        }
+      ]
+    }
+  },
+  "iceSchedule": {
+    "title": "Rozpis ľadu",
+    "modified": "2026-03-23T11:02:07",
+    "sourceUrl": "https://www.hkbrezno.sk/rozpis-ladu/",
+    "asset": "/images/articles/wordpress/rozpis-ladu/rozpis-ladu-e848e09f.png",
+    "assetType": "image"
+  }
+}

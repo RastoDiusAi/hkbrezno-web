@@ -10,7 +10,7 @@ Mapovanie:
   <sc-if value="{{ isXxx }}">   -> <section class="pg" data-pg="xxx">   (routovanie cez CSS)
   <sc-if value="{{ isStuck }}"> -> <span data-stuck>                    (prilepená navigácia)
   <sc-for list="{{ roster }}">  -> rozbalené nad dátami súpisky
-  onClick="{{ go.xxx }}"        -> onclick="go('xxx')"
+  onClick="{{ go.xxx }}"        -> data-go="xxx"
   {{ c.xxx }} / {{ u.xxx }}     -> statická farba + data-nav / data-u (aktívny stav z CSS)
   {{ nav.* }}                   -> data-navbar + trieda .is-stuck
   {{ cd.d|h|m|s }}              -> <span data-cd="…"> (dopočíta JS)
@@ -25,7 +25,7 @@ import pathlib
 import html as html_lib
 import json
 import shutil
-from datetime import date, datetime, timezone
+from datetime import date, datetime
 
 HERE = pathlib.Path(__file__).parent
 SRC = HERE / "design-canvas.dc.html"
@@ -34,8 +34,8 @@ CONTENT = HERE / "content"
 PUBLIC = HERE / "public"
 SITE_URL = "https://novyweb.smartitbiz.com"
 
-PAGES = ['domov', 'novinky', 'zapasy', 'timy', 'supiska', 'klub',
-         'stadion', 'rodicia', 'partneri', 'prihlaska']
+PAGES = ['domov', 'novinky', 'zapasy', 'rozpisladu', 'timy', 'klub',
+         'rodicia', 'partneri', 'prihlaska']
 
 ROSTER = [
     ('1',  'Brankár',  'Tomáš Ferko',      27, 22, 0),
@@ -188,6 +188,10 @@ def validate_article(path):
         "tags": meta.get("tags", []),
         "published": meta["published"],
         "body": body,
+        "bodyHtml": "",
+        "categories": meta.get("categories", []),
+        "source": "local",
+        "sourceUrl": "",
         "path": path,
     }
 
@@ -210,6 +214,87 @@ def load_articles():
             continue
         published.append(article)
     return sorted(published, key=lambda item: item["date"], reverse=True)
+
+
+def load_wordpress_articles():
+    path = CONTENT / "wordpress" / "posts.json"
+    if not path.exists():
+        return []
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{path}: neplatný JSON ({exc})")
+    if not isinstance(data, dict) or not isinstance(data.get("posts"), list):
+        fail(f"{path}: očakávam objekt s poľom `posts`")
+
+    articles = []
+    required = (
+        "title", "slug", "date", "description", "cover", "author",
+        "categories", "tags", "bodyHtml", "sourceUrl",
+    )
+    for i, post in enumerate(data["posts"], start=1):
+        if not isinstance(post, dict):
+            fail(f"{path}: článok {i} nie je objekt")
+        for key in required:
+            if key not in post:
+                fail(f"{path}: článku {i} chýba `{key}`")
+        if not SLUG_RE.match(str(post["slug"])):
+            fail(f"{path}: článok {i} má neplatný `slug`")
+        try:
+            article_date = date.fromisoformat(str(post["date"]))
+        except ValueError:
+            fail(f"{path}: článok {i} má neplatný `date`")
+        articles.append({
+            "title": str(post["title"]),
+            "slug": str(post["slug"]),
+            "date": article_date,
+            "publishDate": None,
+            "description": str(post["description"]),
+            "cover": str(post["cover"]),
+            "author": str(post["author"]),
+            "tags": post["tags"],
+            "categories": post["categories"],
+            "published": True,
+            "body": "",
+            "bodyHtml": str(post["bodyHtml"]),
+            "source": "wordpress",
+            "sourceUrl": str(post["sourceUrl"]),
+            "path": path,
+        })
+    return articles
+
+
+def load_wordpress_pages():
+    path = CONTENT / "wordpress" / "pages.json"
+    if not path.exists():
+        fail(f"chýba {path}; spusti scripts/import_wordpress.py")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{path}: neplatný JSON ({exc})")
+    if not isinstance(data, dict) or data.get("schemaVersion") != 1:
+        fail(f"{path}: nepodporovaná schéma")
+    if not isinstance(data.get("club"), dict):
+        fail(f"{path}: chýba objekt `club`")
+    if not isinstance(data.get("iceSchedule"), dict):
+        fail(f"{path}: chýba objekt `iceSchedule`")
+    contact = data["club"].get("contact")
+    history = data["club"].get("history")
+    if not isinstance(contact, dict) or not isinstance(history, dict):
+        fail(f"{path}: neplatný obsah stránky Klub")
+    if not isinstance(history.get("blocks"), list):
+        fail(f"{path}: história nemá zoznam `blocks`")
+    return data
+
+
+def merge_articles(local_articles, wordpress_articles):
+    articles = local_articles + wordpress_articles
+    seen = set()
+    for article in articles:
+        if article["slug"] in seen:
+            fail(f"duplicitný slug článku: {article['slug']}")
+        seen.add(article["slug"])
+    return sorted(articles, key=lambda item: item["date"], reverse=True)
 
 
 def validate_json_file(path, required_keys):
@@ -238,7 +323,7 @@ def validate_content():
                        ("name", "role", "active", "order"))
     validate_json_file(CONTENT / "documents" / "documents.json",
                        ("title", "file", "active", "order"))
-    return load_articles()
+    return merge_articles(load_articles(), load_wordpress_articles())
 
 
 def load_match_schedule():
@@ -282,6 +367,182 @@ SK_MONTHS = (
     "január", "február", "marec", "apríl", "máj", "jún",
     "júl", "august", "september", "október", "november", "december",
 )
+
+
+def article_category(article):
+    values = article.get("categories") or article.get("tags") or ["Klub"]
+    return str(values[0])
+
+
+def article_date_label(article_date):
+    return f"{article_date.day}. {article_date.month}. {article_date.year}"
+
+
+def article_reading_minutes(article):
+    source = article.get("bodyHtml") or article.get("body", "")
+    words = re.sub(r"<[^>]+>", " ", source).split()
+    return max(1, round(len(words) / 200))
+
+
+def article_media(article, large=False):
+    title = html_lib.escape(article["title"])
+    if article.get("cover"):
+        cover = html_lib.escape(article["cover"].lstrip("/"), quote=True)
+        return f'<img src="{cover}" alt="{title}" loading="lazy">'
+    size_class = " large" if large else ""
+    return (
+        f'<div class="article-card-fallback{size_class}">'
+        '<img src="assets/logo-hk-brezno.png" alt="" loading="lazy">'
+        '</div>'
+    )
+
+
+def render_article_card(article):
+    title = html_lib.escape(article["title"])
+    description = html_lib.escape(article["description"])
+    category = html_lib.escape(article_category(article))
+    href = f"aktuality/{html_lib.escape(article['slug'], quote=True)}/"
+    return f"""
+      <a class="article-card" href="{href}">
+        <div class="article-card-media">{article_media(article)}</div>
+        <div class="article-card-body">
+          <div class="article-card-meta"><span>{category}</span><time datetime="{article['date'].isoformat()}">{article_date_label(article['date'])}</time></div>
+          <h3>{title}</h3>
+          <p>{description}</p>
+        </div>
+      </a>"""
+
+
+def render_home_articles(articles):
+    cards = "".join(render_article_card(article) for article in articles[:3])
+    if not cards:
+        cards = '<p class="article-empty">Zatiaľ neboli publikované žiadne novinky.</p>'
+    return f'<div class="article-home-grid">{cards}</div>'
+
+
+def render_news_page(articles):
+    cards = "".join(render_article_card(article) for article in articles)
+    if not cards:
+        cards = '<p class="article-empty">Zatiaľ neboli publikované žiadne novinky.</p>'
+    return f"""
+  <div>
+    <div class="match-hero">
+      <div>Aktuality HK Brezno</div>
+      <h1>NOVINKY</h1>
+    </div>
+    <div class="article-news-page">
+      <div class="article-news-heading">
+        <h2>ČO JE NOVÉ V KLUBE</h2>
+        <span>{len(articles)} publikovaných článkov</span>
+      </div>
+      <div class="article-grid">{cards}</div>
+    </div>
+  </div>
+"""
+
+
+def render_club_page(pages):
+    club = pages["club"]
+    contact = club["contact"]
+    history = club["history"]
+    history_parts = []
+    lead_used = False
+    for block in history.get("blocks", []):
+        tag = str(block.get("tag", "p")).lower()
+        value = str(block.get("text", "")).strip()
+        if not value or tag == "h1":
+            continue
+        safe_value = html_lib.escape(value).replace("\n", "<br>")
+        if tag == "h2":
+            history_parts.append(f"<h2>{safe_value}</h2>")
+        elif tag in ("h3", "h4", "h5", "h6"):
+            css_class = "club-history-lead" if not lead_used else "club-history-emphasis"
+            history_parts.append(f'<p class="{css_class}">{safe_value}</p>')
+            lead_used = True
+        else:
+            history_parts.append(f"<p>{safe_value}</p>")
+
+    source_url = html_lib.escape(history.get("sourceUrl", ""), quote=True)
+    address = "<br>".join(html_lib.escape(str(item)) for item in contact.get("address", []))
+    email = html_lib.escape(contact.get("email", "info@hkbrezno.sk"))
+    return f"""
+  <div>
+    <div class="match-hero">
+      <div>Hokejový klub Brezno</div>
+      <h1>KLUB</h1>
+    </div>
+    <div class="club-page">
+      <article class="club-history">
+        <div class="section-kicker">Od prvého klziska po dnešok</div>
+        <h2>HISTÓRIA KLUBU</h2>
+        <div class="club-history-content">{''.join(history_parts)}</div>
+        {f'<a class="club-source" href="{source_url}" target="_blank" rel="noopener noreferrer">Pôvodný text na hkbrezno.sk</a>' if source_url else ''}
+      </article>
+      <aside class="club-contact">
+        <div class="section-kicker">Kontakt a identifikačné údaje</div>
+        <h2>{html_lib.escape(contact.get('name', 'Hokejový klub Brezno'))}</h2>
+        <dl>
+          <div><dt>Adresa</dt><dd>{address}</dd></div>
+          <div><dt>E-mail</dt><dd><a href="mailto:{email}">{email}</a></dd></div>
+          <div><dt>IČO</dt><dd>{html_lib.escape(contact.get('companyId', ''))}</dd></div>
+          <div><dt>DIČ</dt><dd>{html_lib.escape(contact.get('taxId', ''))}</dd></div>
+          <div><dt>IČ DPH</dt><dd>{html_lib.escape(contact.get('vatId', ''))}</dd></div>
+          <div><dt>Registrácia</dt><dd>{html_lib.escape(contact.get('registry', ''))}<br>{html_lib.escape(contact.get('registryNumber', ''))}</dd></div>
+        </dl>
+      </aside>
+    </div>
+  </div>
+"""
+
+
+def render_ice_schedule_page(pages):
+    schedule = pages["iceSchedule"]
+    asset = html_lib.escape(str(schedule.get("asset", "")).lstrip("/"), quote=True)
+    asset_type = schedule.get("assetType", "")
+    modified = str(schedule.get("modified", ""))[:10]
+    modified_label = ""
+    if modified:
+        try:
+            modified_date = date.fromisoformat(modified)
+            modified_label = article_date_label(modified_date)
+        except ValueError:
+            modified_label = html_lib.escape(modified)
+
+    if asset and asset_type == "pdf":
+        media = (
+            f'<iframe class="ice-schedule-frame" src="{asset}" '
+            'title="Aktuálny rozpis ľadu HK Brezno"></iframe>'
+        )
+    elif asset and asset_type == "image":
+        media = f'<img class="ice-schedule-image" src="{asset}" alt="Aktuálny rozpis ľadu HK Brezno">'
+    else:
+        media = '<p class="ice-schedule-empty">Rozpis ľadu momentálne nie je zverejnený.</p>'
+
+    action = ""
+    if asset:
+        label = "Otvoriť PDF" if asset_type == "pdf" else "Otvoriť v plnej veľkosti"
+        action = f'<a class="ice-schedule-open" href="{asset}" target="_blank" rel="noopener noreferrer">{label}</a>'
+    source_url = html_lib.escape(str(schedule.get("sourceUrl", "")), quote=True)
+    source = (
+        f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">WordPress HK Brezno</a>'
+        if source_url else "WordPress HK Brezno"
+    )
+    return f"""
+  <div>
+    <div class="match-hero">
+      <div>Aktuálny týždenný program</div>
+      <h1>ROZPIS ĽADU</h1>
+    </div>
+    <div class="ice-schedule-page">
+      <div class="ice-schedule-heading">
+        <div><div class="section-kicker">Zimný štadión Brezno</div><h2>ROZPIS ĽADOVEJ PLOCHY</h2></div>
+        {action}
+      </div>
+      <div class="ice-schedule-media">{media}</div>
+      <div class="ice-schedule-meta">{f'Aktualizované {modified_label} · ' if modified_label else ''}Zdroj: {source}</div>
+    </div>
+  </div>
+"""
 
 
 def match_logo(path):
@@ -386,7 +647,7 @@ def render_home_schedule(schedule):
     feature = f"""
     <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
       <div style="padding: 38px 48px 38px 0; border-right: 1px solid #21406E">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"><span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas</span></div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"><span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas A tímu seniorov</span></div>
         <div style="display: flex; align-items: center; gap: 28px">
           {home_team(featured['home'], featured['homeLogo'], 'Domáci').strip()}
           <span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 22px">VS</span>
@@ -419,7 +680,7 @@ def render_home_schedule(schedule):
         'overflow: hidden; background: #07172C">'
         '<span style="font-family: \'Archivo Black\', sans-serif; color: #fff; font-size: 13px; '
         'letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">'
-        'NAJBLIŽŠIE ZÁPASY</span><div style="display: flex; gap: 28px; align-items: center; '
+        'ĎALŠIE ZÁPASY A TÍMU SENIOROV</span><div style="display: flex; gap: 28px; align-items: center; '
         'font-family: \'Barlow Condensed\', sans-serif; font-size: 16px; color: #C3C9D2; '
         'white-space: nowrap">' + '<span style="color: #2B4C7E">/</span>'.join(ticker_items) + '</div></div>'
     )
@@ -433,11 +694,19 @@ def next_match_target(schedule):
     return f"{match['date']}T{match['time']}:00"
 
 
-def page_shell(title, description, canonical, body_html):
-    safe_title = html_lib.escape(title)
-    safe_meta_title = html_lib.escape(f"{title} | HK Brezno")
-    safe_description = html_lib.escape(description)
+def page_shell(article, canonical, body_html):
+    safe_title = html_lib.escape(article["title"])
+    safe_meta_title = html_lib.escape(f"{article['title']} | HK Brezno")
+    safe_description = html_lib.escape(article["description"])
     safe_canonical = html_lib.escape(canonical)
+    category = html_lib.escape(article_category(article))
+    author = html_lib.escape(article["author"])
+    cover = ""
+    social_image = ""
+    if article.get("cover"):
+        cover_path = html_lib.escape(article["cover"], quote=True)
+        cover = f'<img class="article-cover" src="{cover_path}" alt="{safe_title}">'
+        social_image = f'<meta property="og:image" content="{html_lib.escape(SITE_URL + article["cover"], quote=True)}">'
     return f"""<!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -448,35 +717,44 @@ def page_shell(title, description, canonical, body_html):
 <meta property="og:title" content="{safe_meta_title}">
 <meta property="og:description" content="{safe_description}">
 <meta property="og:type" content="article">
+<meta property="article:published_time" content="{article['date'].isoformat()}">
+{social_image}
 <link rel="canonical" href="{safe_canonical}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&amp;family=Barlow+Condensed:wght@500;600;700&amp;family=Barlow:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <style>
+*{{box-sizing:border-box}}
 body{{margin:0;background:#E7ECF1;color:#0B1B33;font-family:'Barlow',system-ui,sans-serif;line-height:1.65}}
 a{{color:#CE1126;text-decoration:none}}a:hover{{color:#9E0C1C}}
 .top{{background:linear-gradient(112deg,#0D2242 0%,#14315C 52%,#1C4074 100%);color:#fff;border-bottom:3px solid #CE1126}}
 .wrap{{max-width:940px;margin:0 auto;padding:28px 22px}}
-.brand{{display:flex;align-items:center;gap:12px;font-family:'Archivo Black',sans-serif;letter-spacing:.02em}}
+.brand{{display:flex;align-items:center;gap:12px;color:#fff;font-family:'Archivo Black',sans-serif;letter-spacing:.02em}}
+.brand:hover{{color:#fff}}
 .brand img{{width:48px;height:48px}}
 .hero{{padding:58px 22px 50px}}
 .eyebrow{{font-family:'Barlow Condensed',sans-serif;color:#CE1126;letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:13px}}
 h1{{font-family:'Archivo Black',sans-serif;font-size:clamp(36px,8vw,64px);line-height:.98;margin:12px 0 18px;letter-spacing:0}}
 main{{background:#fff;margin:34px auto 60px;max-width:880px;padding:42px clamp(22px,5vw,58px);box-shadow:0 14px 34px rgba(11,27,51,.12)}}
 main h1{{font-size:38px}}main h2{{font-family:'Archivo Black',sans-serif;margin-top:34px}}main p{{font-size:18px;color:#334155}}main li{{font-size:18px;color:#334155;margin:7px 0}}
+main img{{max-width:100%;height:auto}}main figure{{margin:28px 0}}main figcaption{{color:#6E7C90;font-size:14px}}
+main blockquote{{margin:28px 0;padding:4px 0 4px 22px;border-left:4px solid #CE1126;color:#334155}}
+.article-cover{{display:block;width:100%;max-height:500px;object-fit:cover;margin:0 0 34px}}
+.article-source{{margin-top:42px;padding-top:22px;border-top:1px solid #E1E6EC;color:#6E7C90;font-size:14px}}
 .meta{{color:#CBD5E1;font-family:'Barlow Condensed',sans-serif;letter-spacing:.12em;text-transform:uppercase;font-weight:700}}
 </style>
 </head>
 <body>
 <header class="top">
-  <div class="wrap brand"><img src="/assets/logo-hk-brezno.png" alt="HK Brezno"><span>HK Brezno</span></div>
+  <a class="wrap brand" href="/"><img src="/assets/logo-hk-brezno.png" alt="HK Brezno"><span>HK Brezno</span></a>
   <div class="wrap hero">
-    <div class="eyebrow">Aktuality</div>
+    <div class="eyebrow">{category}</div>
     <h1>{safe_title}</h1>
-    <div class="meta">{safe_description}</div>
+    <div class="meta">{article_date_label(article['date'])} · {author} · {article_reading_minutes(article)} min čítania</div>
   </div>
 </header>
 <main>
+{cover}
 {body_html}
 </main>
 </body>
@@ -485,30 +763,32 @@ main h1{{font-size:38px}}main h2{{font-family:'Archivo Black',sans-serif;margin-
 
 
 def generate_article_pages(articles):
+    article_root = HERE / "aktuality"
+    if article_root.exists():
+        shutil.rmtree(article_root)
     for article in articles:
-        out_dir = HERE / "aktuality" / article["slug"]
+        out_dir = article_root / article["slug"]
         out_dir.mkdir(parents=True, exist_ok=True)
-        body_html = markdown_to_html(article["body"])
+        body_html = article["bodyHtml"] or markdown_to_html(article["body"])
         canonical = f"{SITE_URL}/aktuality/{article['slug']}/"
-        page = page_shell(
-            article["title"],
-            article["description"],
-            canonical,
-            body_html,
-        )
+        page = page_shell(article, canonical, body_html)
         (out_dir / "index.html").write_text(page, encoding="utf-8")
 
 
-def generate_seo_files(articles):
-    urls = [f"{SITE_URL}/"]
-    urls.extend(f"{SITE_URL}/aktuality/{article['slug']}/" for article in articles)
+def generate_seo_files(articles, schedule):
+    content_dates = [date.fromisoformat(schedule["updatedAt"])]
+    content_dates.extend(article["date"] for article in articles)
+    urls = [(f"{SITE_URL}/", max(content_dates).isoformat())]
+    urls.extend(
+        (f"{SITE_URL}/aktuality/{article['slug']}/", article["date"].isoformat())
+        for article in articles
+    )
     sitemap = ['<?xml version="1.0" encoding="UTF-8"?>',
                '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    now = datetime.now(timezone.utc).date().isoformat()
-    for url in urls:
+    for url, last_modified in urls:
         sitemap.append("  <url>")
         sitemap.append(f"    <loc>{html_lib.escape(url)}</loc>")
-        sitemap.append(f"    <lastmod>{now}</lastmod>")
+        sitemap.append(f"    <lastmod>{last_modified}</lastmod>")
         sitemap.append("  </url>")
     sitemap.append("</urlset>")
     (HERE / "sitemap.xml").write_text("\n".join(sitemap) + "\n", encoding="utf-8")
@@ -541,6 +821,7 @@ def sync_public_assets():
 
 # ---------------------------------------------------------------- 0. načítanie
 articles = validate_content()
+wordpress_pages = load_wordpress_pages()
 schedule = load_match_schedule()
 match_target = next_match_target(schedule)
 sync_public_assets()
@@ -561,8 +842,10 @@ body = m.group(1)
 
 home_feature, home_ticker = render_home_schedule(schedule)
 for start, end, replacement in (
-    ("HOME_NEXT_MATCH_START", "HOME_NEXT_MATCH_END", home_feature),
-    ("HOME_MATCH_TICKER_START", "HOME_MATCH_TICKER_END", home_ticker),
+    ("HOME_NEXT_MATCH_START", "HOME_NEXT_MATCH_END", ""),
+    ("HOME_MATCH_TICKER_START", "HOME_MATCH_TICKER_END", ""),
+    ("HOME_ARTICLES_START", "HOME_ARTICLES_END",
+     render_home_articles(articles) + home_feature + home_ticker),
 ):
     body, count = re.subn(
         rf'[ \t]*<!-- {start} -->.*?<!-- {end} -->',
@@ -572,6 +855,15 @@ for start, end, replacement in (
     )
     if count != 1:
         fail(f"očakával som 1 blok {start}, našiel {count}")
+
+body, n_home_removed = re.subn(
+    r'\s*<!-- HOME_REMOVED_START -->.*?<!-- HOME_REMOVED_END -->',
+    '',
+    body,
+    flags=re.S,
+)
+if n_home_removed != 1:
+    fail(f"očakával som 1 blok odstráneného obsahu domov, našiel {n_home_removed}")
 
 # Zápasy sa generujú z Gitom spravovaného JSON-u; staré vzorové skóre zo
 # zdrojového canvasu sa do výsledku vôbec nedostane.
@@ -584,8 +876,35 @@ body, n_matches_page = re.subn(
 if n_matches_page != 1:
     fail(f"očakával som 1 sekciu zápasov, našiel {n_matches_page}")
 
+body, n_news_page = re.subn(
+    r'<sc-if value="\{\{ isNovinky \}\}">.*?</sc-if>',
+    '<sc-if value="{{ isNovinky }}">' + render_news_page(articles) + '</sc-if>',
+    body,
+    flags=re.S,
+)
+if n_news_page != 1:
+    fail(f"očakával som 1 sekciu noviniek, našiel {n_news_page}")
+
+body, n_club_page = re.subn(
+    r'<sc-if value="\{\{ isKlub \}\}">.*?</sc-if>',
+    '<sc-if value="{{ isKlub }}">' + render_club_page(wordpress_pages) + '</sc-if>',
+    body,
+    flags=re.S,
+)
+if n_club_page != 1:
+    fail(f"očakával som 1 sekciu klubu, našiel {n_club_page}")
+
+body, n_ice_page = re.subn(
+    r'<sc-if value="\{\{ isRozpisladu \}\}">.*?</sc-if>',
+    '<sc-if value="{{ isRozpisladu }}">' + render_ice_schedule_page(wordpress_pages) + '</sc-if>',
+    body,
+    flags=re.S,
+)
+if n_ice_page != 1:
+    fail(f"očakával som 1 sekciu rozpisu ľadu, našiel {n_ice_page}")
+
 # Zrušené podstránky sa odstránia ešte pred spracovaním routovania.
-for removed_page in ("Tabulka", "Eshop"):
+for removed_page in ("Tabulka", "Eshop", "Supiska", "Stadion"):
     body, count = re.subn(
         rf'\s*<sc-if value="\{{\{{ is{removed_page} \}}\}}">.*?</sc-if>',
         '',
@@ -618,8 +937,8 @@ def expand_roster(match):
 
 
 body, n = re.subn(r'<sc-for\b[^>]*>(.*?)</sc-for>', expand_roster, body, flags=re.S)
-if n != 1:
-    fail(f"očakával som 1 sc-for, našiel {n}")
+if n != 0:
+    fail(f"po odstránení súpisky nemal zostať sc-for, našiel {n}")
 
 
 # -------------------------------------------------------------- 2. sc-if
@@ -664,9 +983,9 @@ body = transform_sc_if(body)
 def transform_tag(m):
     tag, attrs, selfclose = m.group(1), m.group(2), m.group(3)
 
-    # onClick="{{ go.xxx }}" -> onclick="go('xxx')"
+    # onClick="{{ go.xxx }}" -> data-go="xxx" (obsluha je v externom site.js)
     attrs = re.sub(r'\sonClick="\{\{\s*go\.(\w+)\s*\}\}"',
-                   lambda g: f' onclick="go(\'{g.group(1)}\')"', attrs)
+                   lambda g: f' data-go="{g.group(1)}"', attrs)
 
     # aktívna farba položky menu -> statická + marker data-nav
     nav_item = re.search(r'\{\{\s*c\.(\w+)\s*\}\}', attrs)
@@ -799,6 +1118,82 @@ page_css = "\n".join(
     for p in PAGES)
 
 hover_css = "\n".join(f'[data-hv="{i}"]:hover{{{r}}}' for i, r in enumerate(hover_rules))
+
+site_js = f"""(function () {{
+  'use strict';
+  var PAGES = {json.dumps(PAGES)};
+
+  function go(page, updateHistory) {{
+    if (PAGES.indexOf(page) === -1) return;
+    document.documentElement.dataset.page = page;
+    document.documentElement.classList.remove('nav-open');
+    if (updateHistory !== false) {{
+      var url = page === 'domov' ? location.pathname : location.pathname + '?page=' + encodeURIComponent(page);
+      history.pushState({{ page: page }}, '', url);
+    }}
+    window.scrollTo(0, 0);
+    onScroll();
+  }}
+
+  var requestedPage = new URLSearchParams(location.search).get('page');
+  if (requestedPage && PAGES.indexOf(requestedPage) !== -1) go(requestedPage, false);
+  window.addEventListener('popstate', function () {{
+    var page = new URLSearchParams(location.search).get('page') || 'domov';
+    go(page, false);
+  }});
+
+  document.addEventListener('click', function (event) {{
+    var trigger = event.target.closest('[data-go]');
+    if (!trigger) return;
+    event.preventDefault();
+    go(trigger.dataset.go);
+  }});
+
+  var bar = document.querySelector('[data-navbar]');
+  if (bar) {{
+    var burger = document.createElement('button');
+    burger.className = 'hk-burger';
+    burger.type = 'button';
+    burger.setAttribute('aria-label', 'Menu');
+    burger.setAttribute('aria-expanded', 'false');
+    for (var i = 0; i < 3; i += 1) burger.appendChild(document.createElement('span'));
+    burger.addEventListener('click', function () {{
+      var isOpen = document.documentElement.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', String(isOpen));
+    }});
+    bar.appendChild(burger);
+    document.addEventListener('click', function (event) {{
+      if (!document.documentElement.classList.contains('nav-open')) return;
+      if (bar.contains(event.target)) return;
+      document.documentElement.classList.remove('nav-open');
+      burger.setAttribute('aria-expanded', 'false');
+    }});
+  }}
+
+  function onScroll() {{
+    var y = window.scrollY || document.documentElement.scrollTop || 0;
+    if (bar) bar.classList.toggle('is-stuck', y > 120);
+  }}
+  window.addEventListener('scroll', onScroll, {{ passive: true }});
+  onScroll();
+
+  var target = new Date('{match_target}').getTime();
+  var cells = document.querySelectorAll('[data-cd]');
+  function pad(number) {{ return String(number).padStart(2, '0'); }}
+  function tick() {{
+    var diff = Math.max(0, target - Date.now());
+    var values = {{
+      d: pad(Math.floor(diff / 86400000)),
+      h: pad(Math.floor(diff / 3600000) % 24),
+      m: pad(Math.floor(diff / 60000) % 60),
+      s: pad(Math.floor(diff / 1000) % 60)
+    }};
+    cells.forEach(function (element) {{ element.textContent = values[element.dataset.cd]; }});
+  }}
+  tick();
+  window.setInterval(tick, 1000);
+}})();
+"""
 
 html = f"""<!DOCTYPE html>
 <html lang="sk" data-page="domov">
@@ -984,70 +1379,15 @@ html = f"""<!DOCTYPE html>
 </head>
 <body>
 {body}
-<script>
-(function () {{
-  var PAGES = {PAGES!r};
-
-  window.go = function (page) {{
-    if (PAGES.indexOf(page) === -1) return;
-    document.documentElement.dataset.page = page;
-    document.documentElement.classList.remove('nav-open');  /* zavri mobilné menu */
-    window.scrollTo(0, 0);
-    onScroll();
-  }};
-
-  /* prilepenie navigácie po odscrollovaní hlavičky */
-  var bar = document.querySelector('[data-navbar]');
-
-  /* mobilný hamburger: vloží tlačidlo do lišty a prepína .nav-open */
-  if (bar) {{
-    var burger = document.createElement('button');
-    burger.className = 'hk-burger';
-    burger.setAttribute('aria-label', 'Menu');
-    burger.innerHTML = '<span></span><span></span><span></span>';
-    burger.addEventListener('click', function () {{
-      document.documentElement.classList.toggle('nav-open');
-    }});
-    bar.appendChild(burger);
-    /* klik mimo menu ho zavrie */
-    document.addEventListener('click', function (e) {{
-      if (!document.documentElement.classList.contains('nav-open')) return;
-      if (bar.contains(e.target)) return;
-      document.documentElement.classList.remove('nav-open');
-    }});
-  }}
-  function onScroll() {{
-    var y = window.scrollY || document.documentElement.scrollTop || 0;
-    if (bar) bar.classList.toggle('is-stuck', y > 120);
-  }}
-  window.addEventListener('scroll', onScroll, {{ passive: true }});
-  onScroll();
-
-  /* odpočet do najbližšieho zápasu */
-  var target = new Date('{match_target}').getTime();
-  var cells = document.querySelectorAll('[data-cd]');
-  function pad(n) {{ return String(n).padStart(2, '0'); }}
-  function tick() {{
-    var diff = Math.max(0, target - Date.now());
-    var v = {{
-      d: pad(Math.floor(diff / 86400000)),
-      h: pad(Math.floor(diff / 3600000) % 24),
-      m: pad(Math.floor(diff / 60000) % 60),
-      s: pad(Math.floor(diff / 1000) % 60)
-    }};
-    cells.forEach(function (el) {{ el.textContent = v[el.dataset.cd]; }});
-  }}
-  tick();
-  setInterval(tick, 1000);
-}})();
-</script>
+<script src="site.js" defer></script>
 </body>
 </html>
 """
 
 OUT.write_text(html, encoding='utf-8')
+(HERE / "site.js").write_text(site_js, encoding="utf-8")
 generate_article_pages(articles)
-generate_seo_files(articles)
+generate_seo_files(articles, schedule)
 print(f"OK  {OUT.name}: {len(html)} znakov, {n_slots} fotomiest, "
       f"{len(hover_rules)} hover pravidiel, {len(PAGES)} stránok, "
       f"{len(articles)} publikovaných článkov")

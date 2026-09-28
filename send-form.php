@@ -2,7 +2,23 @@
 declare(strict_types=1);
 
 const CLUB_EMAIL_FALLBACK = 'info@hkbrezno.sk';
+const FROM_EMAIL_FALLBACK = 'no-reply@hkbrezno.sk';
 const MAX_REQUESTS_PER_HOUR = 5;
+const MAX_REQUEST_BYTES = 20000;
+
+function security_headers(): void
+{
+    header('Content-Type: text/html; charset=UTF-8');
+    header('Cache-Control: no-store');
+    header('Content-Security-Policy: default-src \'none\'; style-src \'unsafe-inline\'; img-src \'self\' data:; base-uri \'none\'; form-action \'none\'; frame-ancestors \'none\'');
+    header('Referrer-Policy: no-referrer');
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: DENY');
+    header('X-XSS-Protection: 0');
+}
+
+security_headers();
 
 function respond(int $status, string $title, string $message): void
 {
@@ -23,10 +39,40 @@ function is_https_request(): bool
     if (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') {
         return true;
     }
-    if (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https') {
+    if (($_SERVER['SERVER_PORT'] ?? '') === '443') {
+        return true;
+    }
+    if (getenv('HK_TRUST_PROXY') === '1'
+        && strtolower((string) ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '')) === 'https') {
         return true;
     }
     return false;
+}
+
+function allowed_hosts(): array
+{
+    $configured = getenv('HK_ALLOWED_HOSTS');
+    $hosts = $configured !== false && trim($configured) !== ''
+        ? explode(',', $configured)
+        : ['hkbrezno.sk', 'www.hkbrezno.sk', 'novyweb.smartitbiz.com'];
+    return array_values(array_filter(array_map(static function ($host) {
+        return strtolower(trim($host));
+    }, $hosts)));
+}
+
+function validate_request_origin(): void
+{
+    $fetchSite = strtolower((string) ($_SERVER['HTTP_SEC_FETCH_SITE'] ?? ''));
+    if ($fetchSite === 'cross-site') {
+        respond(403, 'Požiadavka bola zamietnutá', 'Formulár je možné odoslať iba z webu HK Brezno.');
+    }
+
+    $source = (string) ($_SERVER['HTTP_ORIGIN'] ?? $_SERVER['HTTP_REFERER'] ?? '');
+    $host = strtolower((string) parse_url($source, PHP_URL_HOST));
+    $scheme = strtolower((string) parse_url($source, PHP_URL_SCHEME));
+    if ($source === '' || $host === '' || $scheme !== 'https' || !in_array($host, allowed_hosts(), true)) {
+        respond(403, 'Požiadavka bola zamietnutá', 'Nepodarilo sa overiť pôvod odoslania formulára.');
+    }
 }
 
 function field(string $key): string
@@ -58,13 +104,14 @@ function rate_limit(string $ip): void
     $now = time();
     $windowStart = $now - 3600;
     $data = [];
-
-    if (is_file($file)) {
-        $raw = file_get_contents($file);
-        $decoded = json_decode($raw ?: '{}', true);
-        if (is_array($decoded)) {
-            $data = $decoded;
-        }
+    $handle = fopen($file, 'c+');
+    if ($handle === false || !flock($handle, LOCK_EX)) {
+        respond(503, 'Skúste neskôr', 'Formulár sa momentálne nedá bezpečne spracovať. Skúste to, prosím, neskôr.');
+    }
+    $raw = stream_get_contents($handle);
+    $decoded = json_decode($raw ?: '{}', true);
+    if (is_array($decoded)) {
+        $data = $decoded;
     }
 
     foreach ($data as $key => $timestamps) {
@@ -80,14 +127,22 @@ function rate_limit(string $ip): void
         }
     }
 
-    $hits = $data[$ip] ?? [];
+    $ipKey = hash('sha256', $ip . (getenv('HK_RATE_LIMIT_SALT') ?: 'hkbrezno-form'));
+    $hits = $data[$ipKey] ?? [];
     if (count($hits) >= MAX_REQUESTS_PER_HOUR) {
+        flock($handle, LOCK_UN);
+        fclose($handle);
         respond(429, 'Skúste neskôr', 'Formulár bol z tejto adresy odoslaný príliš veľakrát. Skúste to, prosím, neskôr.');
     }
 
     $hits[] = $now;
-    $data[$ip] = $hits;
-    file_put_contents($file, json_encode($data), LOCK_EX);
+    $data[$ipKey] = $hits;
+    rewind($handle);
+    ftruncate($handle, 0);
+    fwrite($handle, json_encode($data));
+    fflush($handle);
+    flock($handle, LOCK_UN);
+    fclose($handle);
 }
 
 function mail_header_value(string $value): string
@@ -96,12 +151,25 @@ function mail_header_value(string $value): string
 }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    header('Allow: POST');
     respond(405, 'Nepovolená požiadavka', 'Formulár je možné odoslať iba metódou POST.');
 }
 
 if (!is_https_request()) {
     respond(400, 'Vyžaduje sa HTTPS', 'Prihlášku je možné odoslať až po zapnutí HTTPS na demo alebo produkčnej doméne.');
 }
+
+$requestLength = (int) ($_SERVER['CONTENT_LENGTH'] ?? 0);
+if ($requestLength <= 0 || $requestLength > MAX_REQUEST_BYTES) {
+    respond(413, 'Neplatná veľkosť požiadavky', 'Odoslané údaje sú prázdne alebo príliš veľké.');
+}
+
+$contentType = strtolower(trim(explode(';', (string) ($_SERVER['CONTENT_TYPE'] ?? ''))[0]));
+if ($contentType !== 'application/x-www-form-urlencoded') {
+    respond(415, 'Nepodporovaný formát', 'Formulár bol odoslaný v nepodporovanom formáte.');
+}
+
+validate_request_origin();
 
 if (field('website') !== '') {
     respond(200, 'Ďakujeme', 'Vaša žiadosť bola prijatá a odoslaná na spracovanie HK Brezno. Potvrdenie sme vám zaslali aj e-mailom.');
@@ -125,12 +193,22 @@ if (!filter_var($parentEmail, FILTER_VALIDATE_EMAIL)) {
     respond(422, 'Neplatný e-mail', 'Skontrolujte, prosím, e-mailovú adresu zákonného zástupcu.');
 }
 
+$allowedCategories = ['Prípravka U8', 'Mladší žiaci', 'Starší žiaci', 'Dorast'];
+if (!in_array($category, $allowedCategories, true)) {
+    respond(422, 'Neplatná kategória', 'Vyberte, prosím, jednu z ponúkaných kategórií.');
+}
+
+$allowedExperience = ['áno', 'nie', 'začiatočník'];
+if (!in_array($experience, $allowedExperience, true)) {
+    respond(422, 'Neplatná skúsenosť', 'Vyberte, prosím, jednu z ponúkaných možností.');
+}
+
 if (!preg_match('/^[0-9 +().-]{7,24}$/', $phone)) {
     respond(422, 'Neplatný telefón', 'Skontrolujte, prosím, telefónne číslo.');
 }
 
 $birth = DateTime::createFromFormat('Y-m-d', $birthDate);
-if (!$birth || $birth->format('Y-m-d') !== $birthDate) {
+if (!$birth || $birth->format('Y-m-d') !== $birthDate || $birth > new DateTime('today')) {
     respond(422, 'Neplatný dátum', 'Dátum narodenia musí byť zadaný vo formáte z formulára.');
 }
 
@@ -140,7 +218,10 @@ if (field('consent_gdpr') !== '1') {
 
 $requestId = 'HK-' . gmdate('Ymd') . '-' . strtoupper(substr(bin2hex(random_bytes(3)), 0, 6));
 $clubEmail = getenv('HK_FORM_TO') ?: CLUB_EMAIL_FALLBACK;
-$fromEmail = 'no-reply@' . ($_SERVER['HTTP_HOST'] ?? 'hkbrezno.sk');
+$fromEmail = getenv('HK_FORM_FROM') ?: FROM_EMAIL_FALLBACK;
+if (!filter_var($clubEmail, FILTER_VALIDATE_EMAIL) || !filter_var($fromEmail, FILTER_VALIDATE_EMAIL)) {
+    respond(500, 'Chyba konfigurácie', 'Kontaktný formulár nie je správne nakonfigurovaný.');
+}
 
 $lines = [
     'Nová žiadosť z formulára HK Brezno',
