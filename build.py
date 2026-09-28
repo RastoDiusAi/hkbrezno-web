@@ -485,7 +485,6 @@ def render_club_page(pages):
         else:
             history_parts.append(f"<p>{safe_value}</p>")
 
-    source_url = html_lib.escape(history.get("sourceUrl", ""), quote=True)
     address = "<br>".join(html_lib.escape(str(item)) for item in contact.get("address", []))
     email = html_lib.escape(contact.get("email", "info@hkbrezno.sk"))
     return f"""
@@ -503,7 +502,6 @@ def render_club_page(pages):
         <div class="section-kicker">Od prvého klziska po dnešok</div>
         <h2>HISTÓRIA KLUBU</h2>
         <div class="club-history-content">{''.join(history_parts)}</div>
-        {f'<a class="club-source" href="{source_url}" target="_blank" rel="noopener noreferrer">Pôvodný text na hkbrezno.sk</a>' if source_url else ''}
       </article>
       <aside class="club-contact">
         <div class="section-kicker">Kontakt a identifikačné údaje</div>
@@ -549,12 +547,7 @@ def render_ice_schedule_page(pages):
     if asset:
         label = "Otvoriť PDF" if asset_type == "pdf" else "Otvoriť v plnej veľkosti"
         action = f'<a class="ice-schedule-open" href="{asset}" target="_blank" rel="noopener noreferrer">{label}</a>'
-    source_url = html_lib.escape(str(schedule.get("sourceUrl", "")), quote=True)
-    source_label = html_lib.escape(str(schedule.get("sourceLabel", "WordPress HK Brezno")))
-    source = (
-        f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">{source_label}</a>'
-        if source_url else source_label
-    )
+    meta = f'Aktualizované {modified_label}' if modified_label else ''
     return f"""
   <div>
     <div class="match-hero">
@@ -567,7 +560,7 @@ def render_ice_schedule_page(pages):
         {action}
       </div>
       <div class="ice-schedule-media">{media}</div>
-      <div class="ice-schedule-meta">{f'Aktualizované {modified_label} · ' if modified_label else ''}Zdroj: {source}</div>
+      {f'<div class="ice-schedule-meta">{meta}</div>' if meta else ''}
     </div>
   </div>
 """
@@ -646,11 +639,11 @@ def render_match_page(schedule):
   <div>
     <div class="match-hero">
       <div>Sezóna {html_lib.escape(schedule['season'])} · {html_lib.escape(schedule['competition'])}</div>
-      <h1>ZÁPASOVÝ KALENDÁR</h1>
+      <h1>ZÁPASY A-TÍMU</h1>
     </div>
     <div class="match-page">
       {featured_html.strip()}
-      <div class="match-calendar-heading"><h2>VŠETKY ZÁPASY HK BREZNO</h2><span>Doma aj vonku · bez výsledkov</span></div>
+      <div class="match-calendar-heading"><h2>VŠETKY ZÁPASY A-TÍMU</h2><span>Doma aj vonku · bez výsledkov</span></div>
       <div class="match-calendar">{''.join(groups)}</div>
       <div class="match-calendar-source">Aktualizované {updated} · <a href="{source}" target="_blank" rel="noopener noreferrer">Oficiálny program Hockey Slovakia</a></div>
     </div>
@@ -669,7 +662,7 @@ def render_home_schedule(schedule):
         return f"""
           <div style="display: flex; align-items: center; gap: 18px">
             <div style="width: 62px; height: 62px; flex: 0 0 62px; background: #fff; display: grid; place-items: center; border: 1px solid #2B4C7E"><img src="{match_logo(logo)}" alt="Logo {safe_name}" style="width: 50px; height: 50px; object-fit: contain"></div>
-            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px">{safe_name}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">{role}</div></div>
+            <div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 18px">{safe_name}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">{role}</div></div>
           </div>"""
 
     feature = f"""
@@ -678,7 +671,7 @@ def render_home_schedule(schedule):
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"><span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas A tímu seniorov</span></div>
         <div style="display: flex; align-items: center; gap: 28px">
           {home_team(featured['home'], featured['homeLogo'], 'Domáci').strip()}
-          <span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 22px">VS</span>
+          <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #CE1126; font-size: 22px">VS</span>
           {home_team(featured['away'], featured['awayLogo'], 'Hostia').strip()}
         </div>
         <div style="display: flex; gap: 28px; margin-top: 24px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .1em; text-transform: uppercase; font-size: 15px"><span>{SK_DAYS[match_date.weekday()]} {match_date.day}. {match_date.month}. {match_date.year} · {html_lib.escape(featured['time'])}</span><span style="color: #3A4C68">|</span><span>{html_lib.escape(featured['venue'])}</span></div>
@@ -686,10 +679,10 @@ def render_home_schedule(schedule):
       <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center">
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 18px">Do zápasu zostáva</div>
         <div style="display: flex; gap: 12px">
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.d }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.h }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.m }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 34px; line-height: 1">{{{{ cd.s }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.d }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.h }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.m }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #CE1126; font-size: 34px; line-height: 1">{{{{ cd.s }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div></div>
         </div>
       </div>
     </div>"""
@@ -700,13 +693,13 @@ def render_home_schedule(schedule):
         item_date = date.fromisoformat(match["date"])
         location = "doma" if match["location"] == "home" else "vonku"
         ticker_items.append(
-            f'<span><strong style="color: #fff; font-family: \'Archivo Black\', sans-serif; font-size: 14px">{item_date.day}. {item_date.month}. · {html_lib.escape(match["time"])}</strong> '
+            f'<span><strong style="color: #fff; font-family: \'Barlow Condensed\', sans-serif; font-weight: 800; font-size: 14px">{item_date.day}. {item_date.month}. · {html_lib.escape(match["time"])}</strong> '
             f'{html_lib.escape(match["opponent"])} · {location}</span>'
         )
     ticker = (
         '<div style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; '
         'overflow: hidden; background: #07172C">'
-        '<span style="font-family: \'Archivo Black\', sans-serif; color: #fff; font-size: 13px; '
+        '<span style="font-family: \'Barlow Condensed\', sans-serif; font-weight: 800; color: #fff; font-size: 13px; '
         'letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">'
         'ĎALŠIE ZÁPASY A TÍMU SENIOROV</span><div style="display: flex; gap: 28px; align-items: center; '
         'font-family: \'Barlow Condensed\', sans-serif; font-size: 16px; color: #C3C9D2; '
@@ -757,14 +750,14 @@ body{{margin:0;background:#E7ECF1;color:#0B1B33;font-family:'Barlow',system-ui,s
 a{{color:#CE1126;text-decoration:none}}a:hover{{color:#9E0C1C}}
 .top{{background:linear-gradient(112deg,#0D2242 0%,#14315C 52%,#1C4074 100%);color:#fff;border-bottom:3px solid #CE1126}}
 .wrap{{max-width:940px;margin:0 auto;padding:28px 22px}}
-.brand{{display:flex;align-items:center;gap:12px;color:#fff;font-family:'Archivo Black',sans-serif;letter-spacing:.02em}}
+.brand{{display:flex;align-items:center;gap:12px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:.02em}}
 .brand:hover{{color:#fff}}
 .brand img{{width:48px;height:48px}}
 .hero{{padding:58px 22px 50px}}
 .eyebrow{{font-family:'Barlow Condensed',sans-serif;color:#CE1126;letter-spacing:.2em;text-transform:uppercase;font-weight:700;font-size:13px}}
-h1{{font-family:'Archivo Black',sans-serif;font-size:clamp(36px,8vw,64px);line-height:.98;margin:12px 0 18px;letter-spacing:0}}
+h1{{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:clamp(36px,8vw,64px);line-height:.98;margin:12px 0 18px;letter-spacing:0}}
 main{{background:#fff;margin:34px auto 60px;max-width:880px;padding:42px clamp(22px,5vw,58px);box-shadow:0 14px 34px rgba(11,27,51,.12)}}
-main h1{{font-size:38px}}main h2{{font-family:'Archivo Black',sans-serif;margin-top:34px}}main p{{font-size:18px;color:#334155}}main li{{font-size:18px;color:#334155;margin:7px 0}}
+main h1{{font-size:38px}}main h2{{font-family:'Barlow Condensed',sans-serif;font-weight:800;margin-top:34px}}main p{{font-size:18px;color:#334155}}main li{{font-size:18px;color:#334155;margin:7px 0}}
 main img{{max-width:100%;height:auto}}main figure{{margin:28px 0}}main figcaption{{color:#6E7C90;font-size:14px}}
 main blockquote{{margin:28px 0;padding:4px 0 4px 22px;border-left:4px solid #CE1126;color:#334155}}
 .article-cover{{display:block;width:100%;max-height:500px;object-fit:cover;margin:0 0 34px}}
