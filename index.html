@@ -79,6 +79,9 @@
   .article-card p { display: -webkit-box; margin: 0; overflow: hidden; color: #4A5768; font-size: 15px; line-height: 1.55; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
   .article-empty { grid-column: 1 / -1; margin: 0; padding: 32px; background: #fff; color: #4A5768; }
   .section-kicker { margin-bottom: 9px; color: #CE1126; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+  .club-arena { position: relative; width: 100%; margin: 0; aspect-ratio: 8 / 3; overflow: hidden; background: #DDE5EE; }
+  .club-arena img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .club-arena figcaption { position: absolute; right: 24px; bottom: 20px; max-width: calc(100% - 48px); padding: 9px 13px; background: rgba(7,23,44,.88); color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
   .club-page { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(320px, .75fr); gap: 28px; align-items: start; padding: 44px 48px 90px; }
   .club-history { min-width: 0; background: #fff; padding: 38px 42px 46px; }
   .club-history > h2, .club-contact h2, .ice-schedule-heading h2 { margin: 0; color: #0B1B33; font-family: 'Archivo Black', sans-serif; font-size: 32px; line-height: 1.12; letter-spacing: 0; }
@@ -139,6 +142,7 @@
     .article-news-heading h2 { font-size: 24px; line-height: 1.15; }
     .article-card-body { padding: 20px 20px 23px; }
     .club-page { grid-template-columns: minmax(0, 1fr); padding: 28px 18px 60px; }
+    .club-arena figcaption { right: 12px; bottom: 12px; max-width: calc(100% - 24px); font-size: 10px; }
     .club-history { padding: 27px 22px 34px; }
     .club-history > h2, .ice-schedule-heading h2 { font-size: 25px; }
     .club-history-content .club-history-lead { font-size: 17px; }
@@ -916,10 +920,10 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
     <div class="ice-schedule-page">
       <div class="ice-schedule-heading">
         <div><div class="section-kicker">Zimný štadión Brezno</div><h2>ROZPIS ĽADOVEJ PLOCHY</h2></div>
-        <a class="ice-schedule-open" href="images/articles/wordpress/rozpis-ladu/rozpis-ladu-e848e09f.png" target="_blank" rel="noopener noreferrer">Otvoriť v plnej veľkosti</a>
+        <a class="ice-schedule-open" href="images/ice-schedule/rozpis-ladu-2026-09-28.svg" target="_blank" rel="noopener noreferrer">Otvoriť v plnej veľkosti</a>
       </div>
-      <div class="ice-schedule-media"><img class="ice-schedule-image" src="images/articles/wordpress/rozpis-ladu/rozpis-ladu-e848e09f.png" alt="Aktuálny rozpis ľadu HK Brezno"></div>
-      <div class="ice-schedule-meta">Aktualizované 23. 3. 2026 · Zdroj: <a href="https://www.hkbrezno.sk/rozpis-ladu/" target="_blank" rel="noopener noreferrer">WordPress HK Brezno</a></div>
+      <div class="ice-schedule-media"><img class="ice-schedule-image" src="images/ice-schedule/rozpis-ladu-2026-09-28.svg" alt="Aktuálny rozpis ľadu HK Brezno"></div>
+      <div class="ice-schedule-meta">Aktualizované 28. 9. 2026 · Zdroj: HK Brezno</div>
     </div>
   </div>
 </section>
@@ -995,6 +999,10 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <div>Hokejový klub Brezno</div>
       <h1>KLUB</h1>
     </div>
+    <figure class="club-arena">
+      <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
+      <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
+    </figure>
     <div class="club-page">
       <article class="club-history">
         <div class="section-kicker">Od prvého klziska po dnešok</div>

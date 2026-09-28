@@ -15,6 +15,7 @@ publikovanie článkov.
 | [`public/`](public) | Verejné obrázky, tímové logá a dokumenty pripravené pre budúci Next.js statický export. |
 | [`scripts/import_hockey_schedule.py`](scripts/import_hockey_schedule.py) | Import programu A tímu a tímových log z Hockey Slovakia. |
 | [`scripts/import_wordpress.py`](scripts/import_wordpress.py) | Import článkov, histórie klubu, kontaktu a rozpisu ľadu z WordPress REST API. |
+| [`scripts/render_ice_schedule.py`](scripts/render_ice_schedule.py) | Vytvorí škálovateľný SVG rozpisu z klubom dodaných termínov. |
 | [`send-form.php`](send-form.php) | Serverový endpoint pre rodičovský formulár na klasickom PHP hostingu, bez databázy. |
 | [`NAVRH-STRUKTURY.md`](NAVRH-STRUKTURY.md) | Informačná architektúra a historický návrh. Technologické rozhodnutie je aktualizované podľa aktuálnych pravidiel: Next.js statický export, obsah v Gite, PHP formulár. |
 | [`prototyp.html`](prototyp.html) | Skorší vizuálny prototyp (4 obrazovky, responzívny, prepínač Desktop/Mobil) — slúžil na odladenie dizajnového smeru. |
@@ -78,6 +79,18 @@ alebo obrázok; PDF má prednosť a na novom webe sa zobrazí priamo vo vloženo
 prehliadači. História, kontaktné údaje a rozpis sa ukladajú do
 `content/wordpress/pages.json`, takže verejný web zostáva statický aj pri
 dočasnej nedostupnosti WordPressu.
+
+Klubom dodaný rozpis sa môže dočasne nastaviť cez
+`content/ice-schedule.json`. Build porovná jeho dátum s WordPress snapshotom a
+zobrazí novší záznam. Aktuálny lokálny rozpis sa regeneruje príkazom:
+
+```bash
+python3 scripts/render_ice_schedule.py
+python3 build.py
+```
+
+Po publikovaní novšieho rozpisu vo WordPresse sa web automaticky prepne späť
+na CMS verziu.
 
 Workflow [`.github/workflows/sync-wordpress.yml`](.github/workflows/sync-wordpress.yml)
 kontroluje WordPress každú hodinu. Dá sa spustiť aj ručne alebo okamžite cez

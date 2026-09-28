@@ -287,6 +287,29 @@ def load_wordpress_pages():
     return data
 
 
+def apply_ice_schedule_override(pages):
+    path = CONTENT / "ice-schedule.json"
+    if not path.exists():
+        return pages
+    try:
+        override = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{path}: neplatný JSON ({exc})")
+    required = ("title", "modified", "sourceLabel", "sourceUrl", "asset", "assetType")
+    if not isinstance(override, dict) or any(key not in override for key in required):
+        fail(f"{path}: neplatný lokálny rozpis ľadu")
+    if override["assetType"] not in ("image", "pdf"):
+        fail(f"{path}: `assetType` musí byť image alebo pdf")
+    asset_path = HERE / str(override["asset"]).lstrip("/")
+    if not asset_path.is_file():
+        fail(f"{path}: súbor rozpisu neexistuje: {asset_path}")
+
+    wordpress_modified = str(pages["iceSchedule"].get("modified", ""))
+    if str(override["modified"]) > wordpress_modified:
+        pages["iceSchedule"] = override
+    return pages
+
+
 def merge_articles(local_articles, wordpress_articles):
     articles = local_articles + wordpress_articles
     seen = set()
@@ -471,6 +494,10 @@ def render_club_page(pages):
       <div>Hokejový klub Brezno</div>
       <h1>KLUB</h1>
     </div>
+    <figure class="club-arena">
+      <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
+      <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
+    </figure>
     <div class="club-page">
       <article class="club-history">
         <div class="section-kicker">Od prvého klziska po dnešok</div>
@@ -523,9 +550,10 @@ def render_ice_schedule_page(pages):
         label = "Otvoriť PDF" if asset_type == "pdf" else "Otvoriť v plnej veľkosti"
         action = f'<a class="ice-schedule-open" href="{asset}" target="_blank" rel="noopener noreferrer">{label}</a>'
     source_url = html_lib.escape(str(schedule.get("sourceUrl", "")), quote=True)
+    source_label = html_lib.escape(str(schedule.get("sourceLabel", "WordPress HK Brezno")))
     source = (
-        f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">WordPress HK Brezno</a>'
-        if source_url else "WordPress HK Brezno"
+        f'<a href="{source_url}" target="_blank" rel="noopener noreferrer">{source_label}</a>'
+        if source_url else source_label
     )
     return f"""
   <div>
@@ -821,7 +849,7 @@ def sync_public_assets():
 
 # ---------------------------------------------------------------- 0. načítanie
 articles = validate_content()
-wordpress_pages = load_wordpress_pages()
+wordpress_pages = apply_ice_schedule_override(load_wordpress_pages())
 schedule = load_match_schedule()
 match_target = next_match_target(schedule)
 sync_public_assets()
