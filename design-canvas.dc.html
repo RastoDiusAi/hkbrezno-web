@@ -19,6 +19,71 @@
   a:hover { color: #9E0C1C; }
   .social-icon:hover { background: #14315C; border-color: #14315C !important; color: #fff !important; }
   .social-text:hover { color: #fff !important; }
+  .match-hero, .match-page, .match-next, .match-month, .match-row { box-sizing: border-box; min-width: 0; }
+  .match-hero { padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); }
+  .match-hero > div { font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 14px; font-weight: 700; margin-bottom: 10px; }
+  .match-hero h1 { font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 66px; margin: 0; letter-spacing: 0; }
+  .match-page { padding: 40px 48px 90px; }
+  .match-next { background: #fff; border-top: 4px solid #CE1126; padding: 30px 34px 32px; }
+  .match-next-label { font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 24px; }
+  .match-next-teams { display: grid; grid-template-columns: minmax(0, 1fr) 220px minmax(0, 1fr); align-items: center; gap: 30px; }
+  .match-next-center { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .match-next-center strong { font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 42px; line-height: 1; }
+  .match-next-center span { margin-top: 8px; font-family: 'Barlow Condensed', sans-serif; color: #4A5768; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; }
+  .match-next-center small { margin-top: 5px; color: #6E7C90; font-size: 13px; }
+  .match-team { min-width: 0; display: flex; align-items: center; gap: 13px; color: #0B1B33; font-family: 'Archivo Black', sans-serif; font-size: 15px; line-height: 1.2; overflow-wrap: anywhere; }
+  .match-team img { width: 52px; height: 52px; flex: 0 0 52px; object-fit: contain; }
+  .match-next .match-team { flex-direction: column; text-align: center; font-size: 18px; }
+  .match-next .match-team img { width: 86px; height: 86px; flex-basis: 86px; }
+  .match-source-link { display: block; width: max-content; max-width: 100%; box-sizing: border-box; margin: 26px auto 0; border: 2px solid #14315C; color: #14315C; padding: 12px 20px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .06em; text-align: center; text-transform: uppercase; }
+  .match-source-link:hover { background: #14315C; color: #fff; }
+  .match-calendar-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin: 44px 0 18px; }
+  .match-calendar-heading h2 { font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 30px; margin: 0; letter-spacing: 0; }
+  .match-calendar-heading span { font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .12em; text-transform: uppercase; font-size: 12px; }
+  .match-month { margin-bottom: 24px; background: #fff; }
+  .match-month h2 { margin: 0; padding: 12px 20px; background: #14315C; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; letter-spacing: .16em; text-transform: uppercase; }
+  .match-row { display: grid; grid-template-columns: 90px minmax(0, 1fr) 150px 72px; gap: 18px; align-items: center; padding: 16px 20px; border-bottom: 1px solid #EDF0F4; color: #0B1B33; }
+  .match-row:last-child { border-bottom: 0; }
+  .match-row:hover { background: #F5F8FB; color: #0B1B33; }
+  .match-row.is-past { opacity: .66; }
+  .match-date { display: flex; flex-direction: column; }
+  .match-date strong { font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 17px; }
+  .match-date span { font-family: 'Barlow Condensed', sans-serif; color: #6E7C90; letter-spacing: .1em; text-transform: uppercase; font-size: 11px; }
+  .match-pair { min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) 28px minmax(0, 1fr); gap: 10px; align-items: center; }
+  .match-pair .match-team-away { justify-content: flex-end; flex-direction: row-reverse; text-align: right; }
+  .match-vs { text-align: center; color: #9AA6B5; font-family: 'Archivo Black', sans-serif; font-size: 11px; }
+  .match-info { display: flex; flex-direction: column; text-align: right; }
+  .match-info strong { font-family: 'Archivo Black', sans-serif; color: #14315C; font-size: 17px; }
+  .match-info span { color: #6E7C90; font-size: 12px; line-height: 1.35; }
+  .match-location { justify-self: end; padding: 6px 9px; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; }
+  .match-location.home { background: #CE1126; color: #fff; }
+  .match-location.away { background: #EDF0F4; color: #59687A; }
+  .match-calendar-source { margin-top: 28px; color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
+  @media (max-width: 800px) {
+    .match-hero { padding: 42px 20px 46px; }
+    .match-hero > div { line-height: 1.45; }
+    .match-hero h1 { font-size: 42px; line-height: 1; }
+    .match-page { padding: 28px 18px 60px; }
+    .match-next { padding: 24px 18px; }
+    .match-next-teams { grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); gap: 8px; }
+    .match-next-teams > * { min-width: 0; }
+    .match-next .match-team { font-size: 14px; }
+    .match-next .match-team img { width: 64px; height: 64px; flex-basis: 64px; }
+    .match-next-center strong { font-size: 30px; }
+    .match-next-center span { font-size: 11px; }
+    .match-calendar-heading { align-items: flex-start; flex-direction: column; gap: 6px; }
+    .match-source-link { width: 100%; padding: 12px 10px; font-size: 11px; }
+    .match-calendar-heading h2 { font-size: 23px; line-height: 1.15; }
+    .match-row { grid-template-columns: 52px minmax(0, 1fr) 54px; gap: 8px; padding: 15px 12px; }
+    .match-pair { grid-template-columns: 1fr; gap: 8px; }
+    .match-pair .match-team-away { justify-content: flex-start; flex-direction: row; text-align: left; }
+    .match-vs { display: none; }
+    .match-team { font-size: 13px; gap: 9px; }
+    .match-team img { width: 36px; height: 36px; flex-basis: 36px; }
+    .match-info { text-align: right; }
+    .match-info span { display: none; }
+    .match-location { grid-column: 3; justify-self: end; box-sizing: border-box; max-width: 54px; padding: 6px 7px; font-size: 10px; }
+  }
   ::selection { background: #CE1126; color: #fff; }
   @keyframes hkPulse { 0%,100% { opacity: 1 } 50% { opacity: .35 } }
 </style>
@@ -34,7 +99,7 @@
     <div style="display: flex; gap: 26px; align-items: center">
       <span>Zimný štadión Brezno</span>
       <span style="color: #B6C0CE">/</span>
-      <span>2. liga — skupina Juh</span>
+      <span>2. liga</span>
     </div>
     <div style="display: flex; gap: 22px; align-items: center">
       <span>+421 48 611 22 33</span>
@@ -68,14 +133,12 @@
       <button onClick="{{ go.domov }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.domov }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; position: relative" style-hover="color: #fff">Domov<span style="height: 3px; width: 100%; background: {{ u.domov }}"></span></button>
       <button onClick="{{ go.novinky }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.novinky }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Novinky<span style="height: 3px; width: 100%; background: {{ u.novinky }}"></span></button>
       <button onClick="{{ go.zapasy }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.zapasy }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Zápasy<span style="height: 3px; width: 100%; background: {{ u.zapasy }}"></span></button>
-      <button onClick="{{ go.tabulka }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.tabulka }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Tabuľka<span style="height: 3px; width: 100%; background: {{ u.tabulka }}"></span></button>
       <button onClick="{{ go.timy }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.timy }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Tímy<span style="height: 3px; width: 100%; background: {{ u.timy }}"></span></button>
       <button onClick="{{ go.supiska }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.supiska }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Súpiska<span style="height: 3px; width: 100%; background: {{ u.supiska }}"></span></button>
       <button onClick="{{ go.klub }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.klub }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Klub<span style="height: 3px; width: 100%; background: {{ u.klub }}"></span></button>
       <button onClick="{{ go.stadion }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.stadion }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Štadión<span style="height: 3px; width: 100%; background: {{ u.stadion }}"></span></button>
       <button onClick="{{ go.rodicia }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.rodicia }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Pre rodičov<span style="height: 3px; width: 100%; background: {{ u.rodicia }}"></span></button>
       <button onClick="{{ go.partneri }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.partneri }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">Partneri<span style="height: 3px; width: 100%; background: {{ u.partneri }}"></span></button>
-      <button onClick="{{ go.eshop }}" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: {{ c.eshop }}; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" style-hover="color: #fff">E-shop<span style="height: 3px; width: 100%; background: {{ u.eshop }}"></span></button>
     </nav>
     <sc-if value="{{ isStuck }}">
       <button onClick="{{ go.prihlaska }}" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 12px 18px; margin-left: 6px; font-family: 'Archivo Black', sans-serif; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%)" style-hover="background: #E31B31">Chcem hrať hokej</button>
@@ -112,6 +175,7 @@
       
     </div>
 
+    <!-- HOME_NEXT_MATCH_START -->
     <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
       <div style="padding: 38px 48px 38px 0; border-right: 1px solid #21406E">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px">
@@ -163,7 +227,9 @@
         </div>
       </div>
     </div>
+    <!-- HOME_NEXT_MATCH_END -->
 
+    <!-- HOME_MATCH_TICKER_START -->
     <div style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; overflow: hidden; background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%)">
       <span style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 13px; letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">POSLEDNÉ VÝSLEDKY</span>
       <div style="display: flex; gap: 34px; align-items: center; font-family: 'Barlow Condensed', sans-serif; font-size: 17px; letter-spacing: .04em; color: #C3C9D2; white-space: nowrap">
@@ -176,6 +242,7 @@
         <span>Levice <strong style="color: #fff; font-family: 'Archivo Black', sans-serif; font-size: 15px; margin: 0 6px">2 : 6</strong> Brezno <span style="color: #4ADE80; font-size: 14px; margin-left: 6px">V</span></span>
       </div>
     </div>
+    <!-- HOME_MATCH_TICKER_END -->
 
     <div style="position: relative; padding: 84px 48px 20px; display: flex; align-items: flex-end; justify-content: space-between">
       <div style="position: absolute; left: 0; top: 64px; width: 210px; height: 62px; pointer-events: none; background: repeating-linear-gradient(115deg, rgba(148,160,176,.35) 0 8px, rgba(148,160,176,0) 8px 22px)"></div>
@@ -287,7 +354,6 @@
           <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; border-bottom: 1px solid #EDF0F4; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">4</span><span style="font-weight: 600">HK Trnava</span><span style="text-align: center">22</span><span style="text-align: center">11</span><span style="text-align: center">11</span><span style="text-align: center">72:75</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">34</span></div>
           <div style="display: grid; grid-template-columns: 46px 1fr 54px 54px 54px 54px 66px; padding: 15px 20px; font-size: 15px; color: #0B1B33; align-items: center"><span style="font-family: 'Archivo Black', sans-serif; font-size: 14px">5</span><span style="font-weight: 600">HK Levice</span><span style="text-align: center">22</span><span style="text-align: center">8</span><span style="text-align: center">14</span><span style="text-align: center">63:88</span><span style="text-align: center; font-family: 'Archivo Black', sans-serif; font-size: 14px">26</span></div>
         </div>
-        <button onClick="{{ go.tabulka }}" style="margin-top: 18px; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px 24px; font-family: 'Archivo Black', sans-serif; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" style-hover="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff">Celá tabuľka</button>
       </div>
       <div>
         <h2 style="font-family: 'Archivo Black', sans-serif; color: #0B1B33; font-size: 36px; margin: 0 0 22px; letter-spacing: -.02em">VEREJNÉ KLZANIE</h2>
@@ -953,9 +1019,7 @@
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Sezóna</div>
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
           <span style="cursor: pointer" onClick="{{ go.zapasy }}" style-hover="color: #fff">Rozpis zápasov</span>
-          <span style="cursor: pointer" onClick="{{ go.tabulka }}" style-hover="color: #fff">Tabuľka</span>
           <span style="cursor: pointer" onClick="{{ go.novinky }}" style-hover="color: #fff">Novinky</span>
-          <span style="cursor: pointer" onClick="{{ go.eshop }}" style-hover="color: #fff">E-shop</span>
         </div>
       </div>
       <div>
@@ -994,7 +1058,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const p = this.state.page;
-    const pages = ['domov','novinky','zapasy','tabulka','timy','supiska','klub','stadion','rodicia','partneri','eshop','prihlaska'];
+    const pages = ['domov','novinky','zapasy','timy','supiska','klub','stadion','rodicia','partneri','prihlaska'];
     const go = {}, c = {}, u = {};
     pages.forEach(k => {
       go[k] = () => { this.setState({ page: k }); window.scrollTo(0, 0); };
@@ -1037,9 +1101,9 @@ class Component extends DCLogic {
     return {
       go, c, u, cd, roster, nav, isStuck: st,
       isDomov: p === 'domov', isNovinky: p === 'novinky', isZapasy: p === 'zapasy',
-      isTabulka: p === 'tabulka', isTimy: p === 'timy', isSupiska: p === 'supiska',
+      isTimy: p === 'timy', isSupiska: p === 'supiska',
       isKlub: p === 'klub', isStadion: p === 'stadion', isRodicia: p === 'rodicia',
-      isPartneri: p === 'partneri', isEshop: p === 'eshop', isPrihlaska: p === 'prihlaska'
+      isPartneri: p === 'partneri', isPrihlaska: p === 'prihlaska'
     };
   }
 }

@@ -34,8 +34,8 @@ CONTENT = HERE / "content"
 PUBLIC = HERE / "public"
 SITE_URL = "https://novyweb.smartitbiz.com"
 
-PAGES = ['domov', 'novinky', 'zapasy', 'tabulka', 'timy', 'supiska',
-         'klub', 'stadion', 'rodicia', 'partneri', 'eshop', 'prihlaska']
+PAGES = ['domov', 'novinky', 'zapasy', 'timy', 'supiska', 'klub',
+         'stadion', 'rodicia', 'partneri', 'prihlaska']
 
 ROSTER = [
     ('1',  'Brankár',  'Tomáš Ferko',      27, 22, 0),
@@ -49,8 +49,6 @@ ROSTER = [
     ('19', 'Útočník',  'Filip Krupa',      20, 19, 15),
     ('91', 'Útočník',  'Samuel Piliar',    18, 14, 11),
 ]
-
-MATCH_TARGET = '2026-09-12T17:30:00'   # najbližší zápas z pôvodnej logiky
 
 # start tag, ktorý korektne preskočí `>` vnútri hodnôt atribútov
 TAG_RE = re.compile(r'<([a-zA-Z][\w-]*)((?:[^>"]|"[^"]*")*?)(/?)>')
@@ -243,6 +241,198 @@ def validate_content():
     return load_articles()
 
 
+def load_match_schedule():
+    path = CONTENT / "matches" / "matches.json"
+    if not path.exists():
+        fail(f"chýba {path}")
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"{path}: neplatný JSON ({exc})")
+    if not isinstance(data, dict) or not isinstance(data.get("matches"), list):
+        fail(f"{path}: očakávam objekt s poľom `matches`")
+    if not data["matches"]:
+        fail(f"{path}: program neobsahuje žiadne zápasy")
+    required_root = ("competition", "season", "club", "source", "updatedAt")
+    for key in required_root:
+        if key not in data:
+            fail(f"{path}: chýba `{key}`")
+    required_match = (
+        "date", "time", "home", "away", "venue", "location", "opponent",
+        "homeLogo", "awayLogo", "sourceUrl",
+    )
+    for i, match in enumerate(data["matches"], start=1):
+        if not isinstance(match, dict):
+            fail(f"{path}: zápas {i} nie je objekt")
+        for key in required_match:
+            if key not in match:
+                fail(f"{path}: zápasu {i} chýba `{key}`")
+        try:
+            date.fromisoformat(match["date"])
+            datetime.strptime(match["time"], "%H:%M")
+        except (TypeError, ValueError):
+            fail(f"{path}: zápas {i} má neplatný dátum alebo čas")
+        if match["location"] not in ("home", "away"):
+            fail(f"{path}: zápas {i} má neplatné `location`")
+    return data
+
+
+SK_DAYS = ("Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota", "Nedeľa")
+SK_MONTHS = (
+    "január", "február", "marec", "apríl", "máj", "jún",
+    "júl", "august", "september", "október", "november", "december",
+)
+
+
+def match_logo(path):
+    return html_lib.escape(path.lstrip("/"), quote=True)
+
+
+def render_match_team(name, logo, side):
+    safe_name = html_lib.escape(name)
+    safe_logo = match_logo(logo)
+    return (
+        f'<div class="match-team match-team-{side}">'
+        f'<img src="{safe_logo}" alt="Logo {safe_name}" loading="lazy">'
+        f'<span>{safe_name}</span></div>'
+    )
+
+
+def render_match_page(schedule):
+    matches = schedule["matches"]
+    today = date.today()
+    upcoming = [m for m in matches if date.fromisoformat(m["date"]) >= today]
+    featured = upcoming[0] if upcoming else matches[-1]
+    featured_date = date.fromisoformat(featured["date"])
+    featured_location = "Doma" if featured["location"] == "home" else "Vonku"
+    featured_html = f"""
+    <div class="match-next">
+      <div class="match-next-label">Najbližší zápas · {featured_location}</div>
+      <div class="match-next-teams">
+        {render_match_team(featured['home'], featured['homeLogo'], 'home')}
+        <div class="match-next-center">
+          <strong>{html_lib.escape(featured['time'])}</strong>
+          <span>{SK_DAYS[featured_date.weekday()]} {featured_date.day}. {featured_date.month}. {featured_date.year}</span>
+          <small>{html_lib.escape(featured['venue'])}</small>
+        </div>
+        {render_match_team(featured['away'], featured['awayLogo'], 'away')}
+      </div>
+      <a class="match-source-link" href="{html_lib.escape(featured['sourceUrl'], quote=True)}" target="_blank" rel="noopener noreferrer">Detail zápasu na Hockey Slovakia</a>
+    </div>"""
+
+    groups = []
+    current_month = None
+    for match in matches:
+        match_date = date.fromisoformat(match["date"])
+        month_key = (match_date.year, match_date.month)
+        if month_key != current_month:
+            if current_month is not None:
+                groups.append("</div>")
+            current_month = month_key
+            groups.append(
+                f'<div class="match-month"><h2>{SK_MONTHS[match_date.month - 1]} '
+                f'{match_date.year}</h2>'
+            )
+        location = "Doma" if match["location"] == "home" else "Vonku"
+        location_class = "home" if match["location"] == "home" else "away"
+        past_class = " is-past" if match_date < today else ""
+        safe_url = html_lib.escape(match["sourceUrl"], quote=True)
+        groups.append(f"""
+        <a class="match-row{past_class}" href="{safe_url}" target="_blank" rel="noopener noreferrer" aria-label="{html_lib.escape(match['home'])} proti {html_lib.escape(match['away'])}, {match_date.day}. {match_date.month}. {match_date.year}">
+          <div class="match-date"><strong>{match_date.day}. {match_date.month}.</strong><span>{SK_DAYS[match_date.weekday()]}</span></div>
+          <div class="match-pair">
+            {render_match_team(match['home'], match['homeLogo'], 'home')}
+            <span class="match-vs">VS</span>
+            {render_match_team(match['away'], match['awayLogo'], 'away')}
+          </div>
+          <div class="match-info"><strong>{html_lib.escape(match['time'])}</strong><span>{html_lib.escape(match['venue'])}</span></div>
+          <span class="match-location {location_class}">{location}</span>
+        </a>""")
+    if current_month is not None:
+        groups.append("</div>")
+
+    source = html_lib.escape(schedule["source"], quote=True)
+    updated = html_lib.escape(schedule["updatedAt"])
+    return f"""
+  <div>
+    <div class="match-hero">
+      <div>Sezóna {html_lib.escape(schedule['season'])} · {html_lib.escape(schedule['competition'])}</div>
+      <h1>ZÁPASOVÝ KALENDÁR</h1>
+    </div>
+    <div class="match-page">
+      {featured_html.strip()}
+      <div class="match-calendar-heading"><h2>VŠETKY ZÁPASY HK BREZNO</h2><span>Doma aj vonku · bez výsledkov</span></div>
+      <div class="match-calendar">{''.join(groups)}</div>
+      <div class="match-calendar-source">Aktualizované {updated} · <a href="{source}" target="_blank" rel="noopener noreferrer">Oficiálny program Hockey Slovakia</a></div>
+    </div>
+  </div>
+"""
+
+
+def render_home_schedule(schedule):
+    today = date.today()
+    upcoming = [m for m in schedule["matches"] if date.fromisoformat(m["date"]) >= today]
+    featured = upcoming[0] if upcoming else schedule["matches"][-1]
+    match_date = date.fromisoformat(featured["date"])
+
+    def home_team(name, logo, role):
+        safe_name = html_lib.escape(name)
+        return f"""
+          <div style="display: flex; align-items: center; gap: 18px">
+            <div style="width: 62px; height: 62px; flex: 0 0 62px; background: #fff; display: grid; place-items: center; border: 1px solid #2B4C7E"><img src="{match_logo(logo)}" alt="Logo {safe_name}" style="width: 50px; height: 50px; object-fit: contain"></div>
+            <div><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 18px">{safe_name}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">{role}</div></div>
+          </div>"""
+
+    feature = f"""
+    <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
+      <div style="padding: 38px 48px 38px 0; border-right: 1px solid #21406E">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"><span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas</span></div>
+        <div style="display: flex; align-items: center; gap: 28px">
+          {home_team(featured['home'], featured['homeLogo'], 'Domáci').strip()}
+          <span style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 22px">VS</span>
+          {home_team(featured['away'], featured['awayLogo'], 'Hostia').strip()}
+        </div>
+        <div style="display: flex; gap: 28px; margin-top: 24px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .1em; text-transform: uppercase; font-size: 15px"><span>{SK_DAYS[match_date.weekday()]} {match_date.day}. {match_date.month}. {match_date.year} · {html_lib.escape(featured['time'])}</span><span style="color: #3A4C68">|</span><span>{html_lib.escape(featured['venue'])}</span></div>
+      </div>
+      <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 18px">Do zápasu zostáva</div>
+        <div style="display: flex; gap: 12px">
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.d }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.h }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.m }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div></div>
+          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Archivo Black', sans-serif; color: #CE1126; font-size: 34px; line-height: 1">{{{{ cd.s }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div></div>
+        </div>
+      </div>
+    </div>"""
+
+    ticker_matches = upcoming[:4] if upcoming else schedule["matches"][-4:]
+    ticker_items = []
+    for match in ticker_matches:
+        item_date = date.fromisoformat(match["date"])
+        location = "doma" if match["location"] == "home" else "vonku"
+        ticker_items.append(
+            f'<span><strong style="color: #fff; font-family: \'Archivo Black\', sans-serif; font-size: 14px">{item_date.day}. {item_date.month}. · {html_lib.escape(match["time"])}</strong> '
+            f'{html_lib.escape(match["opponent"])} · {location}</span>'
+        )
+    ticker = (
+        '<div style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; '
+        'overflow: hidden; background: #07172C">'
+        '<span style="font-family: \'Archivo Black\', sans-serif; color: #fff; font-size: 13px; '
+        'letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">'
+        'NAJBLIŽŠIE ZÁPASY</span><div style="display: flex; gap: 28px; align-items: center; '
+        'font-family: \'Barlow Condensed\', sans-serif; font-size: 16px; color: #C3C9D2; '
+        'white-space: nowrap">' + '<span style="color: #2B4C7E">/</span>'.join(ticker_items) + '</div></div>'
+    )
+    return feature, ticker
+
+
+def next_match_target(schedule):
+    today = date.today()
+    upcoming = [m for m in schedule["matches"] if date.fromisoformat(m["date"]) >= today]
+    match = upcoming[0] if upcoming else schedule["matches"][-1]
+    return f"{match['date']}T{match['time']}:00"
+
+
 def page_shell(title, description, canonical, body_html):
     safe_title = html_lib.escape(title)
     safe_meta_title = html_lib.escape(f"{title} | HK Brezno")
@@ -351,6 +541,8 @@ def sync_public_assets():
 
 # ---------------------------------------------------------------- 0. načítanie
 articles = validate_content()
+schedule = load_match_schedule()
+match_target = next_match_target(schedule)
 sync_public_assets()
 
 if not SRC.exists():
@@ -366,6 +558,42 @@ m = re.search(r'</helmet>(.*?)</x-dc>', src, re.S)
 if not m:
     fail("v zdroji nie je telo medzi </helmet> a </x-dc>")
 body = m.group(1)
+
+home_feature, home_ticker = render_home_schedule(schedule)
+for start, end, replacement in (
+    ("HOME_NEXT_MATCH_START", "HOME_NEXT_MATCH_END", home_feature),
+    ("HOME_MATCH_TICKER_START", "HOME_MATCH_TICKER_END", home_ticker),
+):
+    body, count = re.subn(
+        rf'[ \t]*<!-- {start} -->.*?<!-- {end} -->',
+        replacement.strip(),
+        body,
+        flags=re.S,
+    )
+    if count != 1:
+        fail(f"očakával som 1 blok {start}, našiel {count}")
+
+# Zápasy sa generujú z Gitom spravovaného JSON-u; staré vzorové skóre zo
+# zdrojového canvasu sa do výsledku vôbec nedostane.
+body, n_matches_page = re.subn(
+    r'<sc-if value="\{\{ isZapasy \}\}">.*?</sc-if>',
+    '<sc-if value="{{ isZapasy }}">' + render_match_page(schedule) + '</sc-if>',
+    body,
+    flags=re.S,
+)
+if n_matches_page != 1:
+    fail(f"očakával som 1 sekciu zápasov, našiel {n_matches_page}")
+
+# Zrušené podstránky sa odstránia ešte pred spracovaním routovania.
+for removed_page in ("Tabulka", "Eshop"):
+    body, count = re.subn(
+        rf'\s*<sc-if value="\{{\{{ is{removed_page} \}}\}}">.*?</sc-if>',
+        '',
+        body,
+        flags=re.S,
+    )
+    if count != 1:
+        fail(f"očakával som 1 sekciu is{removed_page}, našiel {count}")
 
 # z helmetu vyhodíme runtime image-slotu, štýly a fonty si ponecháme
 helmet = re.sub(r'<script[^>]*image-slot\.js[^>]*>\s*</script>', '', helmet)
@@ -796,7 +1024,7 @@ html = f"""<!DOCTYPE html>
   onScroll();
 
   /* odpočet do najbližšieho zápasu */
-  var target = new Date('{MATCH_TARGET}').getTime();
+  var target = new Date('{match_target}').getTime();
   var cells = document.querySelectorAll('[data-cd]');
   function pad(n) {{ return String(n).padStart(2, '0'); }}
   function tick() {{

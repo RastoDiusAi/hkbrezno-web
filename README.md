@@ -7,11 +7,12 @@ Návrh a implementácia novej webovej stránky pre hokejový klub HK Brezno
 
 | Súbor | Čo to je |
 |---|---|
-| [`index.html`](index.html) | **Implementovaný dizajn** — funkčná stránka s 12 podstránkami, routovaním, prilepenou navigáciou a odpočtom do zápasu. Generovaný z design canvasu. |
+| [`index.html`](index.html) | **Implementovaný dizajn** — funkčná stránka s 10 podstránkami, routovaním, prilepenou navigáciou a odpočtom do zápasu. Generovaný z design canvasu a obsahových dát. |
 | [`build.py`](build.py) | Transpiler: prevedie `design-canvas.dc.html` na samostatný `index.html` bez runtime závislostí. |
 | [`design-canvas.dc.html`](design-canvas.dc.html) | Zdrojový design canvas importovaný z projektu na `claude.ai/design`. **Needituje sa priamo** — je to vstup pre `build.py`. |
-| [`content/`](content) | Publikačný obsah v Gite: články, tímy, tréneri, partneri, dokumenty. |
-| [`public/`](public) | Verejné obrázky a dokumenty pripravené pre budúci Next.js statický export. |
+| [`content/`](content) | Publikačný obsah v Gite: články, tímy, zápasy, tréneri, partneri a dokumenty. |
+| [`public/`](public) | Verejné obrázky, tímové logá a dokumenty pripravené pre budúci Next.js statický export. |
+| [`scripts/import_hockey_schedule.py`](scripts/import_hockey_schedule.py) | Import programu A tímu a tímových log z Hockey Slovakia. |
 | [`send-form.php`](send-form.php) | Serverový endpoint pre rodičovský formulár na klasickom PHP hostingu, bez databázy. |
 | [`NAVRH-STRUKTURY.md`](NAVRH-STRUKTURY.md) | Informačná architektúra a historický návrh. Technologické rozhodnutie je aktualizované podľa aktuálnych pravidiel: Next.js statický export, obsah v Gite, PHP formulár. |
 | [`prototyp.html`](prototyp.html) | Skorší vizuálny prototyp (4 obrazovky, responzívny, prepínač Desktop/Mobil) — slúžil na odladenie dizajnového smeru. |
@@ -35,6 +36,16 @@ Build zároveň:
 - generuje `sitemap.xml`,
 - generuje `robots.txt` s blokovaním indexácie demo subdomény,
 - synchronizuje obsah `public/` do web rootu podobne, ako to robí Next.js.
+
+Program A tímu a logá súperov sa aktualizujú príkazmi:
+
+```bash
+python3 scripts/import_hockey_schedule.py
+python3 build.py
+```
+
+Importér používa balík `certifi` na overenie HTTPS certifikátov. Vygenerovaný
+web ho nepotrebuje.
 
 Prezeranie: otvor `index.html` priamo v prehliadači (nepotrebuje server).
 
@@ -60,10 +71,12 @@ produkčnom webe nechceme. `build.py` ho preto odstráni a nahradí:
 
 Hotové:
 
-- 12 podstránok: Domov, Novinky, Zápasy, Tabuľka, Tímy, Súpiska, Klub, Štadión,
-  Pre rodičov, Partneri, E-shop, Prihláška.
+- 10 podstránok: Domov, Novinky, Zápasy, Tímy, Súpiska, Klub, Štadión,
+  Pre rodičov, Partneri, Prihláška.
 - Routovanie medzi podstránkami, aktívny stav v menu, prilepená navigácia po
-  odscrollovaní, živý odpočet do najbližšieho zápasu, 69 hover stavov.
+  odscrollovaní a živý odpočet do najbližšieho zápasu.
+- Kalendár 18 zápasov A tímu bez výsledkov, s logami a dátami importovanými
+  z oficiálneho programu Hockey Slovakia.
 - Základná obsahová štruktúra podľa pravidiel: `content/articles`, `content/pages`,
   `content/teams`, `content/coaches`, `content/partners`, `public/images`,
   `public/documents`, `app`, `components`, `lib/content`.
@@ -89,5 +102,5 @@ Zostáva:
 
 ## Poznámka k obsahu
 
-Texty, súpiska, výsledky, tabuľka a mená v tomto repozitári sú **vzorové dáta**
-z dizajnového návrhu, nie skutočné údaje klubu.
+Texty, súpiska a mená v tomto repozitári sú **vzorové dáta** z dizajnového
+návrhu. Program A tímu a tímové logá sú importované z Hockey Slovakia.
