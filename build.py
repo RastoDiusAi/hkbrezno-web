@@ -1352,7 +1352,7 @@ html = f"""<!DOCTYPE html>
     box-shadow: 0 20px 40px rgba(11,27,51,.5);
     transform: translateY(-120%); transition: transform .25s ease;
   }}
-  [data-navbar] nav button {{
+  [data-navbar] nav button, [data-navbar] nav .nav-external {{
     width: 100%; padding: 16px 20px !important;
     flex-direction: row !important; justify-content: flex-start !important;
     border-bottom: 1px solid rgba(255,255,255,.08);

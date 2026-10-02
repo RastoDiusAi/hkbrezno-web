@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.3 - 2026-10-02
+
+- Pridaná položka E-shop do hlavnej navigácie. Odkaz smeruje priamo na
+  externý obchod HK Brezno na Forfanshope, bez internej podstránky.
+
 ## 0.6.0-beta.2 - 2026-10-02
 
 - E-mail `info@hkbrezno.sk` v hornej lište a pätičke otvára predvoleného

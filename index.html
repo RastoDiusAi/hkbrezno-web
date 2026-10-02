@@ -221,9 +221,9 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
 [data-hv="6"]:hover{color: #fff !important}
 [data-hv="7"]:hover{color: #fff !important}
 [data-hv="8"]:hover{color: #fff !important}
-[data-hv="9"]:hover{background: #E31B31 !important}
+[data-hv="9"]:hover{color: #fff !important}
 [data-hv="10"]:hover{background: #E31B31 !important}
-[data-hv="11"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="11"]:hover{background: #E31B31 !important}
 [data-hv="12"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
 [data-hv="13"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
 [data-hv="14"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
@@ -231,13 +231,14 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
 [data-hv="16"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
 [data-hv="17"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
 [data-hv="18"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
-[data-hv="19"]:hover{background: #E31B31 !important}
-[data-hv="20"]:hover{color: #fff !important}
+[data-hv="19"]:hover{background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%) !important; color: #fff !important}
+[data-hv="20"]:hover{background: #E31B31 !important}
 [data-hv="21"]:hover{color: #fff !important}
 [data-hv="22"]:hover{color: #fff !important}
 [data-hv="23"]:hover{color: #fff !important}
 [data-hv="24"]:hover{color: #fff !important}
 [data-hv="25"]:hover{color: #fff !important}
+[data-hv="26"]:hover{color: #fff !important}
 
 /* ==== RESPONZIVITA ===================================================== */
 /* Layout je pôvodne fixný na 1440 px s inline štýlmi (vysoká špecificita),
@@ -332,7 +333,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
     box-shadow: 0 20px 40px rgba(11,27,51,.5);
     transform: translateY(-120%); transition: transform .25s ease;
   }
-  [data-navbar] nav button {
+  [data-navbar] nav button, [data-navbar] nav .nav-external {
     width: 100%; padding: 16px 20px !important;
     flex-direction: row !important; justify-content: flex-start !important;
     border-bottom: 1px solid rgba(255,255,255,.08);
@@ -428,9 +429,10 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <button data-go="klub" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="6" data-nav="klub">Klub<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
       <button data-go="rodicia" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="7" data-nav="rodicia">Pre rodičov<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
       <button data-go="partneri" style="background: none; border: 0; cursor: pointer; padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px" data-hv="8" data-nav="partneri">Partneri<span style="height: 3px; width: 100%; background: transparent" data-u></span></button>
+      <a class="nav-external" href="https://forfanshop.com/hk-brezno-109" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť E-shop HK Brezno v novej karte" style="padding: 0 11px; white-space: nowrap; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: .1em; text-transform: uppercase; color: #A9B7CB; display: flex; justify-content: center; align-items: center" data-hv="9">E-shop</a>
     </nav>
     <span data-stuck>
-      <button data-go="prihlaska" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 12px 18px; margin-left: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%)" data-hv="9">Chcem hrať hokej</button>
+      <button data-go="prihlaska" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 12px 18px; margin-left: 6px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; white-space: nowrap; clip-path: polygon(9px 0, 100% 0, calc(100% - 9px) 100%, 0 100%)" data-hv="10">Chcem hrať hokej</button>
     </span>
     </div>
   </div>
@@ -454,8 +456,8 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
         </div>
         <p style="color: #3F4E64; font-size: 19px; line-height: 1.6; max-width: 660px; margin: 0 0 36px; text-wrap: pretty">Na ľade bojujeme ako rytieri, mimo ľadu sme priatelia. Od prípravky až po seniorov — pod Nízkymi Tatrami rastie hokejová generácia.</p>
         <div class="home-hero-actions" style="display: flex; gap: 14px; justify-content: center; pointer-events: auto">
-          <button data-go="prihlaska" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="10">Priveď dieťa na hokej</button>
-          <button data-go="rozpisladu" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 18px 33px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase" data-hv="11">Rozpis ľadu</button>
+          <button data-go="prihlaska" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 34px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="11">Priveď dieťa na hokej</button>
+          <button data-go="rozpisladu" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 18px 33px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase" data-hv="12">Rozpis ľadu</button>
         </div>
       </div>
       <div style="position: absolute; top: 34px; right: 300px; display: grid; grid-template-columns: repeat(5, 22px); gap: 12px; pointer-events: none; font-family: 'Barlow', sans-serif; font-size: 20px; line-height: 1; color: rgba(120,133,152,.4)"><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span><span>✕</span></div>
@@ -474,7 +476,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .22em; text-transform: uppercase; font-size: 16px; font-weight: 700; margin-bottom: 10px">Z klubu</div>
         <h2 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 54px; margin: 0; letter-spacing: -.02em">NOVINKY</h2>
       </div>
-      <button data-go="novinky" style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 14px 26px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="12">Všetky novinky</button>
+      <button data-go="novinky" style="background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 14px 26px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .06em; text-transform: uppercase" data-hv="13">Všetky novinky</button>
     </div>
 
 <div class="article-home-grid">
@@ -942,7 +944,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">2. slovenská hokejová liga</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">A TÍM</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Výsledky, rozpis zápasov a aktuálna tabuľka seniorského tímu HK Brezno.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/home/1199/2-slovenska-hokejova-liga" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť detail súťaže A tímu v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="13">Detail súťaže</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/home/1199/2-slovenska-hokejova-liga" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť detail súťaže A tímu v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="14">Detail súťaže</a>
         </div>
       </div>
       <div style="background: #fff; display: flex; flex-direction: column">
@@ -951,7 +953,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga starších žiakov A1</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">STARŠÍ ŽIACI</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Výsledky a program zápasov starších žiakov v súťaži A1.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1212/liga-starsich-ziakov-a1" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky starších žiakov v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="14">Výsledky a zápasy</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1212/liga-starsich-ziakov-a1" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky starších žiakov v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="15">Výsledky a zápasy</a>
         </div>
       </div>
       <div style="background: #fff; display: flex; flex-direction: column">
@@ -960,7 +962,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga mladších žiakov AA</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">MLADŠÍ ŽIACI — 7. ROČNÍK</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Výsledky a program zápasov siedmeho ročníka v súťaži AA.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1207/liga-mladsich-ziakov-aa" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky mladších žiakov siedmeho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="15">Výsledky a zápasy</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1207/liga-mladsich-ziakov-aa" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky mladších žiakov siedmeho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="16">Výsledky a zápasy</a>
         </div>
       </div>
       <div style="background: #fff; display: flex; flex-direction: column">
@@ -969,7 +971,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga mladších žiakov A</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">MLADŠÍ ŽIACI — 6. ROČNÍK</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Výsledky a program zápasov šiesteho ročníka v súťaži A.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1208/liga-mladsich-ziakov-a" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky mladších žiakov šiesteho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="16">Výsledky a zápasy</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/results-date/1208/liga-mladsich-ziakov-a" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť výsledky mladších žiakov šiesteho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="17">Výsledky a zápasy</a>
         </div>
       </div>
       <div style="background: #fff; display: flex; flex-direction: column">
@@ -978,7 +980,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga prípraviek HP5 Mini Stred</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">PRÍPRAVKA — 5. ROČNÍK</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Profil tímu HK Brezno, zápasy a výsledky piateho ročníka.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/teams/1228/liga-pripraviek-hp5-mini-stred/team/670970/hk-brezno" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť profil prípravky piateho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="17">Profil tímu</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/teams/1228/liga-pripraviek-hp5-mini-stred/team/670970/hk-brezno" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť profil prípravky piateho ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="18">Profil tímu</a>
         </div>
       </div>
       <div style="background: #fff; display: flex; flex-direction: column">
@@ -987,7 +989,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
           <div style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; font-weight: 700">Liga prípraviek HP4 Mini Stred</div>
           <h3 style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #0B1B33; font-size: 24px; margin: 6px 0 12px">PRÍPRAVKA — 4. ROČNÍK</h3>
           <p style="color: #4A5768; font-size: 15px; line-height: 1.6; margin: 0 0 18px">Profil tímu HK Brezno Modrí, zápasy a výsledky štvrtého ročníka.</p>
-          <a href="https://www.hockeyslovakia.sk/sk/stats/teams/1230/liga-pripraviek-hp4-mini-stred/team/671231/hk-brezno-modri" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť profil prípravky štvrtého ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="18">Profil tímu</a>
+          <a href="https://www.hockeyslovakia.sk/sk/stats/teams/1230/liga-pripraviek-hp4-mini-stred/team/671231/hk-brezno-modri" target="_blank" rel="noopener noreferrer" aria-label="Otvoriť profil prípravky štvrtého ročníka v novej karte" style="display: block; margin-top: auto; width: 100%; box-sizing: border-box; background: none; border: 2px solid #14315C; color: #14315C; cursor: pointer; padding: 13px; text-align: center; text-decoration: none; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .06em; text-transform: uppercase" data-hv="19">Profil tímu</a>
         </div>
       </div>
     </div>
@@ -1055,7 +1057,7 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
             <div style="grid-column: 1 / -1"><div style="font-family: 'Barlow Condensed', sans-serif; color: #14315C; letter-spacing: .14em; text-transform: uppercase; font-size: 12px; font-weight: 700; margin-bottom: 7px">Poznámka pre trénera</div><textarea name="note" maxlength="1200" placeholder="Otázky alebo praktická poznámka k prvému tréningu" style="width: 100%; box-sizing: border-box; border: 1px solid #D6DCE4; padding: 14px; font-family: 'Barlow', sans-serif; font-size: 15px; height: 92px; resize: none"></textarea></div>
           </div>
           <label style="display: flex; gap: 10px; align-items: flex-start; margin-top: 20px; color: #4A5768; font-size: 14px; line-height: 1.5"><input type="checkbox" name="consent_gdpr" value="1" required style="width: 18px; height: 18px; flex: none; margin-top: 2px"><span>Súhlasím so spracovaním osobných údajov na účely vybavenia žiadosti o členstvo v HK Brezno.</span></label>
-          <button type="submit" style="margin-top: 26px; background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 40px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="19">Poslať prihlášku</button>
+          <button type="submit" style="margin-top: 26px; background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 19px 40px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; clip-path: polygon(12px 0, 100% 0, calc(100% - 12px) 100%, 0 100%)" data-hv="20">Poslať prihlášku</button>
         </form>
       </div>
       <div style="display: flex; flex-direction: column; gap: 20px">
@@ -1123,17 +1125,17 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <div>
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Klub</div>
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
-          <span style="cursor: pointer" data-go="klub" data-hv="20">O klube</span>
-          <span style="cursor: pointer" data-go="timy" data-hv="21">Tímy a kategórie</span>
-          <span style="cursor: pointer" data-go="partneri" data-hv="22">Partneri</span>
+          <span style="cursor: pointer" data-go="klub" data-hv="21">O klube</span>
+          <span style="cursor: pointer" data-go="timy" data-hv="22">Tímy a kategórie</span>
+          <span style="cursor: pointer" data-go="partneri" data-hv="23">Partneri</span>
         </div>
       </div>
       <div>
         <div style="font-family: 'Barlow Condensed', sans-serif; color: #fff; letter-spacing: .16em; text-transform: uppercase; font-size: 13px; font-weight: 700; margin-bottom: 16px">Sezóna</div>
         <div style="display: flex; flex-direction: column; gap: 10px; color: #8C9AB0; font-size: 15px">
-          <span style="cursor: pointer" data-go="zapasy" data-hv="23">Rozpis zápasov</span>
-          <span style="cursor: pointer" data-go="rozpisladu" data-hv="24">Rozpis ľadu</span>
-          <span style="cursor: pointer" data-go="novinky" data-hv="25">Novinky</span>
+          <span style="cursor: pointer" data-go="zapasy" data-hv="24">Rozpis zápasov</span>
+          <span style="cursor: pointer" data-go="rozpisladu" data-hv="25">Rozpis ľadu</span>
+          <span style="cursor: pointer" data-go="novinky" data-hv="26">Novinky</span>
         </div>
       </div>
       <div>

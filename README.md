@@ -5,7 +5,7 @@ CMS. Verejný web je statický a vzniká generovaním HTML súborov v Gite.
 
 ## Aktuálna verzia
 
-**`0.6.0-beta.2` (2. 10. 2026)**
+**`0.6.0-beta.3` (2. 10. 2026)**
 
 Verzia je uložená aj v súbore [`VERSION`](VERSION). Zmeny jednotlivých verzií
 sú v [`CHANGELOG.md`](CHANGELOG.md). Táto verzia je pripravená na testovacie
@@ -23,6 +23,7 @@ Aktuálne funguje:
   dostupnosti WordPressu;
 - bezpečnostné hlavičky pre Apache/LiteSpeed a zabezpečený PHP formulár;
 - hodinová kontrola nového WordPress obsahu cez GitHub Actions.
+- priamy odkaz z hlavnej navigácie na externý klubový E-shop.
 
 Stránka Pre rodičov je zámerne bez obsahu. Partneri zatiaľ používajú zástupné
 logá. Hero fotografie a ďalšie vizuály označené ako fotomiesta ešte čakajú na
