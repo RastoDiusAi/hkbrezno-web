@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.2 - 2026-10-02
+
+- E-mail `info@hkbrezno.sk` v hornej lište a pätičke otvára predvoleného
+  poštového klienta s vyplneným príjemcom, predmetom a úvodom správy.
+
 ## 0.6.0-beta.1 - 2026-09-29
 
 - Aktualizovaný obsah domovskej stránky podľa klubových pripomienok.
