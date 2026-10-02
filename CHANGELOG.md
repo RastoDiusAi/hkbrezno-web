@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.13 - 2026-10-02
+
+- Podstránka Pre rodičov je ponechaná úplne prázdna a pripravená na neskoršie
+  doplnenie obsahu.
+
 ## 0.6.0-beta.12 - 2026-10-02
 
 - Podstránky Vedenie klubu a Trénerská štruktúra sú ponechané úplne prázdne
