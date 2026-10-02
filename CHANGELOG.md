@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.7 - 2026-10-02
+
+- Tlačidlá „Výsledky a zápasy“ v kartách žiackych tímov boli premenované na
+  presnejšie „Rozpis zápasov“.
+
 ## 0.6.0-beta.6 - 2026-10-02
 
 - Do karty Starší žiaci pribudol priamy odkaz na súpisku hráčov v oficiálnych
