@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.10 - 2026-10-02
+
+- Položka E-shop v hlavnej navigácii je výškovo zarovnaná s ostatnými
+  položkami na desktopoch aj mobilných zariadeniach.
+
 ## 0.6.0-beta.9 - 2026-10-02
 
 - Do karty Prípravka - 4. ročník pribudli priame odkazy na súpisky hráčov
