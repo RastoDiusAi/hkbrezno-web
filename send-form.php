@@ -181,7 +181,6 @@ rate_limit($ip);
 $childFirstName = require_field('child_first_name', 'Meno dieťaťa', 80);
 $childLastName = require_field('child_last_name', 'Priezvisko dieťaťa', 80);
 $birthDate = require_field('child_birth_date', 'Dátum narodenia', 20);
-$category = require_field('category', 'Kategória', 80);
 $parentName = require_field('parent_name', 'Rodič', 120);
 $parentEmail = require_field('parent_email', 'E-mail', 160);
 $phone = require_field('phone', 'Telefón', 40);
@@ -191,11 +190,6 @@ $note = substr($note, 0, 1200);
 
 if (!filter_var($parentEmail, FILTER_VALIDATE_EMAIL)) {
     respond(422, 'Neplatný e-mail', 'Skontrolujte, prosím, e-mailovú adresu zákonného zástupcu.');
-}
-
-$allowedCategories = ['Prípravka U8', 'Mladší žiaci', 'Starší žiaci', 'Dorast'];
-if (!in_array($category, $allowedCategories, true)) {
-    respond(422, 'Neplatná kategória', 'Vyberte, prosím, jednu z ponúkaných kategórií.');
 }
 
 $allowedExperience = ['áno', 'nie', 'začiatočník'];
@@ -229,7 +223,6 @@ $lines = [
     '',
     'Dieťa: ' . $childFirstName . ' ' . $childLastName,
     'Dátum narodenia: ' . $birthDate,
-    'Kategória: ' . $category,
     'Skúsenosť s korčuľovaním: ' . $experience,
     '',
     'Zákonný zástupca: ' . $parentName,

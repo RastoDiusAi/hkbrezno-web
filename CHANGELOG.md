@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0-beta.15 - 2026-10-02
+
+- Zo stránky Chcem hrať hokej boli odstránené pôvodné kroky 2 a 4; zostávajúce
+  kroky sú prečíslované a zobrazené v dvoch stĺpcoch.
+- Z online prihlášky aj jej serverového spracovania bolo odstránené pole
+  Kategória.
+
 ## 0.6.0-beta.14 - 2026-10-02
 
 - Podstránka Pre rodičov bola vrátená do predchádzajúceho stavu s klubovou
