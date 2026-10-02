@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.9 - 2026-10-02
+
+- Do karty Prípravka - 4. ročník pribudli priame odkazy na súpisky hráčov
+  tímov HK Brezno Bieli a HK Brezno Modrí.
+
 ## 0.6.0-beta.8 - 2026-10-02
 
 - Karta Prípravka - 5. ročník teraz odkazuje priamo na rozpis zápasov a
