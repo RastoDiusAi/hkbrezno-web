@@ -493,29 +493,50 @@ def render_club_page(pages):
       <div>Hokejový klub Brezno</div>
       <h1>KLUB</h1>
     </div>
-    <figure class="club-arena">
-      <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
-      <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
-    </figure>
-    <div class="club-page">
-      <article class="club-history">
-        <div class="section-kicker">Od prvého klziska po dnešok</div>
-        <h2>HISTÓRIA KLUBU</h2>
-        <div class="club-history-content">{''.join(history_parts)}</div>
-      </article>
-      <aside class="club-contact">
-        <div class="section-kicker">Kontakt a identifikačné údaje</div>
-        <h2>{html_lib.escape(contact.get('name', 'Hokejový klub Brezno'))}</h2>
-        <dl>
-          <div><dt>Adresa</dt><dd>{address}</dd></div>
-          <div><dt>E-mail</dt><dd><a href="mailto:{email}">{email}</a></dd></div>
-          <div><dt>IČO</dt><dd>{html_lib.escape(contact.get('companyId', ''))}</dd></div>
-          <div><dt>DIČ</dt><dd>{html_lib.escape(contact.get('taxId', ''))}</dd></div>
-          <div><dt>IČ DPH</dt><dd>{html_lib.escape(contact.get('vatId', ''))}</dd></div>
-          <div><dt>Registrácia</dt><dd>{html_lib.escape(contact.get('registry', ''))}<br>{html_lib.escape(contact.get('registryNumber', ''))}</dd></div>
-        </dl>
-      </aside>
-    </div>
+    <nav class="club-subnav" aria-label="Podkategórie klubu" role="tablist">
+      <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
+    </nav>
+    <section class="club-panel" id="club-panel-about" role="tabpanel" data-club-panel="o-klube">
+      <figure class="club-arena">
+        <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
+        <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
+      </figure>
+      <div class="club-page">
+        <article class="club-history">
+          <div class="section-kicker">Od prvého klziska po dnešok</div>
+          <h2>HISTÓRIA KLUBU</h2>
+          <div class="club-history-content">{''.join(history_parts)}</div>
+        </article>
+        <aside class="club-contact">
+          <div class="section-kicker">Kontakt a identifikačné údaje</div>
+          <h2>{html_lib.escape(contact.get('name', 'Hokejový klub Brezno'))}</h2>
+          <dl>
+            <div><dt>Adresa</dt><dd>{address}</dd></div>
+            <div><dt>E-mail</dt><dd><a href="mailto:{email}">{email}</a></dd></div>
+            <div><dt>IČO</dt><dd>{html_lib.escape(contact.get('companyId', ''))}</dd></div>
+            <div><dt>DIČ</dt><dd>{html_lib.escape(contact.get('taxId', ''))}</dd></div>
+            <div><dt>IČ DPH</dt><dd>{html_lib.escape(contact.get('vatId', ''))}</dd></div>
+            <div><dt>Registrácia</dt><dd>{html_lib.escape(contact.get('registry', ''))}<br>{html_lib.escape(contact.get('registryNumber', ''))}</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+    <section class="club-panel" id="club-panel-management" role="tabpanel" data-club-panel="vedenie" hidden>
+      <div class="club-directory">
+        <div class="section-kicker">Organizačná štruktúra</div>
+        <h2>VEDENIE KLUBU</h2>
+        <p class="club-directory-empty">Aktuálne zloženie vedenia klubu bude doplnené.</p>
+      </div>
+    </section>
+    <section class="club-panel" id="club-panel-coaches" role="tabpanel" data-club-panel="trenerska-struktura" hidden>
+      <div class="club-directory">
+        <div class="section-kicker">Športový úsek</div>
+        <h2>TRÉNERSKÁ ŠTRUKTÚRA</h2>
+        <p class="club-directory-empty">Aktuálna trénerská štruktúra bude doplnená.</p>
+      </div>
+    </section>
   </div>
 """
 
@@ -1143,6 +1164,26 @@ hover_css = "\n".join(f'[data-hv="{i}"]:hover{{{r}}}' for i, r in enumerate(hove
 site_js = f"""(function () {{
   'use strict';
   var PAGES = {json.dumps(PAGES)};
+  var CLUB_SECTIONS = ['o-klube', 'vedenie', 'trenerska-struktura'];
+
+  function setClubSection(section, updateHistory) {{
+    if (CLUB_SECTIONS.indexOf(section) === -1) section = 'o-klube';
+    document.documentElement.dataset.clubSection = section;
+    document.querySelectorAll('[data-club-tab]').forEach(function (button) {{
+      var active = button.dataset.clubTab === section;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+    }});
+    document.querySelectorAll('[data-club-panel]').forEach(function (panel) {{
+      panel.hidden = panel.dataset.clubPanel !== section;
+    }});
+    if (updateHistory) {{
+      var url = new URL(location.href);
+      url.searchParams.set('page', 'klub');
+      url.searchParams.set('sekcia', section);
+      history.pushState({{ page: 'klub', section: section }}, '', url.pathname + url.search);
+    }}
+  }}
 
   function go(page, updateHistory) {{
     if (PAGES.indexOf(page) === -1) return;
@@ -1152,18 +1193,28 @@ site_js = f"""(function () {{
       var url = page === 'domov' ? location.pathname : location.pathname + '?page=' + encodeURIComponent(page);
       history.pushState({{ page: page }}, '', url);
     }}
+    if (page === 'klub') setClubSection('o-klube', false);
     window.scrollTo(0, 0);
     onScroll();
   }}
 
   var requestedPage = new URLSearchParams(location.search).get('page');
   if (requestedPage && PAGES.indexOf(requestedPage) !== -1) go(requestedPage, false);
+  setClubSection(new URLSearchParams(location.search).get('sekcia') || 'o-klube', false);
   window.addEventListener('popstate', function () {{
-    var page = new URLSearchParams(location.search).get('page') || 'domov';
+    var params = new URLSearchParams(location.search);
+    var page = params.get('page') || 'domov';
     go(page, false);
+    setClubSection(params.get('sekcia') || 'o-klube', false);
   }});
 
   document.addEventListener('click', function (event) {{
+    var clubTab = event.target.closest('[data-club-tab]');
+    if (clubTab) {{
+      event.preventDefault();
+      setClubSection(clubTab.dataset.clubTab, true);
+      return;
+    }}
     var trigger = event.target.closest('[data-go]');
     if (!trigger) return;
     event.preventDefault();

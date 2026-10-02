@@ -5,7 +5,7 @@ CMS. Verejný web je statický a vzniká generovaním HTML súborov v Gite.
 
 ## Aktuálna verzia
 
-**`0.6.0-beta.10` (2. 10. 2026)**
+**`0.6.0-beta.11` (2. 10. 2026)**
 
 Verzia je uložená aj v súbore [`VERSION`](VERSION). Zmeny jednotlivých verzií
 sú v [`CHANGELOG.md`](CHANGELOG.md). Táto verzia je pripravená na testovacie

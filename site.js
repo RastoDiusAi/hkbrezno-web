@@ -1,6 +1,26 @@
 (function () {
   'use strict';
   var PAGES = ["domov", "novinky", "zapasy", "rozpisladu", "timy", "klub", "rodicia", "partneri", "prihlaska"];
+  var CLUB_SECTIONS = ['o-klube', 'vedenie', 'trenerska-struktura'];
+
+  function setClubSection(section, updateHistory) {
+    if (CLUB_SECTIONS.indexOf(section) === -1) section = 'o-klube';
+    document.documentElement.dataset.clubSection = section;
+    document.querySelectorAll('[data-club-tab]').forEach(function (button) {
+      var active = button.dataset.clubTab === section;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+    });
+    document.querySelectorAll('[data-club-panel]').forEach(function (panel) {
+      panel.hidden = panel.dataset.clubPanel !== section;
+    });
+    if (updateHistory) {
+      var url = new URL(location.href);
+      url.searchParams.set('page', 'klub');
+      url.searchParams.set('sekcia', section);
+      history.pushState({ page: 'klub', section: section }, '', url.pathname + url.search);
+    }
+  }
 
   function go(page, updateHistory) {
     if (PAGES.indexOf(page) === -1) return;
@@ -10,18 +30,28 @@
       var url = page === 'domov' ? location.pathname : location.pathname + '?page=' + encodeURIComponent(page);
       history.pushState({ page: page }, '', url);
     }
+    if (page === 'klub') setClubSection('o-klube', false);
     window.scrollTo(0, 0);
     onScroll();
   }
 
   var requestedPage = new URLSearchParams(location.search).get('page');
   if (requestedPage && PAGES.indexOf(requestedPage) !== -1) go(requestedPage, false);
+  setClubSection(new URLSearchParams(location.search).get('sekcia') || 'o-klube', false);
   window.addEventListener('popstate', function () {
-    var page = new URLSearchParams(location.search).get('page') || 'domov';
+    var params = new URLSearchParams(location.search);
+    var page = params.get('page') || 'domov';
     go(page, false);
+    setClubSection(params.get('sekcia') || 'o-klube', false);
   });
 
   document.addEventListener('click', function (event) {
+    var clubTab = event.target.closest('[data-club-tab]');
+    if (clubTab) {
+      event.preventDefault();
+      setClubSection(clubTab.dataset.clubTab, true);
+      return;
+    }
     var trigger = event.target.closest('[data-go]');
     if (!trigger) return;
     event.preventDefault();

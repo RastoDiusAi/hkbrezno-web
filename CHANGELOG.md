@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0-beta.11 - 2026-10-02
+
+- Stránka Klub je rozdelená na podkategórie O klube, Vedenie klubu a
+  Trénerská štruktúra s priamymi odkazmi cez URL.
+- Pôvodný obsah s históriou, fotografiou arény a kontaktom je presunutý do
+  podkategórie O klube.
+
 ## 0.6.0-beta.10 - 2026-10-02
 
 - Položka E-shop v hlavnej navigácii je výškovo zarovnaná s ostatnými

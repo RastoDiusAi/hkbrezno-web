@@ -101,6 +101,16 @@
   .club-contact dt { margin-bottom: 5px; color: #8FA0B9; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
   .club-contact dd { margin: 0; color: #fff; font-size: 15px; line-height: 1.55; overflow-wrap: anywhere; }
   .club-contact a { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
+  .club-subnav { display: flex; border-bottom: 1px solid #D6DCE4; background: #fff; padding: 0 48px; }
+  .club-subnav button { position: relative; min-height: 66px; border: 0; background: transparent; padding: 0 24px; color: #5D6E86; cursor: pointer; font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .club-subnav button::after { position: absolute; right: 24px; bottom: -1px; left: 24px; height: 3px; background: transparent; content: ''; }
+  .club-subnav button:hover { color: #14315C; }
+  .club-subnav button.is-active { color: #0B1B33; }
+  .club-subnav button.is-active::after { background: #CE1126; }
+  .club-panel[hidden] { display: none; }
+  .club-directory { min-height: 360px; padding: 52px 48px 90px; }
+  .club-directory h2 { margin: 0; color: #0B1B33; font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: 0; }
+  .club-directory-empty { max-width: 720px; margin: 22px 0 0; border-left: 4px solid #CE1126; background: #fff; padding: 24px 26px; color: #4A5768; font-size: 16px; line-height: 1.65; }
   .ice-schedule-page { padding: 40px 48px 90px; }
   .ice-schedule-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
   .ice-schedule-open { flex: none; border: 2px solid #14315C; padding: 13px 20px; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
@@ -149,6 +159,11 @@
     .club-history > h2, .ice-schedule-heading h2 { font-size: 25px; }
     .club-history-content .club-history-lead { font-size: 17px; }
     .club-contact { position: static; padding: 28px 24px 32px; }
+    .club-subnav { overflow-x: auto; padding: 0 18px; -webkit-overflow-scrolling: touch; }
+    .club-subnav button { min-height: 58px; padding: 0 16px; white-space: nowrap; }
+    .club-subnav button::after { right: 16px; left: 16px; }
+    .club-directory { min-height: 300px; padding: 34px 18px 60px; }
+    .club-directory h2 { font-size: 28px; }
     .ice-schedule-page { padding: 28px 18px 60px; }
     .ice-schedule-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
     .ice-schedule-open { box-sizing: border-box; width: 100%; text-align: center; }
@@ -1022,29 +1037,50 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <div>Hokejový klub Brezno</div>
       <h1>KLUB</h1>
     </div>
-    <figure class="club-arena">
-      <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
-      <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
-    </figure>
-    <div class="club-page">
-      <article class="club-history">
-        <div class="section-kicker">Od prvého klziska po dnešok</div>
-        <h2>HISTÓRIA KLUBU</h2>
-        <div class="club-history-content"><p class="club-history-lead">Tradovanie zimného korčuľovania a neskoršie začiatky ľadového hokeja v Brezne siahajú do roku 1908. V roku 1910 bolo otvorené prvé klzisko za malou stanicou na lúkach. Prvý „hokejový“ zápas sa odohral v roku 1913 na námestí a to medzi študentami Banskej Bystrice a Brezna. Bystričania vtedy zvíťazili 1:0. Vlastná hokejová hra podľa medzinárodných pravidiel zvaná „kanadský hokej“ sa dostáva do Brezna v roku 1935, kedy v Brezne vzniká prvý hokejový oddiel.</p><p class="club-history-emphasis">Medzi najväčšie ikony nášho klubu patria naši odchovanci ako Ladislav Horský, ktorý sa stal hráčom ŠK Bratislava a neskôr aj reprezentantom ČSR. Taktiež sú to Vojtech Zachar, ktorý sa stal hráčom Žiliny a Simeček, Gallo a Klinec, ktorí hájili farby Slávie Bratislava.V roku 1985, seniori prvýkrát nastúpili do zväzom organizovanej súťaže Krajských majstrovstiev SR . Následne klub striedavo nastupoval v organizovaných súťažiach. Zlom nastal v roku 1997, keď sa družstvo prihlásilo do 2. hokejovej. Odvtedy bolo jej pravidelným účastníkom a posledné roky patrilo medzi popredné družstvá súťaže. V sezóne 2008/09 sa napokon podaril postup do 1. hokejovej ligy, kde tím hneď v prvej sezóne zaznamenal historický úspech 7. miesto. V sezóne 2013/2014 bol hokejový klub z Horehronia účastníkom 2. hokejovej ligy seniorov – skupina východ, kde ostáva dodnes.</p><p>1935 – HO ŠK Brezno</p><p>1939 – ŠK Brezno nad Hronom</p><p>1976- – Jednota SD Brezno</p><p>TJ Mostáreň Brezno</p><p>1988 – 1.MSK VTJ Brezno</p><p>2003 – HK BREZNO</p><p>Prvými reprezentantmi Hokejového oddielu ŠK Brezno boli hráči Dubiny, Laco, Barbarič, Révesz, Strádal, Šramko a brankár Cúth.</p><p>Po výmene generácií a menšom prerušení činnosti vznikol v roku 1939 nový oddiel s názvom ŠK Brezno. Jeho hráčmi sa stali bratia Zacharovci, Petraško, Dunajský, Giertl, Országh a bratia Brožovci.</p><p>Tento kolektív si vybojoval miesto v lige, kde súťažil proti tímom ako HC Poprad-Tatry, Prešov a Trenčín.<br>Najväčšie úspechy dosiahli útočník Vojtech Zachar, obranca František Zachar, brankár Ondrej Petraško a útočníci bratia Brožovci s Dušanom Faškom.</p><h2>Športové úspechy</h2><p>ČESKO – SLOVENSKO</p><p>2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky<br>● 5. miesto: 1992/93 (s)<br>● 6. miesto: 1991/92 (s)</p><p>2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky<br>● 1. miesto: 1990/91 (s)<br>● 2. miesto: 1985/86 (s)<br>● 3. miesto: 1989/90 (s)<br>● 5. miesto: 1986/1987 (s), 1988/89 (s)</p><p>2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov<br>● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)</p><p>SLOVENSKO</p><p>1. Hokejová liga SR – 2. ročníky<br>● 7. miesto: 2009/10<br>● 14. miesto: 2010/11</p><p>2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov<br>● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)<br>● 2. miesto: 2001/02 (v), 2006/07 (v), 2007/08 (v)<br>● 3. miesto: 2004/05 (v), 2016/17 (sr)<br>● 4. miesto: 1999/00 (v), 2000/01 (s)</p><p>Extraliga dorastu<br>● Play out 2022/23</p></div>
-      </article>
-      <aside class="club-contact">
-        <div class="section-kicker">Kontakt a identifikačné údaje</div>
-        <h2>Hokejový klub Brezno</h2>
-        <dl>
-          <div><dt>Adresa</dt><dd>Štvrť Ladislava Novomeského 2157/34<br>977 01 Brezno</dd></div>
-          <div><dt>E-mail</dt><dd><a href="mailto:info@hkbrezno.sk">info@hkbrezno.sk</a></dd></div>
-          <div><dt>IČO</dt><dd>31905277</dd></div>
-          <div><dt>DIČ</dt><dd>2021170558</dd></div>
-          <div><dt>IČ DPH</dt><dd>SK2021170558</dd></div>
-          <div><dt>Registrácia</dt><dd>Register mimovládnych neziskových organizácií Ministerstva vnútra SR<br>VVS/1-900/90-10231</dd></div>
-        </dl>
-      </aside>
-    </div>
+    <nav class="club-subnav" aria-label="Podkategórie klubu" role="tablist">
+      <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
+    </nav>
+    <section class="club-panel" id="club-panel-about" role="tabpanel" data-club-panel="o-klube">
+      <figure class="club-arena">
+        <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
+        <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
+      </figure>
+      <div class="club-page">
+        <article class="club-history">
+          <div class="section-kicker">Od prvého klziska po dnešok</div>
+          <h2>HISTÓRIA KLUBU</h2>
+          <div class="club-history-content"><p class="club-history-lead">Tradovanie zimného korčuľovania a neskoršie začiatky ľadového hokeja v Brezne siahajú do roku 1908. V roku 1910 bolo otvorené prvé klzisko za malou stanicou na lúkach. Prvý „hokejový“ zápas sa odohral v roku 1913 na námestí a to medzi študentami Banskej Bystrice a Brezna. Bystričania vtedy zvíťazili 1:0. Vlastná hokejová hra podľa medzinárodných pravidiel zvaná „kanadský hokej“ sa dostáva do Brezna v roku 1935, kedy v Brezne vzniká prvý hokejový oddiel.</p><p class="club-history-emphasis">Medzi najväčšie ikony nášho klubu patria naši odchovanci ako Ladislav Horský, ktorý sa stal hráčom ŠK Bratislava a neskôr aj reprezentantom ČSR. Taktiež sú to Vojtech Zachar, ktorý sa stal hráčom Žiliny a Simeček, Gallo a Klinec, ktorí hájili farby Slávie Bratislava.V roku 1985, seniori prvýkrát nastúpili do zväzom organizovanej súťaže Krajských majstrovstiev SR . Následne klub striedavo nastupoval v organizovaných súťažiach. Zlom nastal v roku 1997, keď sa družstvo prihlásilo do 2. hokejovej. Odvtedy bolo jej pravidelným účastníkom a posledné roky patrilo medzi popredné družstvá súťaže. V sezóne 2008/09 sa napokon podaril postup do 1. hokejovej ligy, kde tím hneď v prvej sezóne zaznamenal historický úspech 7. miesto. V sezóne 2013/2014 bol hokejový klub z Horehronia účastníkom 2. hokejovej ligy seniorov – skupina východ, kde ostáva dodnes.</p><p>1935 – HO ŠK Brezno</p><p>1939 – ŠK Brezno nad Hronom</p><p>1976- – Jednota SD Brezno</p><p>TJ Mostáreň Brezno</p><p>1988 – 1.MSK VTJ Brezno</p><p>2003 – HK BREZNO</p><p>Prvými reprezentantmi Hokejového oddielu ŠK Brezno boli hráči Dubiny, Laco, Barbarič, Révesz, Strádal, Šramko a brankár Cúth.</p><p>Po výmene generácií a menšom prerušení činnosti vznikol v roku 1939 nový oddiel s názvom ŠK Brezno. Jeho hráčmi sa stali bratia Zacharovci, Petraško, Dunajský, Giertl, Országh a bratia Brožovci.</p><p>Tento kolektív si vybojoval miesto v lige, kde súťažil proti tímom ako HC Poprad-Tatry, Prešov a Trenčín.<br>Najväčšie úspechy dosiahli útočník Vojtech Zachar, obranca František Zachar, brankár Ondrej Petraško a útočníci bratia Brožovci s Dušanom Faškom.</p><h2>Športové úspechy</h2><p>ČESKO – SLOVENSKO</p><p>2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky<br>● 5. miesto: 1992/93 (s)<br>● 6. miesto: 1991/92 (s)</p><p>2. Slovenská národná hokejová liga (skupina Stred) – 2. ročníky<br>● 1. miesto: 1990/91 (s)<br>● 2. miesto: 1985/86 (s)<br>● 3. miesto: 1989/90 (s)<br>● 5. miesto: 1986/1987 (s), 1988/89 (s)</p><p>2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov<br>● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)</p><p>SLOVENSKO</p><p>1. Hokejová liga SR – 2. ročníky<br>● 7. miesto: 2009/10<br>● 14. miesto: 2010/11</p><p>2. Hokejová liga – (skupiny západ, stred, východ a SR) 17. ročníkov<br>● 1. miesto: 2002/03 (v), 2003/04 (v), 2008/09 (v)<br>● 2. miesto: 2001/02 (v), 2006/07 (v), 2007/08 (v)<br>● 3. miesto: 2004/05 (v), 2016/17 (sr)<br>● 4. miesto: 1999/00 (v), 2000/01 (s)</p><p>Extraliga dorastu<br>● Play out 2022/23</p></div>
+        </article>
+        <aside class="club-contact">
+          <div class="section-kicker">Kontakt a identifikačné údaje</div>
+          <h2>Hokejový klub Brezno</h2>
+          <dl>
+            <div><dt>Adresa</dt><dd>Štvrť Ladislava Novomeského 2157/34<br>977 01 Brezno</dd></div>
+            <div><dt>E-mail</dt><dd><a href="mailto:info@hkbrezno.sk">info@hkbrezno.sk</a></dd></div>
+            <div><dt>IČO</dt><dd>31905277</dd></div>
+            <div><dt>DIČ</dt><dd>2021170558</dd></div>
+            <div><dt>IČ DPH</dt><dd>SK2021170558</dd></div>
+            <div><dt>Registrácia</dt><dd>Register mimovládnych neziskových organizácií Ministerstva vnútra SR<br>VVS/1-900/90-10231</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </section>
+    <section class="club-panel" id="club-panel-management" role="tabpanel" data-club-panel="vedenie" hidden>
+      <div class="club-directory">
+        <div class="section-kicker">Organizačná štruktúra</div>
+        <h2>VEDENIE KLUBU</h2>
+        <p class="club-directory-empty">Aktuálne zloženie vedenia klubu bude doplnené.</p>
+      </div>
+    </section>
+    <section class="club-panel" id="club-panel-coaches" role="tabpanel" data-club-panel="trenerska-struktura" hidden>
+      <div class="club-directory">
+        <div class="section-kicker">Športový úsek</div>
+        <h2>TRÉNERSKÁ ŠTRUKTÚRA</h2>
+        <p class="club-directory-empty">Aktuálna trénerská štruktúra bude doplnená.</p>
+      </div>
+    </section>
   </div>
 </section>
 
