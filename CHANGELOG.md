@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.8 - 2026-10-02
+
+- Karta Prípravka - 5. ročník teraz odkazuje priamo na rozpis zápasov a
+  súpisku hráčov v oficiálnych štatistikách Hockey Slovakia.
+
 ## 0.6.0-beta.7 - 2026-10-02
 
 - Tlačidlá „Výsledky a zápasy“ v kartách žiackych tímov boli premenované na
