@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.12 - 2026-10-02
+
+- Podstránky Vedenie klubu a Trénerská štruktúra sú ponechané úplne prázdne
+  a pripravené na neskoršie doplnenie obsahu.
+
 ## 0.6.0-beta.11 - 2026-10-02
 
 - Stránka Klub je rozdelená na podkategórie O klube, Vedenie klubu a

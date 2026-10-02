@@ -494,11 +494,11 @@ def render_club_page(pages):
       <h1>KLUB</h1>
     </div>
     <nav class="club-subnav" aria-label="Podkategórie klubu" role="tablist">
-      <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
+      <button type="button" id="club-tab-about" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
+      <button type="button" id="club-tab-management" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
+      <button type="button" id="club-tab-coaches" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
     </nav>
-    <section class="club-panel" id="club-panel-about" role="tabpanel" data-club-panel="o-klube">
+    <section class="club-panel" id="club-panel-about" role="tabpanel" aria-labelledby="club-tab-about" data-club-panel="o-klube">
       <figure class="club-arena">
         <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
         <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
@@ -523,19 +523,11 @@ def render_club_page(pages):
         </aside>
       </div>
     </section>
-    <section class="club-panel" id="club-panel-management" role="tabpanel" data-club-panel="vedenie" hidden>
-      <div class="club-directory">
-        <div class="section-kicker">Organizačná štruktúra</div>
-        <h2>VEDENIE KLUBU</h2>
-        <p class="club-directory-empty">Aktuálne zloženie vedenia klubu bude doplnené.</p>
-      </div>
+    <section class="club-panel" id="club-panel-management" role="tabpanel" aria-labelledby="club-tab-management" data-club-panel="vedenie" hidden>
+      <div class="club-directory" aria-hidden="true"></div>
     </section>
-    <section class="club-panel" id="club-panel-coaches" role="tabpanel" data-club-panel="trenerska-struktura" hidden>
-      <div class="club-directory">
-        <div class="section-kicker">Športový úsek</div>
-        <h2>TRÉNERSKÁ ŠTRUKTÚRA</h2>
-        <p class="club-directory-empty">Aktuálna trénerská štruktúra bude doplnená.</p>
-      </div>
+    <section class="club-panel" id="club-panel-coaches" role="tabpanel" aria-labelledby="club-tab-coaches" data-club-panel="trenerska-struktura" hidden>
+      <div class="club-directory" aria-hidden="true"></div>
     </section>
   </div>
 """

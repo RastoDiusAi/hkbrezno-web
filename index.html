@@ -109,8 +109,6 @@
   .club-subnav button.is-active::after { background: #CE1126; }
   .club-panel[hidden] { display: none; }
   .club-directory { min-height: 360px; padding: 52px 48px 90px; }
-  .club-directory h2 { margin: 0; color: #0B1B33; font-family: 'Barlow Condensed', sans-serif; font-size: 36px; font-weight: 800; letter-spacing: 0; }
-  .club-directory-empty { max-width: 720px; margin: 22px 0 0; border-left: 4px solid #CE1126; background: #fff; padding: 24px 26px; color: #4A5768; font-size: 16px; line-height: 1.65; }
   .ice-schedule-page { padding: 40px 48px 90px; }
   .ice-schedule-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
   .ice-schedule-open { flex: none; border: 2px solid #14315C; padding: 13px 20px; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
@@ -163,7 +161,6 @@
     .club-subnav button { min-height: 58px; padding: 0 16px; white-space: nowrap; }
     .club-subnav button::after { right: 16px; left: 16px; }
     .club-directory { min-height: 300px; padding: 34px 18px 60px; }
-    .club-directory h2 { font-size: 28px; }
     .ice-schedule-page { padding: 28px 18px 60px; }
     .ice-schedule-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
     .ice-schedule-open { box-sizing: border-box; width: 100%; text-align: center; }
@@ -1038,11 +1035,11 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
       <h1>KLUB</h1>
     </div>
     <nav class="club-subnav" aria-label="Podkategórie klubu" role="tablist">
-      <button type="button" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
-      <button type="button" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
+      <button type="button" id="club-tab-about" class="is-active" role="tab" aria-selected="true" aria-controls="club-panel-about" data-club-tab="o-klube">O klube</button>
+      <button type="button" id="club-tab-management" role="tab" aria-selected="false" aria-controls="club-panel-management" data-club-tab="vedenie">Vedenie klubu</button>
+      <button type="button" id="club-tab-coaches" role="tab" aria-selected="false" aria-controls="club-panel-coaches" data-club-tab="trenerska-struktura">Trénerská štruktúra</button>
     </nav>
-    <section class="club-panel" id="club-panel-about" role="tabpanel" data-club-panel="o-klube">
+    <section class="club-panel" id="club-panel-about" role="tabpanel" aria-labelledby="club-tab-about" data-club-panel="o-klube">
       <figure class="club-arena">
         <img src="images/club/arena-brezno.jpg" alt="Aréna Brezno, domovský zimný štadión HK Brezno">
         <figcaption>Aréna Brezno · Zimný štadión Ladislava Horského</figcaption>
@@ -1067,19 +1064,11 @@ html[data-page="prihlaska"] [data-nav="prihlaska"] [data-u]{background:#CE1126 !
         </aside>
       </div>
     </section>
-    <section class="club-panel" id="club-panel-management" role="tabpanel" data-club-panel="vedenie" hidden>
-      <div class="club-directory">
-        <div class="section-kicker">Organizačná štruktúra</div>
-        <h2>VEDENIE KLUBU</h2>
-        <p class="club-directory-empty">Aktuálne zloženie vedenia klubu bude doplnené.</p>
-      </div>
+    <section class="club-panel" id="club-panel-management" role="tabpanel" aria-labelledby="club-tab-management" data-club-panel="vedenie" hidden>
+      <div class="club-directory" aria-hidden="true"></div>
     </section>
-    <section class="club-panel" id="club-panel-coaches" role="tabpanel" data-club-panel="trenerska-struktura" hidden>
-      <div class="club-directory">
-        <div class="section-kicker">Športový úsek</div>
-        <h2>TRÉNERSKÁ ŠTRUKTÚRA</h2>
-        <p class="club-directory-empty">Aktuálna trénerská štruktúra bude doplnená.</p>
-      </div>
+    <section class="club-panel" id="club-panel-coaches" role="tabpanel" aria-labelledby="club-tab-coaches" data-club-panel="trenerska-struktura" hidden>
+      <div class="club-directory" aria-hidden="true"></div>
     </section>
   </div>
 </section>
