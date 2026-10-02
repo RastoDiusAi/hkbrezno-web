@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.4 - 2026-10-02
+
+- Do karty Mladší žiaci - 7. ročník pribudol priamy odkaz na súpisku hráčov
+  v oficiálnych štatistikách Hockey Slovakia.
+
 ## 0.6.0-beta.3 - 2026-10-02
 
 - Pridaná položka E-shop do hlavnej navigácie. Odkaz smeruje priamo na
