@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.14 - 2026-10-02
+
+- Podstránka Pre rodičov bola vrátená do predchádzajúceho stavu s klubovou
+  hlavičkou a nadpisom; jej obsah zostáva prázdny.
+
 ## 0.6.0-beta.13 - 2026-10-02
 
 - Podstránka Pre rodičov je ponechaná úplne prázdna a pripravená na neskoršie
