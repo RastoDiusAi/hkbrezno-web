@@ -35,7 +35,7 @@ PUBLIC = HERE / "public"
 SITE_URL = "https://novyweb.smartitbiz.com"
 
 PAGES = ['domov', 'novinky', 'zapasy', 'rozpisladu', 'timy', 'klub',
-         'rodicia', 'partneri', 'prihlaska']
+         'rodicia', 'partneri', 'prihlaska', 'sukromie']
 
 ROSTER = [
     ('1',  'Brankár',  'Tomáš Ferko',      27, 22, 0),

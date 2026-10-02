@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.0-beta.16 - 2026-10-02
+
+- Pridaná finálna podstránka Ochrana súkromia prispôsobená reálnemu fungovaniu
+  webu, online prihláške a spracúvaniu údajov HK Brezno.
+- Odkaz Ochrana súkromia v pätičke je aktívny a vedie na novú podstránku.
+
 ## 0.6.0-beta.15 - 2026-10-02
 
 - Zo stránky Chcem hrať hokej boli odstránené pôvodné kroky 2 a 4; zostávajúce

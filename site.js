@@ -1,6 +1,6 @@
 (function () {
   'use strict';
-  var PAGES = ["domov", "novinky", "zapasy", "rozpisladu", "timy", "klub", "rodicia", "partneri", "prihlaska"];
+  var PAGES = ["domov", "novinky", "zapasy", "rozpisladu", "timy", "klub", "rodicia", "partneri", "prihlaska", "sukromie"];
   var CLUB_SECTIONS = ['o-klube', 'vedenie', 'trenerska-struktura'];
 
   function setClubSection(section, updateHistory) {

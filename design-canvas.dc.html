@@ -110,6 +110,24 @@
   .club-subnav button.is-active::after { background: #CE1126; }
   .club-panel[hidden] { display: none; }
   .club-directory { min-height: 360px; padding: 52px 48px 90px; }
+  .privacy-page { display: grid; grid-template-columns: minmax(220px, .34fr) minmax(0, 1fr); gap: 28px; align-items: start; padding: 42px 48px 90px; }
+  .privacy-nav { position: sticky; top: 90px; padding: 26px 24px 28px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); }
+  .privacy-nav strong { display: block; margin-bottom: 16px; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; letter-spacing: .12em; text-transform: uppercase; }
+  .privacy-nav a { display: block; padding: 9px 0; border-top: 1px solid #2B4C7E; color: #B8C4D4; font-size: 14px; line-height: 1.35; text-decoration: none; }
+  .privacy-nav a:hover { color: #fff; }
+  .privacy-content { min-width: 0; background: #fff; padding: 42px 46px 52px; color: #42516A; font-size: 16px; line-height: 1.72; }
+  .privacy-content .privacy-lead { margin: 0 0 34px; color: #0B1B33; font-size: 19px; font-weight: 600; line-height: 1.6; }
+  .privacy-content section { padding: 34px 0 0; border-top: 1px solid #E1E6EC; margin-top: 34px; scroll-margin-top: 92px; }
+  .privacy-content section:first-of-type { margin-top: 0; }
+  .privacy-content h2 { margin: 0 0 16px; color: #0B1B33; font-family: 'Barlow Condensed', sans-serif; font-size: 27px; font-weight: 800; letter-spacing: 0; }
+  .privacy-content h3 { margin: 24px 0 8px; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-size: 19px; font-weight: 800; letter-spacing: 0; }
+  .privacy-content p { margin: 0 0 14px; }
+  .privacy-content ul { margin: 0 0 16px; padding-left: 22px; }
+  .privacy-content li { margin: 7px 0; }
+  .privacy-content a { color: #B20F22; font-weight: 700; text-underline-offset: 3px; }
+  .privacy-meta { display: flex; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 26px; color: #6E7C90; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .footer-link-button { border: 0; background: transparent; padding: 0; color: inherit; cursor: pointer; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .footer-link-button:hover { color: #fff; }
   .ice-schedule-page { padding: 40px 48px 90px; }
   .ice-schedule-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 24px; }
   .ice-schedule-open { flex: none; border: 2px solid #14315C; padding: 13px 20px; color: #14315C; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 12px; letter-spacing: .05em; text-transform: uppercase; }
@@ -162,6 +180,11 @@
     .club-subnav button { min-height: 58px; padding: 0 16px; white-space: nowrap; }
     .club-subnav button::after { right: 16px; left: 16px; }
     .club-directory { min-height: 300px; padding: 34px 18px 60px; }
+    .privacy-page { grid-template-columns: minmax(0, 1fr); padding: 28px 18px 60px; }
+    .privacy-nav { position: static; }
+    .privacy-content { padding: 28px 22px 36px; }
+    .privacy-content .privacy-lead { font-size: 17px; }
+    .privacy-content h2 { font-size: 24px; }
     .ice-schedule-page { padding: 28px 18px 60px; }
     .ice-schedule-heading { align-items: flex-start; flex-direction: column; gap: 18px; }
     .ice-schedule-open { box-sizing: border-box; width: 100%; text-align: center; }
@@ -959,6 +982,86 @@
   </div>
   </sc-if>
 
+  <sc-if value="{{ isSukromie }}">
+  <div>
+    <div class="match-hero">
+      <div>Transparentné spracúvanie údajov</div>
+      <h1>OCHRANA SÚKROMIA</h1>
+    </div>
+    <div class="privacy-page">
+      <nav class="privacy-nav" aria-label="Obsah zásad ochrany súkromia">
+        <strong>Na tejto stránke</strong>
+        <a href="#prevadzkovatel">Prevádzkovateľ</a>
+        <a href="#spracuvanie">Aké údaje spracúvame</a>
+        <a href="#prijemcovia">Príjemcovia a prenosy</a>
+        <a href="#uchovavanie">Ako dlho údaje uchovávame</a>
+        <a href="#cookies">Cookies a externé služby</a>
+        <a href="#prava">Vaše práva</a>
+        <a href="#kontakt-sukromie">Kontakt a dozorný orgán</a>
+      </nav>
+      <article class="privacy-content">
+        <div class="privacy-meta"><span>Účinnosť: 2. októbra 2026</span><span>Verzia 1.0</span></div>
+        <p class="privacy-lead">Vaše súkromie berieme vážne. Tieto zásady zrozumiteľne vysvetľujú, aké osobné údaje spracúva Hokejový klub Brezno pri prevádzke webu, vybavovaní online prihlášok a komunikácii s rodičmi, hráčmi a návštevníkmi.</p>
+
+        <section id="prevadzkovatel">
+          <h2>1. Prevádzkovateľ</h2>
+          <p>Prevádzkovateľom osobných údajov je <strong>Hokejový klub Brezno</strong>, Štvrť Ladislava Novomeského 2157/34, 977 01 Brezno, IČO: 31905277, DIČ: 2021170558, IČ DPH: SK2021170558.</p>
+          <p>Vo veciach ochrany osobných údajov nás môžete kontaktovať na <a href="mailto:info@hkbrezno.sk?subject=Ochrana%20osobn%C3%BDch%20%C3%BAdajov">info@hkbrezno.sk</a>. Pri žiadosti uveďte dostatok informácií, aby sme vás a príslušné údaje vedeli bezpečne identifikovať.</p>
+        </section>
+
+        <section id="spracuvanie">
+          <h2>2. Aké údaje spracúvame a prečo</h2>
+          <h3>Online prihláška „Chcem hrať hokej“</h3>
+          <p>Spracúvame meno a priezvisko dieťaťa, dátum narodenia, meno zákonného zástupcu, jeho e-mail a telefón, informáciu o skúsenosti dieťaťa s korčuľovaním a dobrovoľnú poznámku pre trénera. Údaje používame na vybavenie žiadosti, zaradenie dieťaťa do vhodnej tréningovej skupiny a následnú komunikáciu.</p>
+          <p>Právnym základom je vykonanie opatrení pred vznikom členského alebo obdobného vzťahu podľa čl. 6 ods. 1 písm. b) GDPR a v rozsahu, v ktorom sa opierame o váš súhlas, čl. 6 ods. 1 písm. a) GDPR. Súhlas môžete kedykoľvek odvolať; odvolanie nemá vplyv na zákonnosť predchádzajúceho spracúvania.</p>
+          <h3>Komunikácia s klubom</h3>
+          <p>Ak nám napíšete alebo zavoláte, spracúvame kontaktné údaje a obsah komunikácie, aby sme odpovedali na vašu otázku alebo vybavili požiadavku. Právnym základom je predzmluvná komunikácia alebo náš oprávnený záujem riadne komunikovať s verejnosťou podľa čl. 6 ods. 1 písm. f) GDPR.</p>
+          <h3>Bezpečnosť a prevádzka webu</h3>
+          <p>Server môže krátkodobo zaznamenať IP adresu, čas požiadavky, požadovanú adresu, typ prehliadača a technické chybové údaje. Formulár používa IP adresu aj na obmedzenie opakovaného odosielania. Tieto údaje chránia web a formulár pred zneužitím; právnym základom je náš oprávnený záujem na bezpečnej a spoľahlivej prevádzke.</p>
+          <p>Poskytnutie polí označených vo formulári ako povinné je potrebné na vybavenie prihlášky. Poznámka pre trénera je dobrovoľná. Nevykonávame automatizované individuálne rozhodovanie ani profilovanie.</p>
+        </section>
+
+        <section id="prijemcovia">
+          <h2>3. Príjemcovia a prenosy údajov</h2>
+          <p>K údajom majú prístup iba poverené osoby HK Brezno, ktoré ich potrebujú na vybavenie prihlášky, komunikáciu alebo správu webu. V nevyhnutnom rozsahu môžu byť údaje sprístupnené poskytovateľovi hostingu, e-mailových služieb, technickej podpory alebo orgánom verejnej moci, ak to vyžaduje zákon.</p>
+          <p>Web načítava písma zo služby Google Fonts. Pri načítaní môže poskytovateľ získať technické údaje, najmä IP adresu a údaje prehliadača. Niektorí poskytovatelia môžu spracúvať údaje mimo Európskeho hospodárskeho priestoru; v takom prípade sa uplatnia mechanizmy ochrany podľa GDPR, najmä rozhodnutie o primeranosti alebo štandardné zmluvné doložky.</p>
+        </section>
+
+        <section id="uchovavanie">
+          <h2>4. Ako dlho údaje uchovávame</h2>
+          <ul>
+            <li>údaje z neúspešnej alebo ďalej nepokračujúcej prihlášky najviac 12 mesiacov od poslednej komunikácie,</li>
+            <li>údaje prijatého člena počas trvania členstva a následne počas lehôt potrebných na splnenie zákonných povinností a ochranu právnych nárokov,</li>
+            <li>bežnú e-mailovú komunikáciu počas vybavovania požiadavky a primerane dlho po jej uzavretí, spravidla najviac 24 mesiacov,</li>
+            <li>bezpečnostný záznam na obmedzenie odosielania formulára najviac jednu hodinu; ostatné serverové logy podľa nastavenia poskytovateľa hostingu, iba počas nevyhnutnej bezpečnostnej lehoty.</li>
+          </ul>
+          <p>Ak právny predpis vyžaduje dlhšie uchovávanie alebo sú údaje potrebné na uplatnenie či obhajobu právnych nárokov, môžeme ich uchovať počas príslušnej zákonnej lehoty.</p>
+        </section>
+
+        <section id="cookies">
+          <h2>5. Cookies, odkazy a externé služby</h2>
+          <p>Verejná časť tohto webu nepoužíva analytické ani marketingové cookies a nevytvára používateľské účty. Technické záznamy servera nie sú používané na reklamné profilovanie.</p>
+          <p>Web obsahuje odkazy na Hockey Slovakia, sociálne siete Facebook a Instagram a externý klubový e-shop. Po otvorení takéhoto odkazu sa uplatňujú zásady ochrany súkromia príslušného prevádzkovateľa. HK Brezno nekontroluje cookies ani ďalšie spracúvanie na týchto externých stránkach.</p>
+        </section>
+
+        <section id="prava">
+          <h2>6. Vaše práva</h2>
+          <p>Podľa podmienok GDPR máte právo požiadať o prístup k svojim údajom, ich opravu, vymazanie, obmedzenie spracúvania a prenosnosť. Pri spracúvaní založenom na oprávnenom záujme máte právo namietať; pri spracúvaní založenom na súhlase môžete súhlas kedykoľvek odvolať.</p>
+          <p>Na žiadosť odpovieme bez zbytočného odkladu, spravidla do jedného mesiaca. Pred vybavením môžeme primerane overiť vašu totožnosť, aby sme údaje neposkytli neoprávnenej osobe. Práva nie sú absolútne a v konkrétnom prípade môžu byť obmedzené zákonom.</p>
+          <p>Ak žiadosť súvisí s údajmi dieťaťa, uplatňuje ju zákonný zástupca alebo iná oprávnená osoba. Údaje detí používame iba na účely súvisiace s prihláškou, členstvom a športovou činnosťou klubu.</p>
+        </section>
+
+        <section id="kontakt-sukromie">
+          <h2>7. Kontakt a dozorný orgán</h2>
+          <p>Svoje práva si môžete uplatniť e-mailom na <a href="mailto:info@hkbrezno.sk?subject=Uplatnenie%20pr%C3%A1va%20pod%C4%BEa%20GDPR">info@hkbrezno.sk</a> alebo písomne na adrese prevádzkovateľa.</p>
+          <p>Ak sa domnievate, že vaše osobné údaje spracúvame v rozpore s právnymi predpismi, máte právo podať návrh na začatie konania na Úrad na ochranu osobných údajov Slovenskej republiky, Galvaniho 7/B, 821 04 Bratislava. Aktuálne kontakty a postup nájdete na <a href="https://dataprotection.gov.sk/sk/" target="_blank" rel="noopener noreferrer">dataprotection.gov.sk</a>.</p>
+          <p>Tieto zásady môžeme aktualizovať najmä pri zmene webu, používaných služieb alebo právnych požiadaviek. Aktuálna verzia je vždy zverejnená na tejto stránke s dátumom účinnosti.</p>
+        </section>
+      </article>
+    </div>
+  </div>
+  </sc-if>
+
   <sc-if value="{{ isPartneri }}">
   <div>
     <div style="position: relative; padding: 54px 48px 58px; border-bottom: 3px solid #CE1126; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%)">
@@ -1048,7 +1151,7 @@
     </div>
     <div style="padding: 22px 0 26px; display: flex; justify-content: space-between; align-items: center; font-family: 'Barlow Condensed', sans-serif; color: #56688A; letter-spacing: .1em; text-transform: uppercase; font-size: 12px">
       <span>© 2026 HK Brezno · Všetky práva vyhradené</span>
-      <span style="display: flex; gap: 22px"><span style="cursor: pointer">Ochrana údajov</span><span style="cursor: pointer">Cookies</span><span style="cursor: pointer">Pre médiá</span></span>
+      <span style="display: flex; gap: 22px"><button class="footer-link-button" type="button" onClick="{{ go.sukromie }}">Ochrana súkromia</button><span>Cookies</span><span>Pre médiá</span></span>
     </div>
   </div>
 </div>
@@ -1071,7 +1174,7 @@ class Component extends DCLogic {
 
   renderVals() {
     const p = this.state.page;
-    const pages = ['domov','novinky','zapasy','rozpisladu','timy','klub','rodicia','partneri','prihlaska'];
+    const pages = ['domov','novinky','zapasy','rozpisladu','timy','klub','rodicia','partneri','prihlaska','sukromie'];
     const go = {}, c = {}, u = {};
     pages.forEach(k => {
       go[k] = () => { this.setState({ page: k }); window.scrollTo(0, 0); };
@@ -1116,7 +1219,8 @@ class Component extends DCLogic {
       isDomov: p === 'domov', isNovinky: p === 'novinky', isZapasy: p === 'zapasy',
       isRozpisladu: p === 'rozpisladu', isTimy: p === 'timy',
       isKlub: p === 'klub', isRodicia: p === 'rodicia',
-      isPartneri: p === 'partneri', isPrihlaska: p === 'prihlaska'
+      isPartneri: p === 'partneri', isPrihlaska: p === 'prihlaska',
+      isSukromie: p === 'sukromie'
     };
   }
 }
