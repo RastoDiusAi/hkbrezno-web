@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.20 - 2026-10-03
+
+- Texty a zoznamy na podstránke Ochrana súkromia sú zarovnané do bloku a
+  používajú automatické delenie slov pre čitateľnejšiu sadzbu.
+
 ## 0.6.0-beta.19 - 2026-10-03
 
 - Z pätičky hlavnej stránky boli odstránené neaktívne položky Cookies a Pre
