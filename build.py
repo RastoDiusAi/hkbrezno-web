@@ -508,7 +508,7 @@ def render_club_page(pages):
           <h2>HISTÓRIA KLUBU</h2>
           <div class="club-history-content">{''.join(history_parts)}</div>
         </article>
-        <aside class="club-contact">
+        <aside class="club-contact" id="kontakt">
           <div class="section-kicker">Kontakt a identifikačné údaje</div>
           <h2>{html_lib.escape(contact.get('name', 'Hokejový klub Brezno'))}</h2>
           <dl>
@@ -1192,14 +1192,24 @@ site_js = f"""(function () {{
     onScroll();
   }}
 
+  function scrollToTarget(targetId, smooth) {{
+    if (!targetId) return;
+    window.requestAnimationFrame(function () {{
+      var target = document.getElementById(targetId);
+      if (target) target.scrollIntoView({{ behavior: smooth ? 'smooth' : 'auto', block: 'start' }});
+    }});
+  }}
+
   var requestedPage = new URLSearchParams(location.search).get('page');
   if (requestedPage && PAGES.indexOf(requestedPage) !== -1) go(requestedPage, false);
   setClubSection(new URLSearchParams(location.search).get('sekcia') || 'o-klube', false);
+  scrollToTarget(location.hash.slice(1), false);
   window.addEventListener('popstate', function () {{
     var params = new URLSearchParams(location.search);
     var page = params.get('page') || 'domov';
     go(page, false);
     setClubSection(params.get('sekcia') || 'o-klube', false);
+    scrollToTarget(location.hash.slice(1), false);
   }});
 
   document.addEventListener('click', function (event) {{
@@ -1213,6 +1223,12 @@ site_js = f"""(function () {{
     if (!trigger) return;
     event.preventDefault();
     go(trigger.dataset.go);
+    if (trigger.dataset.scrollTarget) {{
+      var url = new URL(location.href);
+      url.hash = trigger.dataset.scrollTarget;
+      history.replaceState({{ page: trigger.dataset.go }}, '', url.pathname + url.search + url.hash);
+      scrollToTarget(trigger.dataset.scrollTarget, true);
+    }}
   }});
 
   var bar = document.querySelector('[data-navbar]');

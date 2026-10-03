@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0-beta.21 - 2026-10-03
+
+- Do hornej hlavičky pribudlo obrysové tlačidlo Kontakty vedľa tlačidla Chcem
+  hrať hokej.
+- Odkaz otvorí sekciu O klube a posunie stránku priamo na existujúce kontaktné
+  a identifikačné údaje HK Brezno.
+
 ## 0.6.0-beta.20 - 2026-10-03
 
 - Texty a zoznamy na podstránke Ochrana súkromia sú zarovnané do bloku a

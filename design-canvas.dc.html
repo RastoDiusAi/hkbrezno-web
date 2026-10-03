@@ -94,7 +94,7 @@
   .club-history-content .club-history-lead { color: #0B1B33; font-size: 19px; font-weight: 600; line-height: 1.62; }
   .club-history-content .club-history-emphasis { padding: 22px 24px; border-left: 4px solid #CE1126; background: #F3F6F9; color: #243A59; font-weight: 600; }
   .club-source { display: inline-block; margin-top: 16px; border-bottom: 1px solid currentColor; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
-  .club-contact { position: sticky; top: 90px; padding: 34px 32px 38px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; }
+  .club-contact { position: sticky; top: 90px; scroll-margin-top: 90px; padding: 34px 32px 38px; background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff; }
   .club-contact .section-kicker { color: #E44758; }
   .club-contact h2 { color: #fff; font-size: 25px; }
   .club-contact dl { margin: 26px 0 0; }
@@ -225,7 +225,10 @@
         <span style="width: 30px; height: 2px; background: #CE1126"></span>
         <span>Rytieri z Brezna · sezóna 2026/2027</span>
       </div>
-      <button onClick="{{ go.prihlaska }}" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 14px 24px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)" style-hover="background: #E31B31">Chcem hrať hokej</button>
+      <div style="display: flex; align-items: center; gap: 12px">
+        <button onClick="{{ go.klub }}" data-scroll-target="kontakt" aria-label="Zobraziť kontaktné údaje HK Brezno" style="background: rgba(255,255,255,.7); color: #14315C; border: 2px solid #14315C; cursor: pointer; padding: 12px 22px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .05em; text-transform: uppercase" style-hover="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); color: #fff">Kontakty</button>
+        <button onClick="{{ go.prihlaska }}" style="background: #CE1126; color: #fff; border: 0; cursor: pointer; padding: 14px 24px; font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)" style-hover="background: #E31B31">Chcem hrať hokej</button>
+      </div>
     </div>
 
     <div style="position: absolute; left: 50%; top: 2px; transform: translateX(-50%); z-index: 7; cursor: pointer; display: flex; flex-direction: column; align-items: center" onClick="{{ go.domov }}">
