@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.17 - 2026-10-03
+
+- Pole Priezvisko v online prihláške je jednoznačne označené ako Priezvisko
+  dieťaťa, vrátane prístupnostného popisu vstupu.
+
 ## 0.6.0-beta.16 - 2026-10-02
 
 - Pridaná finálna podstránka Ochrana súkromia prispôsobená reálnemu fungovaniu
