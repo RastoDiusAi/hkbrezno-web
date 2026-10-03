@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.22 - 2026-10-03
+
+- Tlačidlá Kontakty a Rozpis ľadu majú rovnaký lichobežníkový tvar ako hlavné
+  tlačidlo Chcem hrať hokej; ich farby a typografia zostali zachované.
+
 ## 0.6.0-beta.21 - 2026-10-03
 
 - Do hornej hlavičky pribudlo obrysové tlačidlo Kontakty vedľa tlačidla Chcem
