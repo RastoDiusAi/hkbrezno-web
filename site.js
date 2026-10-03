@@ -86,19 +86,93 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  var target = new Date('2026-10-03T17:30:00').getTime();
-  var cells = document.querySelectorAll('[data-cd]');
-  function pad(number) { return String(number).padStart(2, '0'); }
-  function tick() {
-    var diff = Math.max(0, target - Date.now());
-    var values = {
-      d: pad(Math.floor(diff / 86400000)),
-      h: pad(Math.floor(diff / 3600000) % 24),
-      m: pad(Math.floor(diff / 60000) % 60),
-      s: pad(Math.floor(diff / 1000) % 60)
-    };
-    cells.forEach(function (element) { element.textContent = values[element.dataset.cd]; });
+  var scheduleNode = document.querySelector('[data-home-schedule]');
+  var schedule = [];
+  if (scheduleNode) {
+    try { schedule = JSON.parse(scheduleNode.textContent); } catch (error) { schedule = []; }
   }
-  tick();
-  window.setInterval(tick, 1000);
+
+  function bratislavaDate() {
+    try {
+      var parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).formatToParts(new Date());
+      var values = {};
+      parts.forEach(function (part) { values[part.type] = part.value; });
+      return values.year + '-' + values.month + '-' + values.day;
+    } catch (error) {
+      var now = new Date();
+      return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    }
+  }
+
+  function matchDateLabel(match) {
+    var values = match.date.split('-').map(Number);
+    var dayNames = ['Nedeľa', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota'];
+    var weekday = new Date(Date.UTC(values[0], values[1] - 1, values[2])).getUTCDay();
+    return dayNames[weekday] + ' ' + values[2] + '. ' + values[1] + '. ' + values[0] + ' · ' + match.time;
+  }
+
+  function setText(selector, value) {
+    var element = document.querySelector(selector);
+    if (element) element.textContent = value;
+  }
+
+  function setTeam(side, name, logo) {
+    setText('[data-home-' + side + '-name]', name);
+    var image = document.querySelector('[data-home-' + side + '-logo]');
+    if (image) {
+      image.src = logo;
+      image.alt = 'Logo ' + name;
+    }
+  }
+
+  function renderTicker(matches) {
+    var ticker = document.querySelector('[data-home-ticker]');
+    var container = document.querySelector('[data-home-ticker-items]');
+    if (!ticker || !container) return;
+    container.replaceChildren();
+    ticker.hidden = matches.length === 0;
+    matches.forEach(function (match, index) {
+      if (index > 0) {
+        var divider = document.createElement('span');
+        divider.style.color = '#2B4C7E';
+        divider.textContent = '/';
+        container.appendChild(divider);
+      }
+      var item = document.createElement('span');
+      var strong = document.createElement('strong');
+      var values = match.date.split('-').map(Number);
+      strong.style.cssText = "color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px";
+      strong.textContent = values[2] + '. ' + values[1] + '. · ' + match.time;
+      item.appendChild(strong);
+      item.appendChild(document.createTextNode(' ' + match.opponent + ' · ' + (match.location === 'home' ? 'doma' : 'vonku')));
+      container.appendChild(item);
+    });
+  }
+
+  function updateHomeSchedule() {
+    if (!schedule.length) return;
+    var today = bratislavaDate();
+    var upcoming = schedule.filter(function (match) { return match.date >= today; });
+    var featured = upcoming[0];
+    var root = document.querySelector('[data-home-next-match]');
+    if (!featured) {
+      if (root) root.hidden = true;
+      renderTicker([]);
+      return;
+    }
+    if (root) root.hidden = false;
+    setTeam('home', featured.home, featured.homeLogo);
+    setTeam('away', featured.away, featured.awayLogo);
+    setText('[data-home-match-date]', matchDateLabel(featured));
+    setText('[data-home-match-venue]', featured.venue);
+    setText('[data-home-match-location]', featured.location === 'home' ? 'Doma' : 'Vonku');
+    var source = document.querySelector('[data-home-match-source]');
+    if (source) source.href = featured.sourceUrl;
+    renderTicker(upcoming.slice(1, 5));
+  }
+
+  updateHomeSchedule();
+  window.setInterval(updateHomeSchedule, 60000);
 })();

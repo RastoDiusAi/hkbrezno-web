@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.0-beta.18 - 2026-10-03
+
+- Z domovskej stránky bolo odstránené odpočítavanie do zápasu.
+- Najbližší zápas a nasledujúce termíny sa pri otvorení stránky aj počas jej
+  zobrazenia automaticky vyberajú podľa aktuálneho dátumu v časovom pásme
+  Europe/Bratislava.
+
 ## 0.6.0-beta.17 - 2026-10-03
 
 - Pole Priezvisko v online prihláške je jednoznačne označené ako Priezvisko

@@ -312,26 +312,10 @@
           <span>Zimný štadión Brezno</span>
         </div>
       </div>
-      <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center">
-        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 18px">Do zápasu zostáva</div>
-        <div style="display: flex; gap: 12px">
-          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
-            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{ cd.d }}</div>
-            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div>
-          </div>
-          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
-            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{ cd.h }}</div>
-            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div>
-          </div>
-          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
-            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{ cd.m }}</div>
-            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div>
-          </div>
-          <div style="background: linear-gradient(112deg, #061223 0%, #0B1B33 52%, #12294C 100%); border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center">
-            <div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #CE1126; font-size: 34px; line-height: 1">{{ cd.s }}</div>
-            <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div>
-          </div>
-        </div>
+      <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 12px">A tím seniorov</div>
+        <div style="background: #CE1126; color: #fff; padding: 8px 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase">Doma</div>
+        <button onClick="{{ go.zapasy }}" style="margin-top: 18px; border: 1px solid #526C91; background: transparent; color: #C3C9D2; cursor: pointer; padding: 11px 16px; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase">Rozpis zápasov</button>
       </div>
     </div>
     <!-- HOME_NEXT_MATCH_END -->
@@ -1158,10 +1142,9 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 class Component extends DCLogic {
-  state = { page: 'domov', now: Date.now(), stuck: false };
+  state = { page: 'domov', stuck: false };
 
   componentDidMount() {
-    this.t = setInterval(() => this.setState({ now: Date.now() }), 1000);
     this.onScroll = () => {
       const y = window.scrollY || document.documentElement.scrollTop || 0;
       const stuck = y > 120;
@@ -1170,7 +1153,7 @@ class Component extends DCLogic {
     window.addEventListener('scroll', this.onScroll, { passive: true });
     this.onScroll();
   }
-  componentWillUnmount() { clearInterval(this.t); window.removeEventListener('scroll', this.onScroll); }
+  componentWillUnmount() { window.removeEventListener('scroll', this.onScroll); }
 
   renderVals() {
     const p = this.state.page;
@@ -1181,16 +1164,6 @@ class Component extends DCLogic {
       c[k] = p === k ? '#ffffff' : '#A9B7CB';
       u[k] = p === k ? '#CE1126' : 'transparent';
     });
-
-    const target = new Date('2026-09-12T17:30:00').getTime();
-    let diff = Math.max(0, target - this.state.now);
-    const pad = n => String(n).padStart(2, '0');
-    const cd = {
-      d: pad(Math.floor(diff / 86400000)),
-      h: pad(Math.floor(diff / 3600000) % 24),
-      m: pad(Math.floor(diff / 60000) % 60),
-      s: pad(Math.floor(diff / 1000) % 60)
-    };
 
     const roster = [
       ['1','Brankár','Tomáš Ferko',27,22,0],
@@ -1215,7 +1188,7 @@ class Component extends DCLogic {
     };
 
     return {
-      go, c, u, cd, roster, nav, isStuck: st,
+      go, c, u, roster, nav, isStuck: st,
       isDomov: p === 'domov', isNovinky: p === 'novinky', isZapasy: p === 'zapasy',
       isRozpisladu: p === 'rozpisladu', isTimy: p === 'timy',
       isKlub: p === 'klub', isRodicia: p === 'rodicia',

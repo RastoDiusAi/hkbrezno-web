@@ -13,7 +13,6 @@ Mapovanie:
   onClick="{{ go.xxx }}"        -> data-go="xxx"
   {{ c.xxx }} / {{ u.xxx }}     -> statická farba + data-nav / data-u (aktívny stav z CSS)
   {{ nav.* }}                   -> data-navbar + trieda .is-stuck
-  {{ cd.d|h|m|s }}              -> <span data-cd="…"> (dopočíta JS)
   style-hover="…"               -> data-hv="N" + vygenerované :hover pravidlo
   <image-slot placeholder="X">  -> <div class="slot"><span>X</span></div>
 
@@ -670,37 +669,53 @@ def render_home_schedule(schedule):
     featured = upcoming[0] if upcoming else schedule["matches"][-1]
     match_date = date.fromisoformat(featured["date"])
 
-    def home_team(name, logo, role):
+    client_matches = [
+        {
+            "date": match["date"],
+            "time": match["time"],
+            "home": match["home"],
+            "away": match["away"],
+            "venue": match["venue"],
+            "location": match["location"],
+            "opponent": match["opponent"],
+            "sourceUrl": match["sourceUrl"],
+            "homeLogo": match["homeLogo"].lstrip("/"),
+            "awayLogo": match["awayLogo"].lstrip("/"),
+        }
+        for match in schedule["matches"]
+    ]
+    schedule_json = json.dumps(client_matches, ensure_ascii=False, separators=(",", ":"))
+    schedule_json = schedule_json.replace("</", "<\\/")
+
+    def home_team(name, logo, role, side):
         safe_name = html_lib.escape(name)
         return f"""
           <div style="display: flex; align-items: center; gap: 18px">
-            <div style="width: 62px; height: 62px; flex: 0 0 62px; background: #fff; display: grid; place-items: center; border: 1px solid #2B4C7E"><img src="{match_logo(logo)}" alt="Logo {safe_name}" style="width: 50px; height: 50px; object-fit: contain"></div>
-            <div><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 18px">{safe_name}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">{role}</div></div>
+            <div style="width: 62px; height: 62px; flex: 0 0 62px; background: #fff; display: grid; place-items: center; border: 1px solid #2B4C7E"><img data-home-{side}-logo src="{match_logo(logo)}" alt="Logo {safe_name}" style="width: 50px; height: 50px; object-fit: contain"></div>
+            <div><div data-home-{side}-name style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 18px">{safe_name}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .14em; text-transform: uppercase; font-size: 13px">{role}</div></div>
           </div>"""
 
     feature = f"""
-    <div style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: 1.15fr 1fr; gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
+    <div data-home-next-match style="background: linear-gradient(112deg, #0D2242 0%, #14315C 52%, #1C4074 100%); padding: 0 48px; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(240px, .55fr); gap: 0; align-items: stretch; border-bottom: 1px solid #21406E">
       <div style="padding: 38px 48px 38px 0; border-right: 1px solid #21406E">
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px"><span style="width: 8px; height: 8px; background: #CE1126; border-radius: 50%; animation: hkPulse 1.6s infinite"></span><span style="font-family: 'Barlow Condensed', sans-serif; color: #CE1126; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; font-weight: 700">Najbližší zápas A tímu seniorov</span></div>
         <div style="display: flex; align-items: center; gap: 28px">
-          {home_team(featured['home'], featured['homeLogo'], 'Domáci').strip()}
+          {home_team(featured['home'], featured['homeLogo'], 'Domáci', 'home').strip()}
           <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #CE1126; font-size: 22px">VS</span>
-          {home_team(featured['away'], featured['awayLogo'], 'Hostia').strip()}
+          {home_team(featured['away'], featured['awayLogo'], 'Hostia', 'away').strip()}
         </div>
-        <div style="display: flex; gap: 28px; margin-top: 24px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .1em; text-transform: uppercase; font-size: 15px"><span>{SK_DAYS[match_date.weekday()]} {match_date.day}. {match_date.month}. {match_date.year} · {html_lib.escape(featured['time'])}</span><span style="color: #3A4C68">|</span><span>{html_lib.escape(featured['venue'])}</span></div>
+        <div style="display: flex; gap: 28px; margin-top: 24px; font-family: 'Barlow Condensed', sans-serif; color: #C3C9D2; letter-spacing: .1em; text-transform: uppercase; font-size: 15px"><span data-home-match-date>{SK_DAYS[match_date.weekday()]} {match_date.day}. {match_date.month}. {match_date.year} · {html_lib.escape(featured['time'])}</span><span style="color: #3A4C68">|</span><span data-home-match-venue>{html_lib.escape(featured['venue'])}</span></div>
       </div>
-      <div style="padding: 38px 0 38px 48px; display: flex; flex-direction: column; justify-content: center">
-        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .2em; text-transform: uppercase; font-size: 13px; margin-bottom: 18px">Do zápasu zostáva</div>
-        <div style="display: flex; gap: 12px">
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.d }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Dní</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.h }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Hodín</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #fff; font-size: 34px; line-height: 1">{{{{ cd.m }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Minút</div></div>
-          <div style="background: #07172C; border-top: 3px solid #CE1126; padding: 16px 0; width: 92px; text-align: center"><div style="font-family: 'Barlow Condensed', sans-serif; font-weight: 800; color: #CE1126; font-size: 34px; line-height: 1">{{{{ cd.s }}}}</div><div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .16em; text-transform: uppercase; font-size: 12px; margin-top: 6px">Sekúnd</div></div>
-        </div>
+      <div style="padding: 38px 0 38px 42px; display: flex; flex-direction: column; justify-content: center; align-items: flex-start">
+        <div style="font-family: 'Barlow Condensed', sans-serif; color: #8C9AB0; letter-spacing: .18em; text-transform: uppercase; font-size: 13px; margin-bottom: 10px">A tím seniorov</div>
+        <div data-home-match-location style="display: inline-flex; align-items: center; min-height: 34px; background: #CE1126; color: #fff; padding: 8px 14px; font-family: 'Barlow Condensed', sans-serif; font-size: 14px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase">{'Doma' if featured['location'] == 'home' else 'Vonku'}</div>
+        <a data-home-match-source href="{html_lib.escape(featured['sourceUrl'], quote=True)}" target="_blank" rel="noopener noreferrer" style="margin-top: 18px; color: #fff; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: .08em; text-decoration: underline; text-underline-offset: 4px; text-transform: uppercase">Detail zápasu</a>
+        <button onClick="{{{{ go.zapasy }}}}" style="margin-top: 15px; border: 1px solid #526C91; background: transparent; color: #C3C9D2; cursor: pointer; padding: 11px 16px; font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase">Rozpis zápasov</button>
       </div>
+      <script type="application/json" data-home-schedule>{schedule_json}</script>
     </div>"""
 
-    ticker_matches = upcoming[:4] if upcoming else schedule["matches"][-4:]
+    ticker_matches = upcoming[1:5] if len(upcoming) > 1 else []
     ticker_items = []
     for match in ticker_matches:
         item_date = date.fromisoformat(match["date"])
@@ -710,22 +725,15 @@ def render_home_schedule(schedule):
             f'{html_lib.escape(match["opponent"])} · {location}</span>'
         )
     ticker = (
-        '<div style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; '
+        '<div data-home-ticker style="padding: 22px 48px; display: flex; align-items: center; gap: 30px; '
         'overflow: hidden; background: #07172C">'
         '<span style="font-family: \'Barlow Condensed\', sans-serif; font-weight: 800; color: #fff; font-size: 13px; '
         'letter-spacing: .06em; background: #CE1126; padding: 8px 14px; white-space: nowrap">'
-        'ĎALŠIE ZÁPASY A TÍMU SENIOROV</span><div style="display: flex; gap: 28px; align-items: center; '
+        'ĎALŠIE ZÁPASY A TÍMU SENIOROV</span><div data-home-ticker-items style="display: flex; gap: 28px; align-items: center; '
         'font-family: \'Barlow Condensed\', sans-serif; font-size: 16px; color: #C3C9D2; '
         'white-space: nowrap">' + '<span style="color: #2B4C7E">/</span>'.join(ticker_items) + '</div></div>'
     )
     return feature, ticker
-
-
-def next_match_target(schedule):
-    today = date.today()
-    upcoming = [m for m in schedule["matches"] if date.fromisoformat(m["date"]) >= today]
-    match = upcoming[0] if upcoming else schedule["matches"][-1]
-    return f"{match['date']}T{match['time']}:00"
 
 
 def page_shell(article, canonical, body_html):
@@ -857,7 +865,6 @@ def sync_public_assets():
 articles = validate_content()
 wordpress_pages = apply_ice_schedule_override(load_wordpress_pages())
 schedule = load_match_schedule()
-match_target = next_match_target(schedule)
 sync_public_assets()
 
 if not SRC.exists():
@@ -1130,12 +1137,7 @@ body, n_slots = re.subn(
     r'<image-slot\b((?:[^>"]|"[^"]*")*)>\s*</image-slot>', transform_slot, body)
 
 
-# ------------------------------------------------------------ 5. countdown
-for unit in ('d', 'h', 'm', 's'):
-    body = body.replace('{{ %s }}' % ('cd.' + unit),
-                        f'<span data-cd="{unit}">--</span>')
-
-# 6. cesty k obrázkom a kontrola, že nezostala žiadna nevyriešená väzba
+# 5. cesty k obrázkom a kontrola, že nezostala žiadna nevyriešená väzba
 body = body.replace('src="./assets/', 'src="assets/')
 leftover = re.findall(r'\{\{[^}]*\}\}', body)
 if leftover:
@@ -1241,21 +1243,95 @@ site_js = f"""(function () {{
   window.addEventListener('scroll', onScroll, {{ passive: true }});
   onScroll();
 
-  var target = new Date('{match_target}').getTime();
-  var cells = document.querySelectorAll('[data-cd]');
-  function pad(number) {{ return String(number).padStart(2, '0'); }}
-  function tick() {{
-    var diff = Math.max(0, target - Date.now());
-    var values = {{
-      d: pad(Math.floor(diff / 86400000)),
-      h: pad(Math.floor(diff / 3600000) % 24),
-      m: pad(Math.floor(diff / 60000) % 60),
-      s: pad(Math.floor(diff / 1000) % 60)
-    }};
-    cells.forEach(function (element) {{ element.textContent = values[element.dataset.cd]; }});
+  var scheduleNode = document.querySelector('[data-home-schedule]');
+  var schedule = [];
+  if (scheduleNode) {{
+    try {{ schedule = JSON.parse(scheduleNode.textContent); }} catch (error) {{ schedule = []; }}
   }}
-  tick();
-  window.setInterval(tick, 1000);
+
+  function bratislavaDate() {{
+    try {{
+      var parts = new Intl.DateTimeFormat('en-CA', {{
+        timeZone: 'Europe/Bratislava', year: 'numeric', month: '2-digit', day: '2-digit'
+      }}).formatToParts(new Date());
+      var values = {{}};
+      parts.forEach(function (part) {{ values[part.type] = part.value; }});
+      return values.year + '-' + values.month + '-' + values.day;
+    }} catch (error) {{
+      var now = new Date();
+      return now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0');
+    }}
+  }}
+
+  function matchDateLabel(match) {{
+    var values = match.date.split('-').map(Number);
+    var dayNames = ['Nedeľa', 'Pondelok', 'Utorok', 'Streda', 'Štvrtok', 'Piatok', 'Sobota'];
+    var weekday = new Date(Date.UTC(values[0], values[1] - 1, values[2])).getUTCDay();
+    return dayNames[weekday] + ' ' + values[2] + '. ' + values[1] + '. ' + values[0] + ' · ' + match.time;
+  }}
+
+  function setText(selector, value) {{
+    var element = document.querySelector(selector);
+    if (element) element.textContent = value;
+  }}
+
+  function setTeam(side, name, logo) {{
+    setText('[data-home-' + side + '-name]', name);
+    var image = document.querySelector('[data-home-' + side + '-logo]');
+    if (image) {{
+      image.src = logo;
+      image.alt = 'Logo ' + name;
+    }}
+  }}
+
+  function renderTicker(matches) {{
+    var ticker = document.querySelector('[data-home-ticker]');
+    var container = document.querySelector('[data-home-ticker-items]');
+    if (!ticker || !container) return;
+    container.replaceChildren();
+    ticker.hidden = matches.length === 0;
+    matches.forEach(function (match, index) {{
+      if (index > 0) {{
+        var divider = document.createElement('span');
+        divider.style.color = '#2B4C7E';
+        divider.textContent = '/';
+        container.appendChild(divider);
+      }}
+      var item = document.createElement('span');
+      var strong = document.createElement('strong');
+      var values = match.date.split('-').map(Number);
+      strong.style.cssText = "color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px";
+      strong.textContent = values[2] + '. ' + values[1] + '. · ' + match.time;
+      item.appendChild(strong);
+      item.appendChild(document.createTextNode(' ' + match.opponent + ' · ' + (match.location === 'home' ? 'doma' : 'vonku')));
+      container.appendChild(item);
+    }});
+  }}
+
+  function updateHomeSchedule() {{
+    if (!schedule.length) return;
+    var today = bratislavaDate();
+    var upcoming = schedule.filter(function (match) {{ return match.date >= today; }});
+    var featured = upcoming[0];
+    var root = document.querySelector('[data-home-next-match]');
+    if (!featured) {{
+      if (root) root.hidden = true;
+      renderTicker([]);
+      return;
+    }}
+    if (root) root.hidden = false;
+    setTeam('home', featured.home, featured.homeLogo);
+    setTeam('away', featured.away, featured.awayLogo);
+    setText('[data-home-match-date]', matchDateLabel(featured));
+    setText('[data-home-match-venue]', featured.venue);
+    setText('[data-home-match-location]', featured.location === 'home' ? 'Doma' : 'Vonku');
+    var source = document.querySelector('[data-home-match-source]');
+    if (source) source.href = featured.sourceUrl;
+    renderTicker(upcoming.slice(1, 5));
+  }}
+
+  updateHomeSchedule();
+  window.setInterval(updateHomeSchedule, 60000);
 }})();
 """
 
