@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0-beta.19 - 2026-10-03
+
+- Z pätičky hlavnej stránky boli odstránené neaktívne položky Cookies a Pre
+  médiá.
+
 ## 0.6.0-beta.18 - 2026-10-03
 
 - Z domovskej stránky bolo odstránené odpočítavanie do zápasu.
